@@ -1,0 +1,17 @@
+- utilisateurs : 
+	uid
+	email
+	pwd
+
+- posts :
+	uid
+	text
+	nb_like
+
+- followers :
+	uid_main
+	uid_followers
+	
+- follow (inverse de la table followers) :
+	uid_main
+	uid_follow
