@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "username": "anais",
+      "email": "noe-achour@insa-toulouse.fr",
+      "password_hash": "8fb6cd5573bc2cf9a498d0538af658fe946eb6853d38331f9fe39cb1f7407865",
+      "salt": "e12189125d768c735bc3dd05779cb04f"
+    },
+    {
+      "username": "astrid",
+      "email": "portapia@insa-toulouse.fr",
+      "password_hash": "80b0c1efdbdfdad0f00a4c77b917a21fde4517e4e3e4bdca4938d43de74d7633",
+      "salt": "0b5762dcfabc726c440469245ff7b513"
+    },
+    {
+      "username": "laura",
+      "email": "souverin@insa-toulouse.fr",
+      "password_hash": "386f4a467f6875e5dcb96f8b63408bf680dbc22b316aaaaa59256c8d1b8f98b6",
+      "salt": "640b3112f2dac4275078213b462583df"
+    }
+  ]
+}
