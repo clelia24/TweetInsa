@@ -4,8 +4,10 @@ import hashlib
 import secrets
 
 ############## IDÉES AMÉLIORATIONS ##############
+    # Si DB trop grande, faudra réfléchir à comment ne pas la load sur chaque fonction
     # Trouver user pas email => fonction commune avec le search by username?
     # Delete by email? => fonction commune avec delete by username?
+    #
 
 #------------ Variables globales ------------#
 DB_FILE = "database_auth.json"  #chemin de la DB
@@ -106,6 +108,54 @@ _refresh_count()  #On met à jour NB_USERS dès l'importation du module
 
 
 #------------ Fonctions publiques ------------#
+def test_username(username):
+    """
+    Vérifie si le username est dèjà utilisé.
+
+    Parameters
+    ----------
+    username : str
+        Nom d'utilisateur.
+
+    Raises
+    ------
+    UsernameExistsError
+        Si le username est déjà utilisé.
+
+    Returns
+    -------
+    bool
+        True si username n'est pas déjà utilisé.
+    """
+    db = _load_db()
+    if any(u["username"] == username for u in db["users"]):
+        raise UsernameExistsError(f"Nom d'utilisateur '{username}' déjà utilisé!")
+    return True
+
+def test_email(email):
+    """
+    Vérifie si le username est dèjà utilisé.
+
+    Parameters
+    ----------
+    email : str
+        Email pour le compte.
+
+    Raises
+    ------
+    EmailExistsError
+        Si l'email a déjà été utilisé pour créer un autre compte.
+
+    Returns
+    -------
+    bool
+        True si emmail n'est pas  déjà utilisé.
+    """
+    db = _load_db()
+    if any(u["email"] == email for u in db["users"]):
+        raise EmailExistsError(f"Email '{email}' déjà utilisé!")
+    return True
+
 def add_user(username, email, password):
     """
     Ajoute un utilisateur (compte) à la DB.
