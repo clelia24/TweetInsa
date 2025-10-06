@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "username": "test",
+      "email": "test@test",
+      "password_hash": "6bfef53b472898c8517da2e52d9ae4d39235a6541c03937ceedc0515d18e5e90",
+      "salt": "853f796822e6a7b44fa0b1a571ffc785"
+    },
+    {
+      "username": "cle",
+      "email": "cle@cle",
+      "password_hash": "e0c8ad212fc4ed2d9216b09c171c1819b10599cd59045f8ab38aa7ac77d100e2",
+      "salt": "b60a23d25dcd61461748275eb45f65f8"
+    }
+  ]
+}
