@@ -10,7 +10,7 @@ import secrets
     #
 
 #------------ Variables globales ------------#
-DB_FILE = "database_auth.json"  #chemin de la DB
+DB_FILE = "./data_base/database_auth.json"  #chemin de la DB
 
 NB_USERS = 0 #Compteur utilisateurs
 
