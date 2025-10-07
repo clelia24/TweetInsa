@@ -1,0 +1,22 @@
+{
+  "tweets": [
+    {
+      "tweet_id": "5ef630d0-6a88-4192-951f-c44f86d7c128",
+      "username": "astrid",
+      "date": "2025-10-07T05:06:58",
+      "content": "Ceci est un test."
+    },
+    {
+      "tweet_id": "8819663f-7bc2-4ee7-a764-ea1b4eb6e32d",
+      "username": "astrid",
+      "date": "07/10/2025 05:20",
+      "content": "Ceci est un test."
+    },
+    {
+      "tweet_id": "0379610d-5d45-410a-9a6f-c264b2b3b38c",
+      "username": "astrid",
+      "date": "07/10/2025 05:25",
+      "content": "Ceci est un test."
+    }
+  ]
+}
