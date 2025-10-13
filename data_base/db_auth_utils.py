@@ -14,6 +14,16 @@ DB_FILE = "./data_base/database_auth.json"  #chemin de la DB
 
 NB_USERS = 0 #Compteur utilisateurs
 
+# Créer le fichier database_auth.json s'il n'existe pas
+if not os.path.exists(DB_FILE):
+    with open(DB_FILE, "w", encoding="utf-8") as f:
+        json.dump({"users": []}, f, indent=2)
+    print(f"Créé le fichier {DB_FILE}")
+
+# Vérifier les permissions d'écriture
+if not os.access(BASE_DIR, os.W_OK):
+    print(f"Erreur : Pas de permission d'écriture pour '{BASE_DIR}' !")
+
 
 #------------ Classes Exception ------------#
 class UsernameExistsError(Exception):
@@ -22,6 +32,10 @@ class UsernameExistsError(Exception):
 
 class EmailExistsError(Exception):
     """Levée quand essai de création de compte avec un email déjà utilisé"""
+    pass
+
+class InvalidPasswordError(Exception):
+    """Levée quand le mot de passe ne respecte pas les critères"""
     pass
 
 class UserNotFoundError(Exception):
@@ -108,6 +122,23 @@ _refresh_count()  #On met à jour NB_USERS dès l'importation du module
 
 
 #------------ Fonctions publiques ------------#
+
+def test_password(password):
+    """
+    Vérifie si le mot de passe respecte les critères :
+    - Au moins 8 caractères
+    - Au moins une lettre majuscule
+    - Au moins une lettre minuscule
+    - Au moins un chiffre
+    """
+    if len(password) < 8:
+        raise InvalidPasswordError("Le mot de passe doit contenir au moins 8 caractères.")
+    if not any(c.isupper() for c in password):
+        raise InvalidPasswordError("Le mot de passe doit contenir au moins une lettre majuscule.")
+    if not any(c.isdigit() for c in password):
+        raise InvalidPasswordError("Le mot de passe doit contenir au moins un chiffre.")
+    return True
+
 def test_username(username):
     """
     Vérifie si le username est dèjà utilisé.
@@ -182,10 +213,9 @@ def add_user(username, email, password):
 
     """
     db = _load_db()
-    if any(u["username"] == username for u in db["users"]):
-        raise UsernameExistsError(f"Nom d'utilisateur '{username}' déjà utilisé!")
-    if any(u["email"] == email for u in db["users"]):
-        raise EmailExistsError(f"Email '{email}' déjà utilisé!")
+    test_username(username)  # Vérifier si le nom d'utilisateur est unique
+    test_email(email)  # Vérifier si l'email est unique
+    test_password(password)  # Vérifier les critères du mot de passe
     hashed, salt = _hash_password(password)
     db["users"].append({
         "username": username,
@@ -193,8 +223,14 @@ def add_user(username, email, password):
         "password_hash": hashed,
         "salt": salt
     })
-    _save_db(db)
-    _refresh_count()
+    try:
+        _save_db(db)
+        _refresh_count()
+        print(f"Utilisateur {username} enregistré dans {DB_FILE}")
+    except Exception as e:
+        print(f"Erreur lors de l'enregistrement de l'utilisateur: {e}")
+        raise
+
 
 def get_user(username):
     """

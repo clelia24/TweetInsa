@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TweetInsa - Inscription</title>
+    <title>TweetInsa - Accueil</title>
     <style>
+        /* Ton CSS existant, inchangé */
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f8fa;
@@ -50,6 +51,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            margin-bottom: 10px;
         }
         button:hover {
             background-color: #1991da;
@@ -57,29 +59,110 @@
         .error {
             color: red;
             font-size: 14px;
-            margin-top: 5px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #fee;
+            border: 1px solid #fcc;
+            border-radius: 5px;
+        }
+        .form-toggle {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-toggle button {
+            background-color: #e1e8ed;
+            color: #1da1f2;
+            width: 48%;
+            margin: 0 1%;
+            padding: 8px;
+        }
+        .form-toggle button:hover {
+            background-color: #d1dbe2;
+        }
+        .form-toggle button.active {
+            background-color: #1da1f2;
+            color: white;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .form-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Inscription</h1>
-        <form action="/register" method="post">
-            <div class="form-group">
-                <label for="username">Nom d'utilisateur</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">S'inscrire</button>
-        </form>
+        <h1>TweetInsa</h1>
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        <div class="form-toggle">
+            <button type="button" id="signup-btn" {% if form_type == 'signup' %}class="active"{% endif %} onclick="showForm('signup')">S'inscrire</button>
+            <button type="button" id="login-btn" {% if form_type == 'login' %}class="active"{% endif %} onclick="showForm('login')">Se connecter</button>
+        </div>
+
+        <!-- Formulaire d'inscription -->
+        <div id="signup-form" class="form-section {% if form_type == 'signup' or not form_type %}active{% endif %}">
+            <h2 class="form-title">Inscription</h2>
+            <form action="/register" method="post">
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">S'inscrire</button>
+            </form>
+            <p style="text-align: center; margin-top: 15px;">
+                <a href="/login" style="color: #1da1f2;">Déjà un compte ? Se connecter</a>
+            </p>
+        </div>
+
+        <!-- Formulaire de connexion -->
+        <div id="login-form" class="form-section {% if form_type == 'login' %}active{% endif %}">
+            <h2 class="form-title">Connexion</h2>
+            <form action="/login" method="post">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Mot de passe</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <button type="submit">Se connecter</button>
+            </form>
+            <p style="text-align: center; margin-top: 15px;">
+                <a href="/" style="color: #1da1f2;">Pas de compte ? S'inscrire</a>
+            </p>
+        </div>
     </div>
+    <script>
+        function showForm(formType) {
+            document.getElementById('signup-form').classList.remove('active');
+            document.getElementById('login-form').classList.remove('active');
+            document.getElementById('signup-btn').classList.remove('active');
+            document.getElementById('login-btn').classList.remove('active');
+            document.getElementById(formType + '-form').classList.add('active');
+            document.getElementById(formType + '-btn').classList.add('active');
+        }
+        {% if form_type %}
+            showForm('{{ form_type }}');
+        {% else %}
+            showForm('signup');
+        {% endif %}
+    </script>
 </body>
 </html>
-

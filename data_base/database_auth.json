@@ -29,6 +29,24 @@
       "email": "fejiz@gmail.com",
       "password_hash": "3feb15a71c9f1b3e755eb90a1eb0d8f636eae67243c104b3f719352d8facd031",
       "salt": "47f662c02f693479129f7f33066c082f"
+    },
+    {
+      "username": "Boussihmed",
+      "email": "ayihmed@gmail.com",
+      "password_hash": "8959f1eb70fb11cc8fa32a8cd5a26ada73a3c398da0f86d1b848e6bc55861c82",
+      "salt": "9b1aedbd6f8ea26ee6228ad496d62b0f"
+    },
+    {
+      "username": "dlksjdkf",
+      "email": "ksljdklfj@gmail.com",
+      "password_hash": "25ef14b0130a606473d9a4d8a06726aa6403e020077492385b73b44e25e07399",
+      "salt": "747388fbd406a33fded1d9333784e0b2"
+    },
+    {
+      "username": "bousdix",
+      "email": "sdkj@cmxivuds.com",
+      "password_hash": "2f60d4fc49ccf573fe9847236b777f2ff4ea694f34d43da2cf4b2093cddc47b2",
+      "salt": "1c173b5f886fe124dc138e37ea1af370"
     }
   ]
 }
