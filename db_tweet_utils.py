@@ -10,6 +10,8 @@ from datetime import datetime
 
 #------------ Variables globales ------------#
 DB_FILE = "./DB_Tweets.json"  #chemin de la DB
+DB_AUTH = "./data_base/database_auth.json"
+
 
 
 #------------ Classes Exception ------------#
@@ -42,6 +44,26 @@ def _load_tweets():
             return json.loads(content)
     except (FileNotFoundError, json.JSONDecodeError):
         return {"tweets": []}
+    
+def _load_auth():
+    """
+    Charge la database contenant les utilisateurs.
+    Si le fichier n'existe pas, est vide ou corrompu, retourne {"users": []}.
+
+    Returns
+    -------
+    Dict
+        Database des users.
+
+    """
+    try:
+        with open(DB_AUTH, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+            if not content:  # fichier vide
+                return {"auth": []}
+            return json.loads(content)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {"auth": []}
 
 
 def _save_tweets(db):
@@ -58,6 +80,22 @@ def _save_tweets(db):
     None.
     """
     with open(DB_FILE, "w", encoding="utf-8") as f:
+        json.dump(db, f, indent=2)
+
+def _save_users(db):
+    """
+    Sauvegarde la database.
+
+    Parameters
+    ----------
+    db : dict
+        Database à sauver.
+
+    Returns
+    -------
+    None.
+    """
+    with open(DB_AUTH, "w", encoding="utf-8") as f:
         json.dump(db, f, indent=2)
 
 
@@ -87,15 +125,26 @@ def post_tweet(username, description):
     if len(description) > 140:
         raise TweetTooLong("Tweet trop long!")
     db = _load_tweets()
+    tweet_id = str(uuid.uuid4())
     tweet = {
-        "tweet_id": str(uuid.uuid4()),
+        "tweet_id": tweet_id,
         "username": username,
         "date": datetime.now().isoformat(timespec="seconds"), # strftime("%d/%m/%Y %H:%M") est mieux pour afficher
         "content": description
     }
     db["tweets"].append(tweet)
     _save_tweets(db)
-    return tweet
+
+    db_users = _load_auth() 
+    for user in db_users["users"] :
+        if user["username"]==username :
+            user["tweets_posted"].append(tweet_id)
+            break
+
+    _save_users(db_users)
+    
+
+    #return tweet
 
 def get_id(tweet):
     """
@@ -159,4 +208,6 @@ def delete_tweet(tweet_id):
     if after==before:  #Aucun utilisateur supprimé
         raise TweetNotFound(f"Tweet ({tweet_id}) introuvable!")
     _save_tweets(db)
+
+
 

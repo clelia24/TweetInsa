@@ -17,6 +17,24 @@
       "username": "astrid",
       "date": "07/10/2025 05:25",
       "content": "Ceci est un test."
+    },
+    {
+      "tweet_id": "21d508a8-c93e-456d-ba1d-6b08fef61f4f",
+      "username": "Clelia",
+      "date": "2025-10-14T11:22:59",
+      "content": "test post tweet"
+    },
+    {
+      "tweet_id": "faf0e391-90c6-4a51-a1a2-556ee4e8050d",
+      "username": "Clelia",
+      "date": "2025-10-14T11:24:03",
+      "content": "test post tweet"
+    },
+    {
+      "tweet_id": "3edbe59d-02f8-4e07-adf4-295dc4a056c0",
+      "username": "Clelia",
+      "date": "2025-10-14T11:24:17",
+      "content": "test post tweet 2.0"
     }
   ]
 }

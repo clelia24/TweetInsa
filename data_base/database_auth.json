@@ -1,34 +1,15 @@
 {
   "users": [
     {
-      "username": "anais",
-      "email": "noe-achour@insa-toulouse.fr",
-      "password_hash": "8fb6cd5573bc2cf9a498d0538af658fe946eb6853d38331f9fe39cb1f7407865",
-      "salt": "e12189125d768c735bc3dd05779cb04f"
-    },
-    {
-      "username": "astrid",
-      "email": "portapia@insa-toulouse.fr",
-      "password_hash": "80b0c1efdbdfdad0f00a4c77b917a21fde4517e4e3e4bdca4938d43de74d7633",
-      "salt": "0b5762dcfabc726c440469245ff7b513"
-    },
-    {
-      "username": "laura",
-      "email": "souverin@insa-toulouse.fr",
-      "password_hash": "386f4a467f6875e5dcb96f8b63408bf680dbc22b316aaaaa59256c8d1b8f98b6",
-      "salt": "640b3112f2dac4275078213b462583df"
-    },
-    {
-      "username": "Corentin",
-      "email": "corentin.brandam@gmail.com",
-      "password_hash": "7e3bf12952bba5853eaadbe99e220332fce17f276641b948a3a8b27602a310ab",
-      "salt": "0cba3ca58c4c9d3fbb77af1d5c4dfdcc"
-    },
-    {
-      "username": "eroebgve",
-      "email": "fejiz@gmail.com",
-      "password_hash": "3feb15a71c9f1b3e755eb90a1eb0d8f636eae67243c104b3f719352d8facd031",
-      "salt": "47f662c02f693479129f7f33066c082f"
+      "username": "Clelia",
+      "email": "clelia@gmail.com",
+      "password_hash": "ddfdccce9740523c2d2de75b1f8054b0015b43fea469fb00730b9642b17526df",
+      "salt": "7396f28a441cdd16a28598e8f297c43a",
+      "tweets_posted": [
+        "21d508a8-c93e-456d-ba1d-6b08fef61f4f",
+        "faf0e391-90c6-4a51-a1a2-556ee4e8050d",
+        "3edbe59d-02f8-4e07-adf4-295dc4a056c0"
+      ]
     }
   ]
 }

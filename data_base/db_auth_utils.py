@@ -191,7 +191,8 @@ def add_user(username, email, password):
         "username": username,
         "email": email,
         "password_hash": hashed,
-        "salt": salt
+        "salt": salt,
+        "tweets_posted":[]
     })
     _save_db(db)
     _refresh_count()
