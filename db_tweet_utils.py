@@ -210,4 +210,26 @@ def delete_tweet(tweet_id):
     _save_tweets(db)
 
 
+def afficher_tweet(tweet_id):
+    """
+    Affichage d'un tweet.
+
+    Parameters
+    ----------
+    tweet_id : str
+        Id du tweet.
+
+    Returns
+    -------
+    str
+        Username de l'utilisateur qui a posté.
+    str
+        Date du post.
+    str
+        Contenu du post.
+    """
+    db = _load_tweets()
+    t = get_tweet(tweet_id)
+    return t["username"], t["date"], t["content"]
+
 
