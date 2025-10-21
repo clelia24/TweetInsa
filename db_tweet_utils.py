@@ -3,7 +3,8 @@ import os
 import uuid
 from datetime import datetime
 import random
-from database.db_auth_utils import UserNotFoundError
+from data_base import db_auth_utils
+
 
 ############## IDÉES AMÉLIORATIONS ##############
     # Faire une nouvelle ligne dans le dict du user qui fait le tweet : ajouter les tweet_id
@@ -12,7 +13,7 @@ from database.db_auth_utils import UserNotFoundError
 
 #------------ Variables globales ------------#
 DB_FILE = "./DB_Tweets.json"  #chemin de la DB
-DB_AUTH = "./data_base/database_auth.json"
+#DB_AUTH = "./data_base/database_auth.json"
 
 
 
@@ -58,14 +59,7 @@ def _load_users():
         Database des users.
 
     """
-    try:
-        with open(DB_AUTH, "r", encoding="utf-8") as f:
-            content = f.read().strip()
-            if not content:  # fichier vide
-                return {"users": []}
-            return json.loads(content)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return {"users": []}
+    return db_auth_utils._load_db()
 
 
 def _save_tweets(db):
@@ -97,8 +91,7 @@ def _save_users(db):
     -------
     None.
     """
-    with open(DB_AUTH, "w", encoding="utf-8") as f:
-        json.dump(db, f, indent=2)
+    db_auth_utils._save_db(db)
 
 
 
@@ -141,9 +134,11 @@ def post_tweet(username, description):
     for user in db_users["users"]:
         if user["username"] == username:
             user["tweets_posted"].append(tweet_id)
+            db_auth_utils._save_db(db_users)
+            return tweet
             break
     else:
-        raise UserNotFoundError(f"Utilisateur '{username}' introuvable.")
+        raise db_auth_utils.UserNotFoundError(f"Utilisateur '{username}' introuvable.")
 
     
 
