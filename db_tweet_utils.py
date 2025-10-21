@@ -2,6 +2,8 @@ import json
 import os
 import uuid
 from datetime import datetime
+import random
+from database.db_auth_utils import UserNotFoundError
 
 ############## IDÉES AMÉLIORATIONS ##############
     # Faire une nouvelle ligne dans le dict du user qui fait le tweet : ajouter les tweet_id
@@ -45,7 +47,7 @@ def _load_tweets():
     except (FileNotFoundError, json.JSONDecodeError):
         return {"tweets": []}
     
-def _load_auth():
+def _load_users():
     """
     Charge la database contenant les utilisateurs.
     Si le fichier n'existe pas, est vide ou corrompu, retourne {"users": []}.
@@ -60,10 +62,10 @@ def _load_auth():
         with open(DB_AUTH, "r", encoding="utf-8") as f:
             content = f.read().strip()
             if not content:  # fichier vide
-                return {"auth": []}
+                return {"users": []}
             return json.loads(content)
     except (FileNotFoundError, json.JSONDecodeError):
-        return {"auth": []}
+        return {"users": []}
 
 
 def _save_tweets(db):
@@ -135,13 +137,14 @@ def post_tweet(username, description):
     db["tweets"].append(tweet)
     _save_tweets(db)
 
-    db_users = _load_auth() 
-    for user in db_users["users"] :
-        if user["username"]==username :
+    db_users = _load_users() 
+    for user in db_users["users"]:
+        if user["username"] == username:
             user["tweets_posted"].append(tweet_id)
             break
+    else:
+        raise UserNotFoundError(f"Utilisateur '{username}' introuvable.")
 
-    _save_users(db_users)
     
 
     #return tweet
@@ -205,9 +208,18 @@ def delete_tweet(tweet_id):
     before = len(db["tweets"])
     db["tweets"] = [u for u in db["tweets"] if u["tweet_id"] != tweet_id]
     after = len(db["tweets"])
-    if after==before:  #Aucun utilisateur supprimé
+    if after == before:
         raise TweetNotFound(f"Tweet ({tweet_id}) introuvable!")
     _save_tweets(db)
+
+    # Retirer le tweet_id de l'utilisateur correspondant
+    db_users = _load_users()
+    for user in db_users["users"]:
+        if tweet_id in user.get("tweets_posted", []):
+            user["tweets_posted"].remove(tweet_id)
+            break
+    _save_users(db_users)
+
 
 
 def afficher_tweet(tweet_id):
@@ -228,8 +240,27 @@ def afficher_tweet(tweet_id):
     str
         Contenu du post.
     """
-    db = _load_tweets()
     t = get_tweet(tweet_id)
     return t["username"], t["date"], t["content"]
 
+def select_random_tweet():
+    """
+    Pour choisir un tweet aléatoirement dans la DB de tweets.
+
+    Raises
+    ------
+    TweetNotFound
+        Si la DB est vide.
+
+    Returns
+    -------
+    str
+        Id du tweet.
+    """
+    db = _load_tweets()
+    if not db["tweets"]:
+        raise TweetNotFound("Aucun tweet dans la base de données.")
+    random_tweet = random.choice(db["tweets"])
+    return random_tweet["tweet_id"]
+    
 
