@@ -35,6 +35,12 @@
       "username": "Clelia",
       "date": "2025-10-14T11:24:17",
       "content": "test post tweet 2.0"
+    },
+    {
+      "tweet_id": "ac7ee4ef-df0e-4c57-a0f4-cf85da57e9ee",
+      "username": "nom personne connect\u00e9e",
+      "date": "2025-10-21T20:22:20",
+      "content": "test stp \u00e7a marche \r\n"
     }
   ]
 }
