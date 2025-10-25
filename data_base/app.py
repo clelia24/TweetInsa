@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for
-from data_base.db_auth_utils import add_user, test_username, test_email, UsernameExistsError, EmailExistsError
+from db_auth_utils import add_user, test_username, test_email, UsernameExistsError, EmailExistsError
 from db_tweet_utils import get_tweet, afficher_tweet,post_tweet, _load_tweets, TweetNotFound, TweetTooLong 
 from db_tweet_utils import _load_tweets
 from datetime import datetime
@@ -44,8 +44,6 @@ def register():
 def success():
     return "Compte créé avec succès ! Vous pouvez maintenant vous connecter."
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
 
     #------timeline --------
 #route pour afficher un tweet 
@@ -84,5 +82,6 @@ def post_tweet_route():
         print("Erreur lors du post :", e)
         return redirect(url_for('timeline'))
 
-
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
 

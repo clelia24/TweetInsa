@@ -10,6 +10,13 @@
         "faf0e391-90c6-4a51-a1a2-556ee4e8050d",
         "3edbe59d-02f8-4e07-adf4-295dc4a056c0"
       ]
+    },
+    {
+      "username": "cl\u00e9li",
+      "email": "cleli@dkmz",
+      "password_hash": "98d6b83985d4b42a8966c91b43d0fe9f911ec8a69103760d7a9dea4a736745f2",
+      "salt": "1311e00d7a69938b502d7cb6358fff1c",
+      "tweets_posted": []
     }
   ]
 }
