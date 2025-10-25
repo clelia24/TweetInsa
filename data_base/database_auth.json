@@ -47,6 +47,24 @@
       "email": "sdkj@cmxivuds.com",
       "password_hash": "2f60d4fc49ccf573fe9847236b777f2ff4ea694f34d43da2cf4b2093cddc47b2",
       "salt": "1c173b5f886fe124dc138e37ea1af370"
+    },
+    {
+      "username": "cleeeeeeee",
+      "email": "coucou@gmail.com",
+      "password_hash": "f069d0b43432e62f6bdad2b1a765e32c37b828cb9e4e6cc5454086035ec9effa",
+      "salt": "b04e3b477e646ec78d66626f4243b3e1"
+    },
+    {
+      "username": "clel",
+      "email": "clel@test",
+      "password_hash": "48b3a43c56ef61093147cb54c45511a0f7da52d1a87d5a979af6e5cd806b091d",
+      "salt": "84223201d41ca516b41cd0acea7f54f4"
+    },
+    {
+      "username": "Clelia24",
+      "email": "clelia@gmail.com",
+      "password_hash": "ab2253c110246052a0bd09490b5f281e33589b8b134ee8497713e256119aeca3",
+      "salt": "eb6ea9182eaa61ad874771f4662df0ad"
     }
   ]
 }

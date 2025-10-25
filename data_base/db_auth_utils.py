@@ -14,6 +14,8 @@ DB_FILE = "./data_base/database_auth.json"  #chemin de la DB
 
 NB_USERS = 0 #Compteur utilisateurs
 
+BASE_DIR = os.path.dirname(DB_FILE) #répertoire dans lequel se trouve la db
+
 # Créer le fichier database_auth.json s'il n'existe pas
 if not os.path.exists(DB_FILE):
     with open(DB_FILE, "w", encoding="utf-8") as f:
