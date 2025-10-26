@@ -10,7 +10,7 @@ import secrets
     #
 
 #------------ Variables globales ------------#
-DB_FILE = "./data_base/database_auth.json"  #chemin de la DB
+DB_FILE = "database_auth.json"  #chemin de la DB
 
 NB_USERS = 0 #Compteur utilisateurs
 
@@ -223,7 +223,8 @@ def add_user(username, email, password):
         "username": username,
         "email": email,
         "password_hash": hashed,
-        "salt": salt
+        "salt": salt,
+        "tweets": [] #liste des tweets de l'utilisateur
     })
     try:
         _save_db(db)
@@ -330,3 +331,25 @@ def count_users():
         Nombre de comptes dans la DB.
     """
     return NB_USERS
+
+def add_tweet(username, tweet_content):
+    """
+    Ajoute un tweet à l'utilisateur.
+    """
+    db = _load_db()
+    for u in db["users"]:
+        if u["username"] == username:
+            u["tweets"].append({
+                "content": tweet_content,
+                "date": "2025-10-26"  # À remplacer par la date actuelle plus tard
+            })
+            _save_db(db)
+            return True
+    return False
+
+def get_user_tweets(username):
+    """
+    Récupère les tweets d'un utilisateur.
+    """
+    u = get_user(username)
+    return u["tweets"] if u else []

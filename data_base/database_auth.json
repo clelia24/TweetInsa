@@ -65,6 +65,19 @@
       "email": "clelia@gmail.com",
       "password_hash": "ab2253c110246052a0bd09490b5f281e33589b8b134ee8497713e256119aeca3",
       "salt": "eb6ea9182eaa61ad874771f4662df0ad"
+    },
+    {
+      "username": "corent",
+      "email": "corentin@gmail.com",
+      "password_hash": "b9602116898650f978c93cbf40795cfc495c07a17c32c4742752c2f47a198dc3",
+      "salt": "4d2108f6a10dc269bd0e9da886212936"
+    },
+    {
+      "username": "test_cor",
+      "email": "cor@gmail.com",
+      "password_hash": "eb4351fdfb1dbd2e223c9bcb1160e75ac6f3a5597f49427fd325dc992ba6b778",
+      "salt": "d8bcbfad214b11bf7453f509092501f6",
+      "tweets": []
     }
   ]
 }
