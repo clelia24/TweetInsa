@@ -3,6 +3,7 @@ from db_auth_utils import *
 from db_auth_utils import _load_db,_save_db,_hash_password
 import os
 import secrets
+from flask import flash
 
 app = Flask(__name__, template_folder="../frontend")  # Chemin vers tes templates HTML
 app.secret_key = secrets.token_hex(16)
@@ -31,7 +32,7 @@ def register():
             test_email(email)
             # Ajoute l'utilisateur à la base de données
             add_user(username, email, password)
-            return redirect(url_for('success'))  # Redirige vers une page de succès
+            return redirect(url_for('success'))  # Redirige vers une page de succès->on veut être redirigé vers la page de login
         except UsernameExistsError as e:
             error = str(e)
         except EmailExistsError as e:
@@ -116,7 +117,8 @@ def login():
 # Route pour la page de succès
 @app.route('/success')
 def success():
-    return "Compte créé avec succès ! Vous pouvez maintenant vous connecter."
+    flash("Compte créé avec succès ! Vous pouvez maintenant vous connecter.")
+    return redirect(url_for('login', form_type='login'))
 
 @app.route('/login_success')
 def login_success():

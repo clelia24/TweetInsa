@@ -1,0 +1,67 @@
+{
+  "users": [
+    {
+      "username": "laura",
+      "email": "souverin@insa-toulouse.fr",
+      "password_hash": "23bc122db5de3fb82e7180b7bafaf67771c9fc7c760e6c8d495a51df2e544b45",
+      "salt": "35e2b3f4943ee25863aebcbafd0da484",
+      "tweets": []
+    },
+    {
+      "username": "truc",
+      "email": "truc@gmail.com",
+      "password_hash": "1599b5d1b5771f7795228696ab3a2bf34283ca5ca7ae498ee245407e6de4c684",
+      "salt": "f8c888f17a14e6cba1a97807cc1b28a8",
+      "tweets": []
+    },
+    {
+      "username": "test6",
+      "email": "test@mail.com",
+      "password_hash": "8553caee5f0142f3c33751ba30b03734cbbb6d1a403ab2a8cdfeefbfb4db9c46",
+      "salt": "4be2ae3182360173c369ac15bae27d5f",
+      "tweets": []
+    },
+    {
+      "username": "ttttttttttt",
+      "email": "ttttt@mail.fr",
+      "password_hash": "0dd53318f034d1b4cfc82b2f9370369c3ac86908e2f9e7ffc8ee573df59f905d",
+      "salt": "df88cede9e9e50eb5f95cc7fb96b3347",
+      "tweets": []
+    },
+    {
+      "username": "retest",
+      "email": "retest@gmail.com",
+      "password_hash": "5f859e9aa551f37890ff213453aa3fc9d5a74b95404dc95a0ab6912a9cad6b36",
+      "salt": "bae2181f7f7b1108619e9a4684ba6603",
+      "tweets": []
+    },
+    {
+      "username": "laura5",
+      "email": "laura5@gmail.com",
+      "password_hash": "b8577b3d887601d7e95c15e877e5b741a181d29a59be4b7822d3a478ca292d62",
+      "salt": "af8ea564e77e3acd5e445b7be80aff2d",
+      "tweets": []
+    },
+    {
+      "username": "letest",
+      "email": "letest@insa-toulouse.fr",
+      "password_hash": "6a1b3201086e35800316da526ff4520de12347e50d968723199a577df6c20e1a",
+      "salt": "3e681d6a9f21e840e6efbeb3b9a34cc2",
+      "tweets": []
+    },
+    {
+      "username": "compte",
+      "email": "compte@insa.fr",
+      "password_hash": "3c4c51e90b82e620be74d106b2c8fb8e96c7fc2be7cfafcef1a13643027e7ffe",
+      "salt": "609a9f889f2db34803a251b04b1855bb",
+      "tweets": []
+    },
+    {
+      "username": "reretest",
+      "email": "reretest@insa-toulouse.fr",
+      "password_hash": "28095a99d52365b35812d2c629db9cf10118b0f6d44495bf26ac7c8e749ba3ee",
+      "salt": "3628e18f563d0988bf37656b5d2e1772",
+      "tweets": []
+    }
+  ]
+}

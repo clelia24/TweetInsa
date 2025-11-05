@@ -102,6 +102,16 @@
         {% if error %}
             <div class="error">{{ error }}</div>
         {% endif %}
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success" style="margin-bottom: 15px; padding:10px; border-radius:5px;">
+                    {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <div class="form-toggle">
             <button type="button" id="signup-btn" {% if form_type == 'signup' %}class="active"{% endif %} onclick="showForm('signup')">S'inscrire</button>
             <button type="button" id="login-btn" {% if form_type == 'login' %}class="active"{% endif %} onclick="showForm('login')">Se connecter</button>
