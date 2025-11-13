@@ -1,11 +1,15 @@
+import traceback
 from flask import Flask, request, render_template, redirect, url_for, session
-from db_auth_utils import *
-from db_auth_utils import _load_db,_save_db,_hash_password
+from data_base.db_auth_utils import *
+from data_base.db_auth_utils import _load_db,_save_db,_hash_password, get_user_tweets
+from db_tweet_utils import get_tweet, afficher_tweet,post_tweet, _load_tweets, TweetNotFound, TweetTooLong
+from db_tweet_utils import _load_tweets
+from datetime import datetime
 import os
 import secrets
 from flask import flash
 
-app = Flask(__name__, template_folder="../frontend")  # Chemin vers tes templates HTML
+app = Flask(__name__, template_folder="../frontend",static_folder="../static")  # Chemin vers tes templates HTML
 app.secret_key = secrets.token_hex(16)
 # Route pour afficher le formulaire d'inscription
 @app.route('/')
@@ -93,7 +97,40 @@ def profile():
 def timeline():
     if 'username' not in session:
         return redirect(url_for('login'))  # Redirige vers le login si non connecté
-    return render_template('timeline.html')
+    else :
+        db = _load_tweets()
+        tweets = db.get("tweets", [])
+        # Tri décroissant (tweets les plus récents d’abord)
+        tweets = sorted(tweets, key=lambda t: t["date"], reverse=True)
+
+        # Reformater la date pour affichage
+        for t in tweets:
+            try:
+                t["date"] = t["date"].replace("T", "  ")[:17]
+            except Exception:
+                pass  # si jamais une date est déjà formatée, on ignore
+
+        return render_template("timeline.html", tweets=tweets)
+
+@app.route("/post_tweet", methods=["POST"])
+def post_tweet_route():
+    try:
+        content = request.form.get('tweet')  # nom du champ dans ton <textarea>
+        username = session['username']
+
+        if not content or content.strip() == "":
+            return redirect(url_for('timeline'))  # rien à poster → on revient à la timeline
+
+        post_tweet(username, content)  # ta fonction enregistre le tweet dans la DB des tweets  
+        return redirect(url_for('timeline'))  # recharge la timeline avec le nouveau tweet
+
+    except TweetTooLong as e:
+        print(e)
+        return redirect(url_for('timeline'))
+    except Exception as e:
+        print("Erreur lors du post :")
+        traceback.print_exc()
+        return redirect(url_for('timeline'))
 
 
 @app.route('/login', methods=['GET', 'POST'])

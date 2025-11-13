@@ -1,0 +1,46 @@
+{
+  "tweets": [
+    {
+      "tweet_id": "5ef630d0-6a88-4192-951f-c44f86d7c128",
+      "username": "astrid",
+      "date": "2025-10-07T05:06:58",
+      "content": "Ceci est un test."
+    },
+    {
+      "tweet_id": "8819663f-7bc2-4ee7-a764-ea1b4eb6e32d",
+      "username": "astrid",
+      "date": "07/10/2025 05:20",
+      "content": "Ceci est un test."
+    },
+    {
+      "tweet_id": "0379610d-5d45-410a-9a6f-c264b2b3b38c",
+      "username": "astrid",
+      "date": "07/10/2025 05:25",
+      "content": "Ceci est un test."
+    },
+    {
+      "tweet_id": "21d508a8-c93e-456d-ba1d-6b08fef61f4f",
+      "username": "Clelia",
+      "date": "2025-10-14T11:22:59",
+      "content": "test post tweet"
+    },
+    {
+      "tweet_id": "faf0e391-90c6-4a51-a1a2-556ee4e8050d",
+      "username": "Clelia",
+      "date": "2025-10-14T11:24:03",
+      "content": "test post tweet"
+    },
+    {
+      "tweet_id": "3edbe59d-02f8-4e07-adf4-295dc4a056c0",
+      "username": "Clelia",
+      "date": "2025-10-14T11:24:17",
+      "content": "test post tweet 2.0"
+    },
+    {
+      "tweet_id": "ac7ee4ef-df0e-4c57-a0f4-cf85da57e9ee",
+      "username": "nom personne connect\u00e9e",
+      "date": "2025-10-21T20:22:20",
+      "content": "test stp \u00e7a marche \r\n"
+    }
+  ]
+}

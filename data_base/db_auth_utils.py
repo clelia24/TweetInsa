@@ -2,6 +2,7 @@ import json
 import os
 import hashlib
 import secrets
+from db_tweet_utils import get_tweet, TweetNotFound
 
 ############## IDÉES AMÉLIORATIONS ##############
     # Si DB trop grande, faudra réfléchir à comment ne pas la load sur chaque fonction
@@ -349,7 +350,34 @@ def add_tweet(username, tweet_content):
 
 def get_user_tweets(username):
     """
-    Récupère les tweets d'un utilisateur.
+    Récupère tous les tweets complets d'un utilisateur à partir des IDs
+    stockés dans la base des utilisateurs.
     """
-    u = get_user(username)
-    return u["tweets"] if u else []
+    user = get_user(username)
+    if not user:
+        raise UserNotFoundError(f"Utilisateur '{username}' introuvable.")
+    
+    tweet_ids = user.get("tweets", user.get("tweets", []))  # compatibilité entre noms de clé
+    
+    tweets = []
+    for tweet_id in tweet_ids:
+        try:
+            tweet = get_tweet(tweet_id)
+            tweets.append(tweet)
+        except TweetNotFound:
+            print(f"Tweet {tweet_id} introuvable — ignoré.")
+            continue
+
+    # Trier du plus récent au plus ancien si la clé "date" existe
+    tweets.sort(key=lambda t: t.get("date", ""), reverse=True)
+
+    # Formatage lisible de la date
+    for t in tweets:
+        try:
+            t["date"] = t["date"].replace("T", " ")[:16]
+        except Exception:
+            pass
+
+    return tweets
+
+

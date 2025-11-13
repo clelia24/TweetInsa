@@ -2,36 +2,150 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Profil - {{user["username"]}} </title>
+    <title>Profil - {{ user["username"] }}</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .profile-info { background: #f5f8fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        .tweet { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
-        .edit-btn { background: #1da1f2; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        :root {
+            --blue: #1da1f2;
+            --bg-light: #f5f8fa;
+            --border: #e1e8ed;
+            --text-dark: #14171a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--blue);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.4em;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+        }
+
+        .profile-info {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .profile-info p {
+            margin: 8px 0;
+        }
+
+        .edit-btn {
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s ease;
+            display: inline-block;
+            margin-top: 10px; /* 👈 ajoute un petit espace au-dessus */
+        }
+
+        .edit-btn:hover {
+            background: #0d8de0;
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .tweet {
+            border: 1px solid var(--border);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .tweet:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .tweet p {
+            margin: 0 0 8px 0;
+        }
+
+        .tweet small {
+            color: #657786;
+            font-size: 0.85em;
+        }
+
+        footer {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        footer a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-    <h1>Profil de {{ user["username"] }}</h1>
+    <header>
+        <h1>Profil de {{ user["username"] }}</h1>
+        <a href="/timeline" class="edit-btn">← Retour à la timeline</a>
+    </header>
 
-    <div class="profile-info">
-        <p><strong>Email:</strong> {{ user["email"] }}</p>
-        <a href="/edit_profile" class="edit-btn">Modifier le profil</a>
+    <div class="container">
+        <div class="profile-info">
+            <p><strong>Nom d’utilisateur :</strong> {{ user["username"] }}</p>
+            <p><strong>Email :</strong> {{ user["email"] }}</p>
+            <a href="/edit_profile" class="edit-btn">Modifier le profil</a>
+        </div>
+
+        <h2>Mes tweets</h2>
+
+        {% if tweets %}
+            {% for tweet in tweets %}
+                <div class="tweet">
+                    <p>{{ tweet["content"] }}</p>
+                    <small>Posté le {{ tweet["date"] }}</small>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Aucun tweet pour le moment.</p>
+        {% endif %}
     </div>
 
-    <h2>Mes tweets</h2>
-    {% if tweets %}
-        {% for tweet in tweets %}
-            <div class="tweet">
-                <p>{{ tweet["content"] }}</p>
-                <small>{{ tweet["date"] }}</small>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>Aucun tweet pour le moment.</p>
-    {% endif %}
-
-    <div class="header">
-    <a href="/timeline" class="edit-btn">Retour à la timeline</a>
-    </div>
+    <footer>
+        <a href="/timeline">Retour à la timeline</a>
+    </footer>
 </body>
 </html>
+
