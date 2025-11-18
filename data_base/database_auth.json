@@ -93,6 +93,13 @@
         "d574fd16-21d1-40c5-bf8a-a430d9e1401f",
         "3386dd62-513d-4f01-b7cb-cb9b5763c21c"
       ]
+    },
+    {
+      "username": "astrid1",
+      "email": "astrid1@gmail.com",
+      "password_hash": "4615df8992d67259e6d22cb2ab2fc9c3611e3ea05e35bf587b08bff0675698e4",
+      "salt": "a5be6f2045a07d14c7e1418d185cde7d",
+      "tweets": []
     }
   ]
 }

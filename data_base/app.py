@@ -1,7 +1,7 @@
 import traceback
-from flask import Flask, request, render_template, redirect, url_for, session
-from db_auth_utils import *
-from db_auth_utils import _load_db,_save_db,_hash_password, get_user_tweets
+from flask import Flask, request, render_template, redirect, url_for, session, jsonify, flash
+from .db_auth_utils import *
+from .db_auth_utils import _load_db,_save_db,_hash_password, get_user_tweets
 from db_tweet_utils import get_tweet, afficher_tweet,post_tweet, _load_tweets, TweetNotFound, TweetTooLong
 from db_tweet_utils import _load_tweets
 from datetime import datetime
@@ -160,6 +160,27 @@ def success():
 @app.route('/login_success')
 def login_success():
     return "Connexion réussie ! Bienvenue sur votre compte."
+
+# Route pour la barre de recherche
+@app.route("/explore")
+def explore():
+    return render_template("explore.html")
+
+# Route pour chercher user
+@app.route("/search_user")
+def search_user():
+    query = request.args.get("q", "").strip().lower()
+
+    db =_load_db()
+    users = db["users"]
+
+    # Filtrer les usernames commençant par la requête
+    matches = sorted(
+        [u["username"] for u in users if u["username"].lower().startswith(query)]
+    )
+
+    return jsonify(matches)
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
