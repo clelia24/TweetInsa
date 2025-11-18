@@ -42,7 +42,7 @@ class InvalidPasswordError(Exception):
     pass
 
 class UserNotFoundError(Exception):
-    """Levée quand essai de suppression d'un utilisateur non existant"""
+    """Levée quand essai de suppression d'un utilisateur non existant ou qu'on cherche à suivre/ne plus suivre un compte non existant"""
     pass
 
 
@@ -165,6 +165,31 @@ def test_username(username):
     if any(u["username"] == username for u in db["users"]):
         raise UsernameExistsError(f"Nom d'utilisateur '{username}' déjà utilisé!")
     return True
+
+def user_exists(username):
+    """
+    Vérifie si le username est dans la db.
+
+    Parameters
+    ----------
+    username : str
+        Nom d'utilisateur.
+
+    Raises
+    ------
+    UserNotFoundError
+        Si le username ne correspond à aucun user de la db.
+
+    Returns
+    -------
+    bool
+        True si username est dans la db.
+    """
+    db = _load_db()
+    if not any(u["username"] == username for u in db["users"]):
+        raise UserNotFoundError(f"L'utilisateur n'est pas dans la db")
+    return True
+
 
 def test_email(email):
     """
@@ -380,4 +405,109 @@ def get_user_tweets(username):
 
     return tweets
 
+def follow(username1, username2):
+    """
+    Permet à l'user1 de suivre l'user2.
+    On ajoute l'user2 à la liste des comptes suivis de l'user1 et on ajoute l'user1 à la liste des abonnés de l'user2.
 
+    Parameters
+    ----------
+    username1 : str
+        Nom d'utilisateur de l'user1.
+    username1 : str
+        Nom d'utilisateur de l'user1.
+
+    Raises
+    ------
+    UserNotFoundError
+        Si le username n'est pas trouvé dans la db.
+
+    Returns
+    -------
+    None.
+
+    """
+    db = _load_db()
+    if user_exists(username1) and user_exists(username2) :
+        user1=None
+        user2=None
+        for user in db["users"]:
+            if user["username"] == username1:
+                user1=user
+                if "followed" not in user:
+                    user["followed"] = []
+                if username2 not in user["followed"] :
+                    user["followed"].append(username2)
+                
+            elif user["username"]==username2 :
+                user2=user
+                if "followers" not in user:
+                    user["followers"] = []
+                if username1 not in user["followers"]:
+                    user["followers"].append(username1)
+            if user1 and user2 :
+                break
+        
+        _save_db(db)
+
+
+def unfollow(username1, username2):
+    """
+    Permet à l'user1 de ne plus suivre l'user2.
+    On enlève l'user2 à la liste des comptes suivis de l'user1 et on retire l'user1 à la liste des abonnés de l'user2.
+
+    Parameters
+    ----------
+    username1 : str
+        Nom d'utilisateur de l'user1.
+    username1 : str
+        Nom d'utilisateur de l'user1.
+
+    Raises
+    ------
+    UserNotFoundError
+        Si le username n'est pas trouvé dans la db.
+
+    Returns
+    -------
+    None.
+
+    """
+    db = _load_db()
+    if user_exists(username1) and user_exists(username2) :
+        user1=None
+        user2=None
+        for user in db["users"]:
+            if user["username"] == username1:
+                user1=user
+                
+            elif user["username"]==username2 :
+                user2=user
+                
+            if user1 and user2 :
+                break
+        
+        # On retire user2 de la liste des comptes suivis par user2
+        followed = user1.get("followed", [])
+        if username2 not in followed:
+            raise UserNotFoundError(
+                f"L'utilisateur '{username1}' ne suit pas '{username2}'"
+            )
+        followed.remove(username2)
+
+        # On retire user1 de la liste des comptes abonnés à user2
+        followers = user2.get("followers", [])
+        if username1 not in followers:
+            raise UserNotFoundError(
+                f"L'utilisateur '{username1}' n'est pas abonné à '{username2}'"
+            )
+        followers.remove(username1)
+
+        #On enregistre la db
+        _save_db(db)
+                
+            
+            
+    
+    
+   
