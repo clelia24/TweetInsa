@@ -91,6 +91,42 @@
         "d574fd16-21d1-40c5-bf8a-a430d9e1401f",
         "3386dd62-513d-4f01-b7cb-cb9b5763c21c"
       ]
+    },
+    {
+      "username": "blabla",
+      "email": "blabla@gmail.vom",
+      "password_hash": "ce7b560a7b543fc96591cdd2903cb5ef5d95b34917769867ae9f5bbaa01858d2",
+      "salt": "85c45d8c46aff5e8f0c622f27ad681b7",
+      "tweets": []
+    },
+    {
+      "username": "non",
+      "email": "non@gmail.com",
+      "password_hash": "169642ebc8c0e8a202caf24e16d5c3eef8dbf88efe7e8056d040573fdf81efbd",
+      "salt": "8b1632d32c70342eedf1e709d59b9f8c",
+      "tweets": []
+    },
+    {
+      "username": "aaaastrid",
+      "email": "aaaastrid@gmail.com",
+      "password_hash": "a56c083478678158ed1ea9cc60b33714d313d0a109e3cc9891cd8817c7837855",
+      "salt": "c80a7289a004e753b82fd976d86a2c99",
+      "tweets": [
+        "5188db08-b69b-48ea-9819-a09e2c953af6",
+        "46331a59-fe32-4eef-85fb-3da520f60cef",
+        "6a4d9903-585a-4a31-a23a-2103c60761e6",
+        "fbdfe296-1fc5-42b0-a6a1-7d5f75456122",
+        "a1eef69a-acce-4bcf-a1cd-1e3147230cfe",
+        "cebeea20-7b44-4f6b-ad3e-a2674443bdc3",
+        "99c33ab7-4d37-47ac-8c58-71238ba8eda1",
+        "ec578739-9dae-4408-9542-f920359dbe3b",
+        "3c415f2a-2901-4d67-8e07-3509949af0f2",
+        "7563729c-8c1c-4d5c-981e-68cd578c34ec",
+        "d3024079-3968-4300-91d5-37f10fb67d34",
+        "6adc98d9-9f6a-4864-9ee7-a4c4326f7d09",
+        "a40d9779-fe26-4558-931b-b2ce0b0bf954",
+        "8abe1909-6566-422c-8219-20f0e8628d9b"
+      ]
     }
   ]
 }
