@@ -105,6 +105,15 @@
       "password_hash": "5c98d7d9656af476495c0c3927673732eb5ef606ab73220fd9019431dba628b3",
       "salt": "cf36331dbb3cce60192bcf2e8ff4ec67",
       "tweets": []
+    },
+    {
+      "username": "nom",
+      "email": "nom@gmail.com",
+      "password_hash": "f48cc49e254e9dc0117533d512100f48dda4b2b7b7d4245470537119aefcf892",
+      "salt": "ce9ddd3a7a0c05946503ae6537419d56",
+      "tweets": [
+        "b89fd9da-cdec-4d07-8100-09fa1668a6d8"
+      ]
     }
   ]
 }

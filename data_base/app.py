@@ -161,6 +161,27 @@ def success():
 def login_success():
     return "Connexion réussie ! Bienvenue sur votre compte."
 
+@app.route('/user/<username>')
+def profil_autre(username):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    profil_autre = get_user(username)
+
+    if username == session['username']:
+        return redirect(url_for('profile'))
+
+    if not profil_autre:
+        return "Utilisateur introuvable", 404
+
+    tweets = get_user_tweets(username)
+
+    return render_template(
+        'profil_autre.html',
+        profil_autre=profil_autre,
+        tweets=tweets
+    )
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
 

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil - {{ profil_autre["username"] }}</title>
+    <style>
+        :root {
+            --blue: #1da1f2;
+            --bg-light: #f5f8fa;
+            --border: #e1e8ed;
+            --text-dark: #14171a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--blue);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.4em;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+        }
+
+        .profile-info {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .profile-info p {
+            margin: 8px 0;
+        }
+
+        .follow-btn {
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s ease;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .follow-btn:hover {
+            background: #0d8de0;
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .tweet {
+            border: 1px solid var(--border);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .tweet:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .tweet p {
+            margin: 0 0 8px 0;
+        }
+
+        .tweet small {
+            color: #657786;
+            font-size: 0.85em;
+        }
+
+        footer {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        footer a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Profil de {{ profil_autre["username"] }}</h1>
+        <a href="/timeline" class="follow-btn">← Retour à la timeline</a>
+    </header>
+
+    <div class="container">
+        <div class="profile-info">
+            <p><strong>Nom d’utilisateur :</strong> {{ profil_autre["username"] }}</p>
+            <p><strong>Comptes suivis :</strong> {{ profil_autre["followed"] }}</p>
+            <p><strong>Abonnés :</strong> {{ profil_autre["followers"] }}</p>
+            <a href="/follow/{{ profil_autre['id'] }}" class="follow-btn">Suivre</a>
+        </div>
+
+        <h2>Tweets de {{ profil_autre["username"] }}</h2>
+
+        {% if tweets %}
+            {% for tweet in tweets %}
+                <div class="tweet">
+                    <p>{{ tweet["content"] }}</p>
+                    <small>Posté le {{ tweet["date"] }}</small>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Aucun tweet pour le moment.</p>
+        {% endif %}
+    </div>
+
+    <footer>
+        <a href="/timeline">Retour à la timeline</a>
+    </footer>
+</body>
+</html>

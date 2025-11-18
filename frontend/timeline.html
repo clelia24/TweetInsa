@@ -41,9 +41,20 @@
         <h2>Accueil</h2>
         <div id="tweetList">
             {% for t in tweets %}
-            <div class="tweet">
-                <strong>@{{ t.username }}</strong> — <em>{{ t.date }}</em><br>
-                {{ t.content }}
+            <div class="post">
+                <div class="user">
+                    <strong>
+                        <!-- Utilise le nom d'endpoint correct : other_profile (ou change si ton endpoint s'appelle autrement) -->
+                        <a href="{{ url_for('profil_autre', username=t.username) }}" style="text-decoration:none; color:inherit;">
+                            @{{ t.username }}
+                        </a>
+                    </strong>
+                    — <em style="font-weight:normal; color:#657786;">{{ t.date }}</em>
+                </div>
+
+                <div class="content">
+                    {{ t.content }}
+                </div>
             </div>
             <hr>
             {% endfor %}
