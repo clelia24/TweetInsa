@@ -181,6 +181,21 @@ def search_user():
 
     return jsonify(matches)
 
+# Route pour afficher le profil d'un username
+@app.route("/profile/<username>")
+def profile_by_name(username):
+    user = get_user(username)
+    if user:
+        return render_template("profile.html", user=user, tweets=get_user_tweets(username))
+
+    # sinon → suggestions
+    db = _load_db()
+    suggestions = [u["username"] for u in db["users"] if username.lower() in u["username"].lower()]
+
+    return render_template("user_not_found.html", query=username, suggestions=suggestions)
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

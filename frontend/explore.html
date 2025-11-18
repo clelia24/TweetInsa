@@ -2,125 +2,98 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Rechercher un utilisateur</title>
-    <style>
-        :root {
-            --blue: #1da1f2;
-            --bg-light: #f5f8fa;
-            --border: #e1e8ed;
-            --text-dark: #14171a;
-        }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: var(--blue);
-            color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            margin: 0;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            font-size: 1em;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            margin-bottom: 10px;
-        }
-
-        .suggestions {
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: white;
-            display: none;
-            margin-top: -5px;
-        }
-
-        .suggestion-item {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .suggestion-item:hover {
-            background: var(--bg-light);
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche — TwitINSA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
 
-<header>
-    <h1>Explorer</h1>
-    <a href="/timeline" style="color: white; text-decoration: none;">← Retour</a>
-</header>
+<!-- MENU FLOTTANT -->
+<div class="floating-menu">
+    <a href="{{ url_for('timeline') }}">
+        <img src="{{ url_for('static', filename='images/home.png') }}" width="28">
+    </a>
 
-<div class="container">
-    <input type="text" id="searchBar" placeholder="Rechercher un utilisateur...">
-    <div id="suggestions" class="suggestions"></div>
+    <a href="{{ url_for('explore') }}">
+        <img src="{{ url_for('static', filename='images/Recherche.png') }}" width="28">
+    </a>
+
+    <a href="{{ url_for('profile') }}">
+        <img src="{{ url_for('static', filename='images/profile-2.png') }}" width="28">
+    </a>
+
+    <button id="openModalBtnFloating">+</button>
 </div>
 
+<!-- BARRE LATERALE -->
+<div class="bloc-gauche">
+    <img src="{{ url_for('static', filename='images/Logo-twitter.png') }}" width="50" style="margin-bottom:20px;">
+
+    <a href="{{ url_for('timeline') }}">
+        <button><img src="{{ url_for('static', filename='images/home.png') }}" width="24"> Accueil</button>
+    </a>
+
+    <a href="{{ url_for('explore') }}">
+        <button><img src="{{ url_for('static', filename='images/Recherche.png') }}" width="24"> Recherche</button>
+    </a>
+
+    <button><img src="{{ url_for('static', filename='images/notif.png') }}" width="24"> Notifications</button>
+    <button><img src="{{ url_for('static', filename='images/messages.png') }}" width="24"> Messages</button>
+
+    <a href="{{ url_for('profile') }}">
+        <button><img src="{{ url_for('static', filename='images/profile-2.png') }}" width="24"> Profil</button>
+    </a>
+</div>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="posts">
+    <h2>Recherche d’utilisateur</h2>
+
+    <input 
+        type="text" 
+        id="searchBar" 
+        placeholder="Rechercher un utilisateur..." 
+        onkeyup="searchUser(event)"
+        class="search-input"
+    >
+
+    <ul id="suggestions" class="suggestions-list"></ul>
+</div>
+
+<!-- JS -->
 <script>
-    const searchBar = document.getElementById("searchBar");
-    const suggestionsBox = document.getElementById("suggestions");
+function searchUser(event) {
+    const query = document.getElementById("searchBar").value;
+    const suggestionBox = document.getElementById("suggestions");
 
-    searchBar.addEventListener("input", () => {
-        const query = searchBar.value.trim();
+    if (event.key === "Enter") {
+        window.location.href = "/profile/" + query;
+        return;
+    }
 
-        if (query === "") {
-            suggestionsBox.style.display = "none";
-            suggestionsBox.innerHTML = "";
-            return;
-        }
+    if (query.length === 0) {
+        suggestionBox.innerHTML = "";
+        return;
+    }
 
-        fetch(`/search_user?q=` + encodeURIComponent(query))
-            .then(response => response.json())
-            .then(data => {
-                // data est une liste de usernames
-                if (data.length === 0) {
-                    suggestionsBox.style.display = "none";
-                    suggestionsBox.innerHTML = "";
-                    return;
-                }
+    fetch(`/search_user?q=${query}`)
+        .then(res => res.json())
+        .then(data => {
+            suggestionBox.innerHTML = "";
+            data.forEach(username => {
+                const li = document.createElement("li");
+                li.textContent = "@" + username;
+                li.classList.add("suggestion-item");
 
-                suggestionsBox.innerHTML = "";
-                suggestionsBox.style.display = "block";
+                li.onclick = () => {
+                    window.location.href = "/profile/" + username;
+                };
 
-                data.forEach(username => {
-                    const item = document.createElement("div");
-                    item.classList.add("suggestion-item");
-                    item.textContent = username;
-
-                    item.addEventListener("click", () => {
-                        window.location.href = "/profile?user=" + username;
-                    });
-
-                    suggestionsBox.appendChild(item);
-                });
+                suggestionBox.appendChild(li);
             });
-    });
+        });
+}
 </script>
 
 </body>
