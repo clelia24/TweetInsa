@@ -1,7 +1,7 @@
 import traceback
 from flask import Flask, request, render_template, redirect, url_for, session
-from data_base.db_auth_utils import *
-from data_base.db_auth_utils import _load_db,_save_db,_hash_password, get_user_tweets
+from db_auth_utils import *
+from db_auth_utils import _load_db,_save_db,_hash_password, get_user_tweets
 from db_tweet_utils import get_tweet, afficher_tweet,post_tweet, _load_tweets, TweetNotFound, TweetTooLong
 from db_tweet_utils import _load_tweets
 from datetime import datetime

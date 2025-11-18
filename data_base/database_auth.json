@@ -77,7 +77,9 @@
       "email": "cor@gmail.com",
       "password_hash": "eb4351fdfb1dbd2e223c9bcb1160e75ac6f3a5597f49427fd325dc992ba6b778",
       "salt": "d8bcbfad214b11bf7453f509092501f6",
-      "tweets": []
+      "tweets": [
+        "2d4b1227-e378-4f83-b8fa-dfc89373041e"
+      ]
     },
     {
       "username": "souverinlaura",
