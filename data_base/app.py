@@ -54,26 +54,90 @@ def edit_profile():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    if request.method == 'POST':
-        new_email = request.form.get('email')
-        new_password = request.form.get('password')
+    current_user = get_user(session['username'])
+    if not current_user:
+        return redirect(url_for('login'))
 
-        # Mettre à jour l'email et le mot de passe
-        db = _load_db()
-        for u in db["users"]:
-            if u["username"] == session['username']:
-                if new_email:
-                    u["email"] = new_email
-                if new_password:
-                    hashed, salt = _hash_password(new_password)
-                    u["password_hash"] = hashed
-                    u["salt"] = salt
-                _save_db(db)
-                break
+    if request.method == 'GET':
+        # Affiche le formulaire d'édition avec les valeurs actuelles
+        return render_template('edit_profile.html', user=current_user)
 
-        return redirect(url_for('profile'))
+    # === POST ===
+    new_email = request.form.get('email') or None
+    new_username = request.form.get('username') or None
+    new_password = request.form.get('password') or None
 
-    return render_template('edit_profile.html')
+    errors = []
+
+    # Vérifications (sans modifier la DB tant que tout n'est pas validé)
+    # test_email/test_username/test_password peuvent renvoyer False ou lever des erreurs :
+    try:
+        if new_email:
+            valid = test_email(new_email)
+            if not valid:
+                errors.append("Adresse e-mail invalide ou déjà utilisée.")
+    except Exception as e:
+        # Si tes fonctions lèvent des exceptions, on capture et on affiche un message lisible
+        errors.append(f"Erreur validation email : {str(e)}")
+
+    try:
+        if new_username:
+            valid = test_username(new_username)
+            if not valid:
+                errors.append("Nom d’utilisateur invalide ou déjà pris.")
+    except Exception as e:
+        errors.append(f"Erreur validation username : {str(e)}")
+
+    try:
+        if new_password:
+            valid = test_password(new_password)
+            if not valid:
+                errors.append("Mot de passe trop faible ou non conforme.")
+    except Exception as e:
+        errors.append(f"Erreur validation mot de passe : {str(e)}")
+
+    # Si erreurs -> rester sur la page d'édition et afficher les erreurs (ne rien sauver)
+    if errors:
+        return render_template(
+            'edit_profile.html',
+            errors=errors,
+            user=current_user,
+            # Pré-remplir les champs côté client si tu veux (attention au password)
+            form_email=new_email or current_user.get('email', ''),
+            form_username=new_username or current_user.get('username', '')
+        )
+
+    # Pas d'erreurs -> mettre à jour en une seule passe
+    db = _load_db()
+    updated = False
+    for u in db.get("users", []):
+        if u.get("username") == session['username']:
+            if new_email:
+                u["email"] = new_email
+            if new_username:
+                u["username"] = new_username
+                session['username'] = new_username  # mettre à jour la session
+            if new_password:
+                hashed, salt = _hash_password(new_password)
+                u["password_hash"] = hashed
+                u["salt"] = salt
+            updated = True
+            break
+
+    if updated:
+        _save_db(db)
+        # Recharger l'utilisateur mis à jour pour l'affichage
+        user_after = get_user(session['username'])
+        return render_template(
+            'profile.html',
+            success="Votre profil a été mis à jour avec succès !",
+            user=user_after
+        )
+    else:
+        # Cas improbable : l'utilisateur n'a pas été trouvé dans la DB (race condition)
+        errors = ["Impossible de retrouver l'utilisateur dans la base de données."]
+        return render_template('edit_profile.html', errors=errors, user=current_user)
+    
 
 # Route pour afficher le profil (accessible uniquement si connecté)
 @app.route('/profile')

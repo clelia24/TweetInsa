@@ -122,8 +122,14 @@
         <a href="/timeline" class="edit-btn">← Retour à la timeline</a>
     </header>
 
+
     <div class="container">
         <div class="profile-info">
+            {% if success %}
+                <div class="success-box">
+                    {{ success }}
+                </div>
+            {% endif %}
             <p><strong>Nom d’utilisateur :</strong> {{ user["username"] }}</p>
             <p><strong>Email :</strong> {{ user["email"] }}</p>
 

@@ -82,16 +82,17 @@
       ]
     },
     {
-      "username": "souverinlaura",
+      "username": "laurasvrn",
       "email": "souverinlaura1@gmail.com",
-      "password_hash": "134eeb36fe1e3a7b914bac8aece7f71abd444fbd9d8a9eb0ac3ad1561e8ecbec",
-      "salt": "6dfd52317684687b3053a669454717fc",
+      "password_hash": "65d8e4a672405a1e51ef7f28908eb7f625059ed0d3291a660df2b0eac7f0d4a7",
+      "salt": "5cec56890e909160260014af84a84cf1",
       "tweets": [
         "499ea362-0ff5-4f82-9008-3c2b0f41c014",
         "513993ff-70a6-4fc9-a18b-346e04b5e8d6",
         "004c43e0-ddd0-4d41-b9dc-30197ba4b226",
         "d574fd16-21d1-40c5-bf8a-a430d9e1401f",
-        "3386dd62-513d-4f01-b7cb-cb9b5763c21c"
+        "3386dd62-513d-4f01-b7cb-cb9b5763c21c",
+        "fbe76cad-e3b7-4d6e-afe4-b684f5c16542"
       ]
     },
     {
@@ -135,6 +136,13 @@
       "email": "astrid1@gmail.com",
       "password_hash": "4615df8992d67259e6d22cb2ab2fc9c3611e3ea05e35bf587b08bff0675698e4",
       "salt": "a5be6f2045a07d14c7e1418d185cde7d",
+      "tweets": []
+    },
+    {
+      "username": "nom",
+      "email": "souverin@insa-toulouse.fr",
+      "password_hash": "f7a09016c4c5e4a2603a3635658719519945c0f6c8847788041b86344359638d",
+      "salt": "73d8d40eb72287053dbbb416ee14c8ad",
       "tweets": []
     }
   ]
