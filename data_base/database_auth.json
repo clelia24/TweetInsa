@@ -91,6 +91,20 @@
         "d574fd16-21d1-40c5-bf8a-a430d9e1401f",
         "3386dd62-513d-4f01-b7cb-cb9b5763c21c"
       ]
+    },
+    {
+      "username": "Testtest",
+      "email": "testtest@test",
+      "password_hash": "783b5dbe1b5cd2599af0c03c9f3d26870bb1f19f08b046f54a15b64f0c29aa2c",
+      "salt": "8e45be6198d0a4a55c0d624b45b3b90e",
+      "tweets": []
+    },
+    {
+      "username": "Abc",
+      "email": "abc@abc",
+      "password_hash": "5c98d7d9656af476495c0c3927673732eb5ef606ab73220fd9019431dba628b3",
+      "salt": "cf36331dbb3cce60192bcf2e8ff4ec67",
+      "tweets": []
     }
   ]
 }
