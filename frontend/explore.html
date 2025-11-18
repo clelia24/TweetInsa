@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche — TwitINSA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<!-- MENU FLOTTANT -->
+<div class="floating-menu">
+    <a href="{{ url_for('timeline') }}">
+        <img src="{{ url_for('static', filename='images/home.png') }}" width="28">
+    </a>
+
+    <a href="{{ url_for('explore') }}">
+        <img src="{{ url_for('static', filename='images/Recherche.png') }}" width="28">
+    </a>
+
+    <a href="{{ url_for('profile') }}">
+        <img src="{{ url_for('static', filename='images/profile-2.png') }}" width="28">
+    </a>
+
+    <button id="openModalBtnFloating">+</button>
+</div>
+
+<!-- BARRE LATERALE -->
+<div class="bloc-gauche">
+    <img src="{{ url_for('static', filename='images/Logo-twitter.png') }}" width="50" style="margin-bottom:20px;">
+
+    <a href="{{ url_for('timeline') }}">
+        <button><img src="{{ url_for('static', filename='images/home.png') }}" width="24"> Accueil</button>
+    </a>
+
+    <a href="{{ url_for('explore') }}">
+        <button><img src="{{ url_for('static', filename='images/Recherche.png') }}" width="24"> Recherche</button>
+    </a>
+
+    <button><img src="{{ url_for('static', filename='images/notif.png') }}" width="24"> Notifications</button>
+    <button><img src="{{ url_for('static', filename='images/messages.png') }}" width="24"> Messages</button>
+
+    <a href="{{ url_for('profile') }}">
+        <button><img src="{{ url_for('static', filename='images/profile-2.png') }}" width="24"> Profil</button>
+    </a>
+</div>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="posts">
+    <h2>Recherche d’utilisateur</h2>
+
+    <input 
+        type="text" 
+        id="searchBar" 
+        placeholder="Rechercher un utilisateur..." 
+        onkeyup="searchUser(event)"
+        class="search-input"
+    >
+
+    <ul id="suggestions" class="suggestions-list"></ul>
+</div>
+
+<!-- JS -->
+<script>
+function searchUser(event) {
+    const query = document.getElementById("searchBar").value;
+    const suggestionBox = document.getElementById("suggestions");
+
+    if (event.key === "Enter") {
+        window.location.href = "/profile/" + query;
+        return;
+    }
+
+    if (query.length === 0) {
+        suggestionBox.innerHTML = "";
+        return;
+    }
+
+    fetch(`/search_user?q=${query}`)
+        .then(res => res.json())
+        .then(data => {
+            suggestionBox.innerHTML = "";
+            data.forEach(username => {
+                const li = document.createElement("li");
+                li.textContent = "@" + username;
+                li.classList.add("suggestion-item");
+
+                li.onclick = () => {
+                    window.location.href = "/profile/" + username;
+                };
+
+                suggestionBox.appendChild(li);
+            });
+        });
+}
+</script>
+
+</body>
+</html>
+

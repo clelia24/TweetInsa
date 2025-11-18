@@ -66,7 +66,7 @@
             font-weight: bold;
             transition: background 0.2s ease;
             display: inline-block;
-            margin-top: 10px; /* 👈 ajoute un petit espace au-dessus */
+            margin-top: 10px; 
         }
 
         .edit-btn:hover {
@@ -126,10 +126,20 @@
         <div class="profile-info">
             <p><strong>Nom d’utilisateur :</strong> {{ user["username"] }}</p>
             <p><strong>Email :</strong> {{ user["email"] }}</p>
-            <a href="/edit_profile" class="edit-btn">Modifier le profil</a>
+
+            {% if session['username'] == user["username"] %}
+                <a href="/edit_profile" class="edit-btn">Modifier le profil</a>
+            {% endif %}
         </div>
 
-        <h2>Mes tweets</h2>
+        <h2>
+        {% if session['username'] == user["username"] %}
+            Mes tweets
+        {% else %}
+            Tweets
+        {% endif %}
+        </h2>
+
 
         {% if tweets %}
             {% for tweet in tweets %}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Utilisateur introuvable — TwitINSA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<!-- MENU FLOTTANT -->
+<div class="floating-menu">
+    <a href="{{ url_for('timeline') }}">
+        <img src="{{ url_for('static', filename='images/home.png') }}" width="28">
+    </a>
+
+    <a href="{{ url_for('explore') }}">
+        <img src="{{ url_for('static', filename='images/Recherche.png') }}" width="28">
+    </a>
+
+    <a href="{{ url_for('profile') }}">
+        <img src="{{ url_for('static', filename='images/profile-2.png') }}" width="28">
+    </a>
+</div>
+
+<!-- BARRE LATERALE -->
+<div class="bloc-gauche">
+    <img src="{{ url_for('static', filename='images/Logo-twitter.png') }}" width="50" style="margin-bottom:20px;">
+
+    <a href="{{ url_for('timeline') }}">
+        <button><img src="{{ url_for('static', filename='images/home.png') }}" width="24"> Accueil</button>
+    </a>
+
+    <a href="{{ url_for('explore') }}">
+        <button><img src="{{ url_for('static', filename='images/recherche.png') }}" width="24"> Recherche</button>
+    </a>
+
+    <button><img src="{{ url_for('static', filename='images/notif.png') }}" width="24"> Notifications</button>
+    <button><img src="{{ url_for('static', filename='images/messages.png') }}" width="24"> Messages</button>
+
+    <a href="{{ url_for('profile') }}">
+        <button><img src="{{ url_for('static', filename='images/profile-2.png') }}" width="24"> Profil</button>
+    </a>
+</div>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="posts">
+    <h2>Utilisateur introuvable</h2>
+
+    <p>Aucun utilisateur nommé <strong>{{ query }}</strong>.</p>
+
+    {% if suggestions %}
+        <p>Peut-être recherchez-vous :</p>
+        <ul class="suggestions-list">
+            {% for s in suggestions %}
+                <li class="suggestion-item">
+                    <a href="/profile/{{ s }}">@{{ s }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+</body>
+</html>
+
