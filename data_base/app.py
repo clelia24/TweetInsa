@@ -1,24 +1,38 @@
 import traceback
 from flask import Flask, request, render_template, redirect, url_for, session, jsonify, flash
 from .db_auth_utils import *
-from .db_auth_utils import _load_db,_save_db,_hash_password, get_user_tweets
-from db_tweet_utils import get_tweet, afficher_tweet,post_tweet, _load_tweets, TweetNotFound, TweetTooLong
-from db_tweet_utils import _load_tweets
+from .db_tweet_utils import *
+from .db_tweet_utils import _load_tweets, _save_tweets
+from .db_auth_utils import _load_db, _save_db
 from datetime import datetime
 import os
 import secrets
-from flask import flash
 
-app = Flask(__name__, template_folder="../frontend",static_folder="../static")  # Chemin vers tes templates HTML
+app = Flask(__name__, template_folder="../frontend", static_folder="../static")
 app.secret_key = secrets.token_hex(16)
-# Route pour afficher le formulaire d'inscription
+
+# ================================================
+# CONTEXT PROCESSOR → session dispo partout !
+# ================================================
+@app.context_processor
+def inject_session():
+    return {'session': session}
+
+# Optionnel mais ultra pratique : current_user dispo partout aussi
+@app.context_processor
+def inject_user():
+    if 'username' in session:
+        return {'current_user': get_user(session['username'])}
+    return {'current_user': None}
+
+# ================================================
+# ROUTES
+# ================================================
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
-
-# Route pour traiter l'inscription (méthode POST)
 @app.route('/register', methods=['POST'])
 def register():
     username = request.form.get('username')
@@ -26,17 +40,15 @@ def register():
     password = request.form.get('password')
     error = None
 
-    # Validation des champs
     if not username or not email or not password:
         error = "Tous les champs sont obligatoires."
     else:
         try:
-            # Vérifie si le username ou l'email existe déjà
             test_username(username)
             test_email(email)
-            # Ajoute l'utilisateur à la base de données
             add_user(username, email, password)
-            return redirect(url_for('success'))  # Redirige vers une page de succès->on veut être redirigé vers la page de login
+            flash("Compte créé avec succès ! Vous pouvez maintenant vous connecter.")
+            return redirect(url_for('login'))
         except UsernameExistsError as e:
             error = str(e)
         except EmailExistsError as e:
@@ -44,11 +56,95 @@ def register():
         except InvalidPasswordError as e:
             error = str(e)
 
-    # Si erreur, réaffiche le formulaire avec le message d'erreur
     return render_template('index.html', error=error)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('index.html')
+    
+    email = request.form.get('email')
+    password = request.form.get('password')
+    error = None
 
-# Route pour modifier son profil
+    if not email or not password:
+        error = "Email et mot de passe sont obligatoires."
+    else:
+        user = get_user_by_email(email)
+        if user and authenticate(user['username'], password):
+            session['username'] = user['username']
+            return redirect(url_for('timeline'))
+        error = "Email ou mot de passe incorrect."
+
+    return render_template('index.html', error=error)
+
+@app.route('/timeline')
+def timeline():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    db = _load_tweets()
+    tweets = db.get("tweets", [])
+    tweets = sorted(tweets, key=lambda t: t["date"], reverse=True)
+
+    for t in tweets:
+        try:
+            t["date"] = t["date"].replace("T", " ")[:16]
+        except:
+            pass
+
+    return render_template(
+        "timeline.html",
+        tweets=tweets,
+        has_user_liked=has_user_liked,       # ← 1) rendre dispo dans Jinja
+        get_likes_count=get_likes_count      # ← 2) rendre dispo dans Jinja
+    )
+
+
+@app.route("/post_tweet", methods=["POST"])
+def post_tweet_route():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    content = request.form.get('tweet', '').strip()
+    if not content:
+        return redirect(url_for('timeline'))
+
+    try:
+        post_tweet(session['username'], content)
+    except TweetTooLong:
+        flash("Ton tweet est trop long ! (max 280 caractères)")
+    except Exception as e:
+        print("Erreur post tweet :", e)
+        traceback.print_exc()
+
+    return redirect(url_for('timeline'))
+
+@app.route('/profile')
+def profile():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+    user = get_user(username)
+    tweets = get_user_tweets(username)
+
+    if not user:
+        return "Utilisateur non trouvé", 404
+
+    return render_template('profile.html', user=user, tweets=tweets)
+
+@app.route("/profile/<username>")
+def profile_by_name(username):
+    user = get_user(username)
+    if user:
+        return render_template("profile.html", user=user, tweets=get_user_tweets(username))
+
+    # Suggestions si l'utilisateur n'existe pas
+    db = _load_db()
+    suggestions = [u["username"] for u in db.get("users", []) if username.lower() in u["username"].lower()]
+    return render_template("user_not_found.html", query=username, suggestions=suggestions)
+
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
     if 'username' not in session:
@@ -59,227 +155,109 @@ def edit_profile():
         return redirect(url_for('login'))
 
     if request.method == 'GET':
-        # Affiche le formulaire d'édition avec les valeurs actuelles
         return render_template('edit_profile.html', user=current_user)
 
-    # === POST ===
     new_email = request.form.get('email') or None
     new_username = request.form.get('username') or None
     new_password = request.form.get('password') or None
-
     errors = []
 
-    # Vérifications (sans modifier la DB tant que tout n'est pas validé)
-    # test_email/test_username/test_password peuvent renvoyer False ou lever des erreurs :
-    try:
-        if new_email:
-            valid = test_email(new_email)
-            if not valid:
-                errors.append("Adresse e-mail invalide ou déjà utilisée.")
-    except Exception as e:
-        # Si tes fonctions lèvent des exceptions, on capture et on affiche un message lisible
-        errors.append(f"Erreur validation email : {str(e)}")
+    # Validation
+    if new_email and new_email != current_user['email']:
+        try:
+            test_email(new_email)
+        except Exception as e:
+            errors.append(str(e) or "Email invalide ou déjà utilisé.")
 
-    try:
-        if new_username:
-            valid = test_username(new_username)
-            if not valid:
-                errors.append("Nom d’utilisateur invalide ou déjà pris.")
-    except Exception as e:
-        errors.append(f"Erreur validation username : {str(e)}")
+    if new_username and new_username != current_user['username']:
+        try:
+            test_username(new_username)
+        except Exception as e:
+            errors.append(str(e) or "Pseudo déjà pris.")
 
-    try:
-        if new_password:
-            valid = test_password(new_password)
-            if not valid:
-                errors.append("Mot de passe trop faible ou non conforme.")
-    except Exception as e:
-        errors.append(f"Erreur validation mot de passe : {str(e)}")
+    if new_password:
+        try:
+            test_password(new_password)
+        except Exception as e:
+            errors.append(str(e) or "Mot de passe trop faible.")
 
-    # Si erreurs -> rester sur la page d'édition et afficher les erreurs (ne rien sauver)
     if errors:
-        return render_template(
-            'edit_profile.html',
-            errors=errors,
-            user=current_user,
-            # Pré-remplir les champs côté client si tu veux (attention au password)
-            form_email=new_email or current_user.get('email', ''),
-            form_username=new_username or current_user.get('username', '')
-        )
+        return render_template('edit_profile.html',
+                               user=current_user,
+                               errors=errors,
+                               form_email=new_email or current_user['email'],
+                               form_username=new_username or current_user['username'])
 
-    # Pas d'erreurs -> mettre à jour en une seule passe
+    # Mise à jour en base
     db = _load_db()
-    updated = False
     for u in db.get("users", []):
-        if u.get("username") == session['username']:
+        if u["username"] == session['username']:
             if new_email:
                 u["email"] = new_email
             if new_username:
                 u["username"] = new_username
-                session['username'] = new_username  # mettre à jour la session
+                session['username'] = new_username
             if new_password:
                 hashed, salt = _hash_password(new_password)
                 u["password_hash"] = hashed
                 u["salt"] = salt
-            updated = True
             break
 
-    if updated:
-        _save_db(db)
-        # Recharger l'utilisateur mis à jour pour l'affichage
-        user_after = get_user(session['username'])
-        return render_template(
-            'profile.html',
-            success="Votre profil a été mis à jour avec succès !",
-            user=user_after
-        )
-    else:
-        # Cas improbable : l'utilisateur n'a pas été trouvé dans la DB (race condition)
-        errors = ["Impossible de retrouver l'utilisateur dans la base de données."]
-        return render_template('edit_profile.html', errors=errors, user=current_user)
-    
+    _save_db(db)
+    flash("Profil mis à jour avec succès !")
+    return redirect(url_for('profile'))
 
-# Route pour afficher le profil (accessible uniquement si connecté)
-@app.route('/profile')
-def profile():
-    print("Contenu de la session:", session)  # Affiche le contenu de la session
-    if 'username' not in session:
-        return redirect(url_for('login'))  # Redirige vers la page de login si non connecté
-    username = session['username']
-    print(f"Username dans session: {username}")
-    user = get_user(username)
-    tweets = get_user_tweets(username)
-    print(f"User récupéré: {user}")  # Affiche l'utilisateur
-
-    if not user:
-        print("Aucun utilisateur trouvé !")
-        return "Utilisateur non trouvé", 404
-    return render_template('profile.html', user=user, tweets=tweets)
-
-#route timeline
-@app.route('/timeline')
-def timeline():
-    if 'username' not in session:
-        return redirect(url_for('login'))  # Redirige vers le login si non connecté
-    else :
-        db = _load_tweets()
-        tweets = db.get("tweets", [])
-        # Tri décroissant (tweets les plus récents d’abord)
-        tweets = sorted(tweets, key=lambda t: t["date"], reverse=True)
-
-        # Reformater la date pour affichage
-        for t in tweets:
-            try:
-                t["date"] = t["date"].replace("T", "  ")[:17]
-            except Exception:
-                pass  # si jamais une date est déjà formatée, on ignore
-
-        return render_template("timeline.html", tweets=tweets)
-
-@app.route("/post_tweet", methods=["POST"])
-def post_tweet_route():
-    try:
-        content = request.form.get('tweet')  # nom du champ dans ton <textarea>
-        username = session['username']
-
-        if not content or content.strip() == "":
-            return redirect(url_for('timeline'))  # rien à poster → on revient à la timeline
-
-        post_tweet(username, content)  # ta fonction enregistre le tweet dans la DB des tweets  
-        return redirect(url_for('timeline'))  # recharge la timeline avec le nouveau tweet
-
-    except TweetTooLong as e:
-        print(e)
-        return redirect(url_for('timeline'))
-    except Exception as e:
-        print("Erreur lors du post :")
-        traceback.print_exc()
-        return redirect(url_for('timeline'))
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'GET':
-        return render_template('index.html')
-    email = request.form.get('email')
-    password = request.form.get('password')
-    error = None
-    if not email or not password:
-        error = "Email et mot de passe sont obligatoires."
-    else:
-        user = get_user_by_email(email)
-        if user and authenticate(user['username'], password):
-            session['username'] = user['username']  # Démarre la session
-            return redirect(url_for('timeline'))
-        error = "Email ou mot de passe incorrect."
-    return render_template('index.html', error=error)
-
-
-# Route pour la page de succès
-@app.route('/success')
-def success():
-    flash("Compte créé avec succès ! Vous pouvez maintenant vous connecter.")
-    return redirect(url_for('login', form_type='login'))
-
-@app.route('/login_success')
-def login_success():
-    return "Connexion réussie ! Bienvenue sur votre compte."
-
-# Route pour la barre de recherche
 @app.route("/explore")
 def explore():
     return render_template("explore.html")
 
-# Route pour chercher user
 @app.route("/search_user")
 def search_user():
     query = request.args.get("q", "").strip().lower()
-
-    db =_load_db()
-    users = db["users"]
-
-    # Filtrer les usernames commençant par la requête
-    matches = sorted(
-        [u["username"] for u in users if u["username"].lower().startswith(query)]
-    )
-
+    db = _load_db()
+    users = db.get("users", [])
+    matches = sorted([u["username"] for u in users if u["username"].lower().startswith(query)])
     return jsonify(matches)
 
-# Route pour afficher le profil d'un username
-@app.route("/profile/<username>")
-def profile_by_name(username):
-    user = get_user(username)
-    if user:
-        return render_template("profile.html", user=user, tweets=get_user_tweets(username))
-
-    # sinon → suggestions
-    db = _load_db()
-    suggestions = [u["username"] for u in db["users"] if username.lower() in u["username"].lower()]
-
-    return render_template("user_not_found.html", query=username, suggestions=suggestions)
-
-# LOGOUT ROUTE
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     flash('Vous êtes déconnecté.')
     return redirect(url_for('index'))
 
+@app.route("/like/<tweet_id>", methods=["POST"])
+def like_route(tweet_id):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    try:
+        like_tweet(tweet_id, session['username'])
+    except TweetNotFound:
+        pass
+    return redirect(request.referrer or url_for('timeline'))
 
-# DELETE ACCOUNT ROUTE
+@app.route("/reply/<tweet_id>", methods=["POST"])
+def reply_route(tweet_id):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    content = request.form.get("reply_content", "").strip()
+    if content:
+        try:
+            add_reply(tweet_id, session['username'], content)
+        except (TweetNotFound, TweetTooLong):
+            pass
+    return redirect(request.referrer or url_for('timeline'))
+
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
     username = session.get('username')
     if username:
-        # suppression via ta fonction existante
         delete_user(username)
         session.clear()
-        flash('Votre compte a été supprimé.')
+        flash('Votre compte a été définitivement supprimé.')
     else:
-        flash('Aucun utilisateur connecté.')
+        flash('Aucun compte connecté.')
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-
-

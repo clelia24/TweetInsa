@@ -3,23 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TwitINSA-timeline</title>
+    <title>TwitINSA - Timeline</title>
     <link rel="stylesheet" href="../static/styles.css">
+    <style>
+        .tweet {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .tweet-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .tweet-actions form {
+            display: inline;
+        }
+        .tweet-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            padding: 5px;
+        }
+        .reply-form {
+            margin-top: 12px;
+            display: none;
+            background: #f7f9fa;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .reply-form textarea {
+            width: 100%;
+            min-height: 60px;
+            resize: vertical;
+            padding: 10px;
+            border: 1px solid #ccd6dd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+        .replies {
+            margin-top: 15px;
+            padding-left: 20px;
+            border-left: 3px solid var(--blue);
+        }
+        .reply {
+            background: #f7f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        .like-count { font-weight: bold; margin-left: 4px; }
+        .reply-count { font-weight: bold; margin-left: 4px; color: #1da1f2; }
+    </style>
 </head>
 <body>
+
     <!-- Barre latérale gauche -->
     <div class="bloc-gauche">
         <img src="../static/images/Logo-twitter.png" alt="TwitINSA Logo" width="50" height="50" style="margin-bottom: 20px;">
-
         <button><img src="../static/images/home.png" alt="Home" width="24"> Accueil</button>
-        <a href="{{ url_for('explore') }}" style="text-decoration:none;">
-        <button>
-            <img src="../static/images/Recherche.png" width="24">
-            Recherche
-        </button>
-        </a>
-
-
+        <button><img src="../static/images/recherche.png" alt="Recherche" width="24"> Explorer</button>
         <button><img src="../static/images/notif.png" alt="Notifications" width="24"> Notifications</button>
         <button><img src="../static/images/messages.png" alt="Messages" width="24"> Messages</button>
         <a href="{{ url_for('profile') }}" style="display: inline-block; text-decoration: none;">
@@ -28,15 +78,16 @@
                 Profile
             </button>
         </a>
-
         <button id="openModalBtn">Poster</button>
+
+        <!-- Modal pour poster un tweet -->
         <div id="tweetModal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span>
+                <span class="close">×</span>
                 <h2>Nouveau tweet</h2>
                 <form id="tweetForm" method="POST" action="/post_tweet">
-                    <textarea name="tweet" rows="4" cols="50" placeholder="Écris ton tweet ici..."></textarea>
-                    <br>
+                    <textarea name="tweet" rows="4" placeholder="Quoi de neuf ?" maxlength="140" required></textarea>
+                    <br><br>
                     <button type="submit">Publier</button>
                 </form>
             </div>
@@ -47,15 +98,68 @@
     <div class="posts">
         <h2>Accueil</h2>
         <div id="tweetList">
+            {% if not tweets %}
+                <p style="text-align:center; color:#666; margin-top:50px;">Aucun tweet pour le moment... Soyez le premier !</p>
+            {% endif %}
+
             {% for t in tweets %}
             <div class="tweet">
-                <strong>@{{ t.username }}</strong> — <em>{{ t.date }}</em><br>
-                {{ t.content }}
+                <strong>@{{ t.username }}</strong> 
+                <span style="color:#657786; font-weight:normal;">— {{ t.date }}</span><br><br>
+                {{ t.content | replace("\n", "<br>") | safe }}
+
+                <!-- Actions : Like + Répondre -->
+                <div class="tweet-actions">
+                    <!-- LIKE -->
+                    <form action="{{ url_for('like_route', tweet_id=t.tweet_id) }}" method="post">
+                        <button type="submit" title="J'aime">
+                            {% if session.username in (t.likes or []) %}
+                                ❤️
+                            {% else %}
+                                ♡
+                            {% endif %}
+                            <span class="like-count">{{ (t.likes or []) | length }}</span>
+                        </button>
+                    </form>
+
+                    <!-- RÉPONDRE -->
+                    <button onclick="document.getElementById('replyform-{{ t.tweet_id }}').style.display='block'; this.style.display='none';"
+                            title="Répondre">
+                        💬 <span class="reply-count">{{ (t.replies or []) | length }}</span>
+                    </button>
+                </div>
+
+                <!-- Formulaire de réponse (caché par défaut) -->
+                <div id="replyform-{{ t.tweet_id }}" class="reply-form">
+                    <form action="{{ url_for('reply_route', tweet_id=t.tweet_id) }}" method="post">
+                        <textarea name="reply_content" placeholder="Écris ta réponse..." maxlength="280" required></textarea>
+                        <br><br>
+                        <button type="submit">Répondre</button>
+                        <button type="button" onclick="this.closest('.reply-form').style.display='none'; 
+                                                     document.querySelector('[onclick*=\"{{ t.tweet_id }}\"]').style.display='inline';">
+                            Annuler
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Affichage des réponses existantes -->
+                {% if t.replies %}
+                <div class="replies>
+                    {% for r in t.replies %}
+                    <div class="reply">
+                        <strong>@{{ r.username }}</strong> 
+                        <small style="color:#657786;">{{ r.date[:16].replace("T", " ") }}</small><br>
+                        {{ r.content | replace("\n", "<br>") | safe }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <hr>
             </div>
-            <hr>
             {% endfor %}
         </div>
     </div>
+
+    <script src="../static/modal.js"></script>
 </body>
-<script src="../static/modal.js"></script>
 </html>

@@ -3,7 +3,7 @@ import os
 import uuid
 from datetime import datetime
 import random
-import db_auth_utils
+from . import db_auth_utils
 
 
 ############## IDÉES AMÉLIORATIONS ##############
@@ -258,4 +258,66 @@ def select_random_tweet():
     random_tweet = random.choice(db["tweets"])
     return random_tweet["tweet_id"]
 
+# === LIKES ===
+def like_tweet(tweet_id: str, username: str):
+    """Ajoute ou retire un like (toggle)"""
+    db = _load_tweets()
+    tweet = None
+    for t in db["tweets"]:
+        if t["tweet_id"] == tweet_id:
+            tweet = t
+            break
+    if not tweet:
+        raise TweetNotFound(f"Tweet {tweet_id} introuvable")
+
+    likes = tweet.get("likes", [])
+    if username in likes:
+        likes.remove(username)   # unlike
+    else:
+        likes.append(username)   # like
+
+    tweet["likes"] = likes
+    _save_tweets(db)
+
+def get_likes_count(tweet_id: str) -> int:
+    try:
+        tweet = get_tweet(tweet_id)
+        return len(tweet.get("likes", []))
+    except TweetNotFound:
+        return 0
+
+def has_user_liked(tweet_id: str, username: str) -> bool:
+    try:
+        tweet = get_tweet(tweet_id)
+        return username in tweet.get("likes", [])
+    except TweetNotFound:
+        return False
+
+
+# === REPLIES (commentaires) ===
+def add_reply(tweet_id: str, username: str, content: str):
+    if len(content) > 280:  # ou 140 si tu veux rester old-school
+        raise TweetTooLong("Réponse trop longue !")
+
+    db = _load_tweets()
+    tweet = None
+    for t in db["tweets"]:
+        if t["tweet_id"] == tweet_id:
+            tweet = t
+            break
+    if not tweet:
+        raise TweetNotFound(f"Tweet {tweet_id} introuvable")
+
+    reply = {
+        "reply_id": str(uuid.uuid4()),
+        "username": username,
+        "date": datetime.now().isoformat(timespec="seconds"),
+        "content": content
+    }
+
+    if "replies" not in tweet:
+        tweet["replies"] = []
+    tweet["replies"].append(reply)
+    _save_tweets(db)
+    return reply
 

@@ -62,6 +62,13 @@
       "password_hash": "28095a99d52365b35812d2c629db9cf10118b0f6d44495bf26ac7c8e749ba3ee",
       "salt": "3628e18f563d0988bf37656b5d2e1772",
       "tweets": []
+    },
+    {
+      "username": "Ayman",
+      "email": "boussihmed@insa-toulouse.fr",
+      "password_hash": "634af311109221da0fb3793c67c68261f37f220a7ee6bfc400bcd3149dfae0c9",
+      "salt": "dff61f2107d30440da227cb52f54648a",
+      "tweets": []
     }
   ]
 }

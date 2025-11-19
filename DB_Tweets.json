@@ -40,7 +40,16 @@
       "tweet_id": "ac7ee4ef-df0e-4c57-a0f4-cf85da57e9ee",
       "username": "nom personne connect\u00e9e",
       "date": "2025-10-21T20:22:20",
-      "content": "test stp \u00e7a marche \r\n"
+      "content": "test stp \u00e7a marche \r\n",
+      "likes": [],
+      "replies": [
+        {
+          "reply_id": "5a08c65f-ea76-4a95-a26b-d18df468e4b6",
+          "username": "Ayman",
+          "date": "2025-11-19T23:42:30",
+          "content": "Yep"
+        }
+      ]
     }
   ]
 }
