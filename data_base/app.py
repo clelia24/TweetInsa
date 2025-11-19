@@ -258,8 +258,26 @@ def profile_by_name(username):
 
     return render_template("user_not_found.html", query=username, suggestions=suggestions)
 
+# LOGOUT ROUTE
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    flash('Vous êtes déconnecté.')
+    return redirect(url_for('index'))
 
 
+# DELETE ACCOUNT ROUTE
+@app.route('/delete_account', methods=['POST'])
+def delete_account():
+    username = session.get('username')
+    if username:
+        # suppression via ta fonction existante
+        delete_user(username)
+        session.clear()
+        flash('Votre compte a été supprimé.')
+    else:
+        flash('Aucun utilisateur connecté.')
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

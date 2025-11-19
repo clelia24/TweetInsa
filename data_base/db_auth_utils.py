@@ -299,6 +299,39 @@ def delete_user(username):
         raise UserNotFoundError(f"Utilisateur '{username}' introuvable!")
     _save_db(db)
     _refresh_count()
+        # ⬅️ On anonymise maintenant les tweets liés à ce user
+    anonymize_tweets(username)
+
+def anonymize_tweets(username):
+    """
+    Anonymise les tweets d'un utilisateur supprimé en remplaçant son
+    nom d'utilisateur par "utilisateur supprimé".
+
+    Parameters
+    ----------
+    username : str
+        Nom d'utilisateur du compte supprimé.
+
+    Returns
+    -------
+    None.
+    """
+    db_tweets_file = "DB_Tweets.json"
+    try:
+        with open(db_tweets_file, "r", encoding="utf-8") as f:
+            db_tweets = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print(f"Erreur : Impossible de charger {db_tweets_file} pour anonymisation.")
+        return
+
+    for tweet in db_tweets.get("tweets", []):
+        if tweet.get("username") == username:
+            tweet["username"] = "utilisateur supprimé"
+
+    with open(db_tweets_file, "w", encoding="utf-8") as f:
+        json.dump(db_tweets, f, indent=2)
+    #print(f"Tweets de l'utilisateur '{username}' anonymisés.")
+
 
 def authenticate(username, password):
     """

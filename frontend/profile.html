@@ -114,6 +114,74 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        .action-box {
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            transition: 0.2s;
+            width: 150px;
+            text-align: center;
+        }
+
+
+        .small-btn:hover {
+            background: #0d8de0;
+        }
+
+
+/* Popup */
+        .popup-bg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .popup-box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+
+        .popup-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+
+        .popup-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+
+        .yes-btn {
+            background: red;
+            color: white;
+        }
+
+        .no-btn {
+            background: grey;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -162,6 +230,40 @@
     <footer>
         <a href="/timeline">Retour à la timeline</a>
     </footer>
+    <!-- Floating Buttons -->
+    {% if session['username'] == user["username"] %}
+    <div class="action-box">
+        <form action="/logout" method="POST">
+            <button class="small-btn" type="submit">Se déconnecter</button>
+        </form>
+        <button class="small-btn" onclick="openPopup()">Supprimer mon compte</button>
+    </div>
+    {% endif %}
+
+
+<!-- Popup Confirmation -->
+    <div class="popup-bg" id="popupBg">
+        <div class="popup-box">
+            <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
+            <div class="popup-buttons">
+                <form action="/delete_account" method="POST">
+                    <button class="popup-btn yes-btn" type="submit">Oui</button>
+                </form>
+                <button class="popup-btn no-btn" onclick="closePopup()">Non</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function openPopup() {
+            document.getElementById('popupBg').style.display = 'flex';
+        }
+        function closePopup() {
+            document.getElementById('popupBg').style.display = 'none';
+        }
+    </script>
+
 </body>
 </html>
 

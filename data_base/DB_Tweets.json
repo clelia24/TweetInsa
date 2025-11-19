@@ -263,6 +263,36 @@
       "username": "laurasvrn",
       "date": "2025-11-18T18:58:04",
       "content": "test\r\n"
+    },
+    {
+      "tweet_id": "65fbdb0e-6dac-4b20-af83-ca2acac63f72",
+      "username": "supp",
+      "date": "2025-11-19T19:03:01",
+      "content": "test"
+    },
+    {
+      "tweet_id": "2915bd4f-d0f7-4d1a-8b49-bf28093a54e1",
+      "username": "t",
+      "date": "2025-11-19T19:24:38",
+      "content": "ah"
+    },
+    {
+      "tweet_id": "c09c581e-d89b-44de-b33c-55f46172d55b",
+      "username": "t",
+      "date": "2025-11-19T19:38:43",
+      "content": "voila"
+    },
+    {
+      "tweet_id": "147190ab-02c0-49f4-b47b-9340bf3e9977",
+      "username": "t",
+      "date": "2025-11-19T19:44:42",
+      "content": "aaa"
+    },
+    {
+      "tweet_id": "a0b5c6af-0011-4543-b455-86ec3ebbbf32",
+      "username": "utilisateur supprim\u00e9",
+      "date": "2025-11-19T19:47:18",
+      "content": "bla"
     }
   ]
 }
