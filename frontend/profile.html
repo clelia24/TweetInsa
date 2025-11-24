@@ -149,10 +149,26 @@
 
         {% if tweets %}
             {% for tweet in tweets %}
-                <div class="tweet">
+                <div class="tweet" style="position: relative; padding: 15px 20px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 15px; background: #fff;">
                     <p>{{ tweet["content"] }}</p>
                     <small>Posté le {{ tweet["date"] }}</small>
 
+                    <form action="/supp_tweet/{{ tweet['tweet_id'] }}" method="POST" style="margin:0;">
+                        <button type="submit" class="small-btn" style="
+                            background: #d62828;
+                            color: white;
+                            padding: 6px 10px;
+                            font-size: 0.8em;
+                            border-radius: 5px;
+                            border: none;
+                            cursor: pointer;
+                            position: absolute;
+                            bottom: 10px;
+                            right: 10px;
+                            transition: 0.2s;">
+                                Supprimer
+                        </button>
+                    </form>
                 </div>
             {% endfor %}
         {% else %}

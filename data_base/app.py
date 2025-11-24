@@ -248,6 +248,16 @@ def reply_route(tweet_id):
             pass
     return redirect(request.referrer or url_for('timeline'))
 
+@app.route('/supp_tweet/<tweet_id>', methods=['POST'])
+def supp_tweet(tweet_id):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    try:
+        delete_tweet(tweet_id)
+    except TweetNotFound:
+        pass
+    return redirect(url_for('profile'))
+
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
     username = session.get('username')

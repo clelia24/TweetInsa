@@ -130,6 +130,15 @@
       "password_hash": "f7a09016c4c5e4a2603a3635658719519945c0f6c8847788041b86344359638d",
       "salt": "73d8d40eb72287053dbbb416ee14c8ad",
       "tweets": []
+    },
+    {
+      "username": "l",
+      "email": "l@gmail.com",
+      "password_hash": "2370385282fdc75e4cead148d5fa848e0a89ac6d47a1158c671fa8432d425ac9",
+      "salt": "8e6a38e2753b85e2de6717a6d3a86ce5",
+      "tweets": [
+        "d8140c3f-dbf2-4f86-a7ab-2100078519cf"
+      ]
     }
   ]
 }
