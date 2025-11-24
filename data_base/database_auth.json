@@ -82,20 +82,6 @@
       ]
     },
     {
-      "username": "laurasvrn",
-      "email": "souverinlaura1@gmail.com",
-      "password_hash": "65d8e4a672405a1e51ef7f28908eb7f625059ed0d3291a660df2b0eac7f0d4a7",
-      "salt": "5cec56890e909160260014af84a84cf1",
-      "tweets": [
-        "499ea362-0ff5-4f82-9008-3c2b0f41c014",
-        "513993ff-70a6-4fc9-a18b-346e04b5e8d6",
-        "004c43e0-ddd0-4d41-b9dc-30197ba4b226",
-        "d574fd16-21d1-40c5-bf8a-a430d9e1401f",
-        "3386dd62-513d-4f01-b7cb-cb9b5763c21c",
-        "fbe76cad-e3b7-4d6e-afe4-b684f5c16542"
-      ]
-    },
-    {
       "username": "blabla",
       "email": "blabla@gmail.vom",
       "password_hash": "ce7b560a7b543fc96591cdd2903cb5ef5d95b34917769867ae9f5bbaa01858d2",

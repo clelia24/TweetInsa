@@ -94,6 +94,159 @@
         .back-link:hover {
             text-decoration: underline;
         }
+        .action-box {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .small-btn {
+            background: #a4161a;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .small-btn:hover {
+            background: #a4161a;
+        }**
+
+        /* Popup */
+        .popup-bg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .popup-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .popup-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .yes-btn {
+            background:  #a4161a;
+            color: white;
+        }
+
+        .no-btn {
+            background: grey;
+            color: white;
+        }
+
+        .modal-backdrop{
+            position:fixed;
+            inset:0;
+            display:none; /* visible when open */
+            align-items:center;
+            justify-content:center;
+            background: rgba(10,10,10,0.45);
+            z-index:1200;
+            padding:20px;
+        }
+
+        .modal-card{
+            width:100%;
+            max-width:420px;
+            border-radius:14px;
+            background:linear-gradient(180deg,#fff,#fbfbfb);
+            box-shadow: 0 20px 60px rgba(22,33,62,0.25);
+            padding:22px;
+            transform: translateY(18px) scale(.98);
+            opacity:0;
+            transition: transform .28s cubic-bezier(.2,.9,.28,1), opacity .22s ease;
+            position:relative;
+            overflow:hidden;
+        }
+
+        /* when open we'll add .open class to show */
+        .modal-backdrop.open{ display:flex; }
+        .modal-card.open{ transform: translateY(0) scale(1); opacity:1; }
+
+        .modal-header{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+        }
+        .modal-title{ font-size:1.05rem; font-weight:800; }
+        .modal-desc{ margin-top:8px; color:#333; font-size:0.98rem; }
+
+        .modal-actions{
+            margin-top:18px;
+            display:flex;
+            gap:12px;
+            justify-content:flex-end;
+            align-items:center;
+        }
+
+        .ghost-btn{
+            background:#f1f3f5;
+            color:black;
+            border:none;
+            padding:8px 12px;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:700;
+        }
+
+        .danger-lg{ 
+            background: #f1f3f5 ;
+            color:black;
+            padding:10px 14px;
+            border-radius:10px;
+            font-weight:800;
+            border:none;
+            cursor:pointer;
+        }
+
+        .danger-lg:hover {
+            background: #a4161a; /* rouge foncé au hover */
+        }
+
+        .close-x{
+            background:transparent;
+            border:none;
+            font-size:1.1rem;
+            cursor:pointer;
+            color:#666;
+            padding:6px;
+            border-radius:8px;
+        }
+        .close-x:focus{ outline:2px solid rgba(29,161,242,0.25); }
+
+        /* small responsive tweaks */
+        @media (max-width:460px){
+            .container{ margin:30px 12px; padding:20px; }
+            .modal-card{ padding:16px; border-radius:12px; }
+        }
+
     </style>
 </head>
 <body>
@@ -134,10 +287,135 @@
                 <input type="password" id="password" name="password" placeholder="Entrez votre nouveau mot de passe">
             </div>
 
+
+
             <button type="submit">💾 Enregistrer les modifications</button>
         </form>
 
+        <!-- Floating Buttons -->
+        {% if session['username'] == user["username"] %}
+        <div class="action-row" aria-hidden="false" style="margin-top:20px">
+            <!-- logout form (separate) -->
+            <form action="/logout" method="POST" style="margin:0; display:inline;">
+                <button class="small-btn" type="submit">Se déconnecter</button>
+            </form>
+        {% endif %}
+            <!-- delete button triggers modal -->
+            <button id="openDeleteBtn" class="small-btn" type="button" aria-haspopup="dialog" aria-controls="deleteModal">Supprimer</button>
+        </div>
+
         <a href="/profile" class="back-link">← Retour au profil</a>
     </div>
+    <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+        <div id="deleteModal" class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+            <div class="modal-header">
+                <div>
+                    <div id="modalTitle" class="modal-title">Supprimer mon compte</div>
+                    <div id="modalDesc" class="modal-desc">Cette action est <strong>irréversible</strong>. Toutes vos données seront supprimées.</div>
+                </div>
+                <button class="close-x" id="modalCloseBtn" aria-label="Fermer la fenêtre">&times;</button>
+            </div>
+
+            <div class="modal-actions" role="group" aria-label="Actions de suppression">
+                <!-- Form de suppression (séparée) -->
+                <form action="/delete_account" method="POST" id="deleteForm" style="margin:0;">
+                    <button class="danger-lg" type="submit">Oui, supprimer</button>
+                </form>
+                <button class="ghost-btn" id="cancelBtn" type="button">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elements
+        const openBtn = document.getElementById('openDeleteBtn');
+        const backdrop = document.getElementById('modalBackdrop');
+        const modal = document.getElementById('deleteModal');
+        const closeBtn = document.getElementById('modalCloseBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // For focus trap
+        let lastFocused = null;
+        const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
+        function openModal(){
+            lastFocused = document.activeElement;
+            backdrop.classList.add('open');
+            modal.classList.add('open');
+            backdrop.setAttribute('aria-hidden','false');
+            // disable body scroll
+            document.body.style.overflow = 'hidden';
+            // focus first focusable element inside modal
+            const focusables = modal.querySelectorAll(focusableSelectors);
+            if(focusables.length) focusables[0].focus();
+
+            // listen for tab cycling
+            document.addEventListener('keydown', handleKeyDown);
+            // close if clicking backdrop (but not when clicking inside modal)
+            backdrop.addEventListener('click', handleBackdropClick);
+        }
+
+        function closeModal(){
+            modal.classList.remove('open');
+            backdrop.classList.remove('open');
+            backdrop.setAttribute('aria-hidden','true');
+            document.body.style.overflow = '';
+            // restore focus
+            if(lastFocused) lastFocused.focus();
+            document.removeEventListener('keydown', handleKeyDown);
+            backdrop.removeEventListener('click', handleBackdropClick);
+        }
+
+        function handleBackdropClick(e){
+            if(e.target === backdrop) closeModal();
+        }
+
+        function handleKeyDown(e){
+            // Escape to close
+            if(e.key === 'Escape') {
+                e.preventDefault();
+                closeModal();
+                return;
+            }
+
+            // Focus trap
+            if(e.key === 'Tab'){
+                const focusables = Array.from(modal.querySelectorAll(focusableSelectors))
+                    .filter(el => el.offsetParent !== null); // visible
+                if(focusables.length === 0) {
+                    e.preventDefault();
+                    return;
+                }
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+                const current = document.activeElement;
+
+                if(e.shiftKey){
+                    // backward
+                    if(current === first || current === modal) {
+                        last.focus();
+                        e.preventDefault();
+                    }
+                } else {
+                    // forward
+                    if(current === last) {
+                        first.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        }
+
+        // events
+        if(openBtn){
+            openBtn.addEventListener('click', openModal);
+        }
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        // prevent accidental submit by pressing enter on backdrop: handled since modal is focused
+        // ensure modal does not close when clicking inside card
+        modal.addEventListener('click', (e) => e.stopPropagation());
+    </script>
 </body>
 </html>

@@ -260,7 +260,7 @@
     },
     {
       "tweet_id": "fbe76cad-e3b7-4d6e-afe4-b684f5c16542",
-      "username": "laurasvrn",
+      "username": "utilisateur supprim\u00e9",
       "date": "2025-11-18T18:58:04",
       "content": "test\r\n"
     },
@@ -286,7 +286,30 @@
       "tweet_id": "147190ab-02c0-49f4-b47b-9340bf3e9977",
       "username": "t",
       "date": "2025-11-19T19:44:42",
-      "content": "aaa"
+      "content": "aaa",
+      "replies": [
+        {
+          "reply_id": "52ab8d5b-df6d-4907-855e-e1de0b973b4c",
+          "username": "laurasvrn",
+          "date": "2025-11-24T17:33:44",
+          "content": "un test"
+        },
+        {
+          "reply_id": "e027d251-3821-4f34-b800-32dccb37e279",
+          "username": "laurasvrn",
+          "date": "2025-11-24T17:34:15",
+          "content": "u autre"
+        },
+        {
+          "reply_id": "363b507e-e8d4-4cbc-bf39-f220106647d4",
+          "username": "laurasvrn",
+          "date": "2025-11-24T17:34:24",
+          "content": "encore"
+        }
+      ],
+      "likes": [
+        "laurasvrn"
+      ]
     },
     {
       "tweet_id": "a0b5c6af-0011-4543-b455-86ec3ebbbf32",
