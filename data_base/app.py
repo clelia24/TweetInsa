@@ -5,7 +5,7 @@ import json
 from .db_auth_utils import *
 from .db_tweet_utils import *
 from .db_tweet_utils import _load_tweets, _save_tweets
-from .db_auth_utils import _load_db, _save_db
+from .db_auth_utils import _load_db, _save_db, _hash_password
 from datetime import datetime
 import os
 import secrets
@@ -196,8 +196,22 @@ def edit_profile():
         if u["username"] == session['username']:
             if new_email:
                 u["email"] = new_email
-            if new_username:
+            if new_username and new_username != current_user["username"]:
+                old_username = current_user["username"]
                 u["username"] = new_username
+
+                # Mettre à jour tous les tweets avec l'ancien username
+                tweets_db = _load_tweets()
+                for tweet in tweets_db.get("tweets", []):
+                    if tweet["username"] == old_username:
+                        tweet["username"] = new_username
+                    if tweet.get("replies"):
+                        for r in tweet["replies"]:
+                            if r["username"] == old_username:
+                                r["username"] = new_username
+                _save_tweets(tweets_db)  # n'oublie pas de sauvegarder après modification
+
+                # Mettre à jour la session après avoir changé les tweets
                 session['username'] = new_username
             if new_password:
                 hashed, salt = _hash_password(new_password)
