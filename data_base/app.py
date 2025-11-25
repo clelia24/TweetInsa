@@ -1,5 +1,7 @@
 import traceback
-from flask import Flask, request, render_template, redirect, url_for, session, jsonify, flash
+from flask import Flask, request, render_template, redirect, send_file, url_for, session, jsonify, flash, Response 
+import base64
+import json
 from .db_auth_utils import *
 from .db_tweet_utils import *
 from .db_tweet_utils import _load_tweets, _save_tweets
@@ -268,6 +270,64 @@ def delete_account():
     else:
         flash('Aucun compte connecté.')
     return redirect(url_for('index'))
+# Ajout d'une photo de profil
+def load_db():
+    with open("database_auth.json", "r") as f:
+        return json.load(f)
+
+
+def save_db(data):
+    with open("database_auth.json", "w") as f:
+        json.dump(data, f, indent=4)
+
+
+@app.route('/upload_pfp', methods=['POST'])
+def upload_pfp():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    file = request.files.get('pfp')
+    if not file:
+        flash("Aucune photo sélectionnée")
+        return redirect(request.referrer)
+    
+
+    # 1️⃣ Lire l'image
+    image_bytes = file.read()
+
+    # 2️⃣ Convertir en base64
+    image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+
+    # 3️⃣ Charger DB JSON
+    db = load_db()
+
+    # 4️⃣ Trouver l'utilisateur
+    for user in db["users"]:
+        if user["username"] == session["username"]:
+            user["profile_picture"] = image_base64
+            break
+
+    # 5️⃣ Sauvegarder
+    save_db(db)
+
+    flash("Photo de profil mise à jour !")
+    return redirect(url_for('edit_profile'))
+
+#affichage de la pp
+@app.route('/pfp/<username>')
+def pfp(username):
+    db = load_db()
+
+    for user in db["users"]:
+        if user["username"] == username:
+            if user.get("profile_picture"):
+                # Convertir base64 → bytes
+                img = base64.b64decode(user["profile_picture"])
+                return Response(img, mimetype="image/*")
+
+    # Si pas de photo → image par défaut
+    return send_file("../static/images/default_pfp.jpg")
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

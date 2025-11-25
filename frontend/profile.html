@@ -99,6 +99,15 @@
             color: #657786;
             font-size: 0.85em;
         }
+        .pfp {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%; /* forme ronde */
+        object-fit: cover; /* recadre proprement */
+        border: 3px solid var(--blue);
+        display: block;
+        margin: 0 auto 15px auto;
+    }
 
         footer {
             text-align: center;
@@ -130,6 +139,7 @@
                     {{ success }}
                 </div>
             {% endif %}
+            <img src="/pfp/{{ user['username'] }}" class="pfp">
             <p><strong>Nom d’utilisateur :</strong> {{ user["username"] }}</p>
             <p><strong>Email :</strong> {{ user["email"] }}</p>
 

@@ -104,8 +104,15 @@
 
             {% for t in tweets %}
             <div class="tweet">
-                <strong>@{{ t.username }}</strong> 
-                <span style="color:#657786; font-weight:normal;">— {{ t.date }}</span><br><br>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                    <img src="{{ url_for('pfp', username=t.username) }}" 
+                        alt="@{{ t.username }}" 
+                        style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                    <div>
+                        <strong>@{{ t.username }}</strong> 
+                        <span style="color:#657786; font-weight:normal; font-size:0.9em;">— {{ t.date }}</span>
+                    </div>
+                </div>
                 {{ t.content | replace("\n", "<br>") | safe }}
 
                 <!-- Actions : Like + Répondre -->
@@ -144,11 +151,19 @@
 
                 <!-- Affichage des réponses existantes -->
                 {% if t.replies %}
-                <div class="replies>
+                <div class="replies">
                     {% for r in t.replies %}
                     <div class="reply">
-                        <strong>@{{ r.username }}</strong> 
-                        <small style="color:#657786;">{{ r.date[:16].replace("T", " ") }}</small><br>
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <img src="{{ url_for('pfp', username=r.username) }}"  
+                                alt="@{{ r.username }}" 
+                                style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                            <div>
+                                <strong>@{{ r.username }}</strong>
+                                <small style="color:#657786; font-size:0.8em;">{{ r.date[:16].replace("T", " ") }}</small>
+                            </div>
+                        </div>
+    
                         {{ r.content | replace("\n", "<br>") | safe }}
                     </div>
                     {% endfor %}

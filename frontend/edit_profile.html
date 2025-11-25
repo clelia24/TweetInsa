@@ -241,6 +241,54 @@
         }
         .close-x:focus{ outline:2px solid rgba(29,161,242,0.25); }
 
+        .popup-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        }
+
+        .popup-box {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            width: 350px;
+            text-align: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .drop-zone {
+            border: 2px dashed #999;
+            border-radius: 10px;
+            padding: 30px;
+            cursor: pointer;
+            background: #fafafa;
+            transition: 0.3s;
+        }
+
+        .drop-zone:hover {
+            border-color: #0077ff;
+            background: #f0f8ff;
+        }
+
+        .close-popup {
+            margin-top: 15px;
+            background: #ccc;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
         /* small responsive tweaks */
         @media (max-width:460px){
             .container{ margin:30px 12px; padding:20px; }
@@ -250,6 +298,27 @@
     </style>
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div style="margin:20px;">
+            {% for category, message in messages %}
+                <div style="
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    margin-bottom: 10px;
+                    color: white;
+                    background:
+                        {% if category == 'success' %} #2ecc71
+                        {% elif category == 'error' %} #e74c3c
+                        {% else %} #3498db {% endif %};
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+                    font-weight:bold;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
     <header>
         <h1>Modifier le profil</h1>
         <a href="/profile" class="back-link" style="color: white; text-decoration: none;">← Retour au profil</a>
@@ -287,10 +356,35 @@
                 <input type="password" id="password" name="password" placeholder="Entrez votre nouveau mot de passe">
             </div>
 
-
+            <button type="button" id="openPhotoPopup" class="edit-btn" style="margin-bottom: 15px;">
+                Nouvelle photo de profil
+            </button>
 
             <button type="submit">💾 Enregistrer les modifications</button>
         </form>
+
+        <!-- POPUP Upload Photo -->
+            <div id="photoPopup" class="popup-overlay" style="display:none;">
+                <div class="popup-box">
+                    <h3>Importer une photo</h3>
+
+                        <form id="uploadForm" action="/upload_pfp" method="POST" enctype="multipart/form-data">
+                            <div id="dropZone" class="drop-zone">
+                                Glissez votre photo ici ou cliquez pour choisir
+                                <input type="file" name="pfp" id="photoInput" accept="image/*" hidden>
+                            </div>
+                            <div id="errorMsg" style="color:red; margin-top:10px; display:none;">
+                                Veuillez charger un fichier PNG ou JPG.
+                            </div>
+
+                            <button type="submit" class="save-btn" style="margin-top:15px;">
+                                Télécharger
+                            </button>
+                        </form>
+
+                    <button class="close-popup">Fermer</button>
+                </div>
+            </div>
 
         <!-- Floating Buttons -->
         {% if session['username'] == user["username"] %}
@@ -327,61 +421,124 @@
     </div>
 
     <script>
-        // Elements
-        const openBtn = document.getElementById('openDeleteBtn');
+        /* ---------------- POPUP PHOTO ---------------- */
+        const openPhotoPopupBtn = document.getElementById("openPhotoPopup");
+        const photoPopup = document.getElementById("photoPopup");
+        const closePopupBtn = photoPopup.querySelector(".close-popup");
+        const dropZone = document.getElementById("dropZone");
+        const photoInput = document.getElementById("photoInput");
+        const uploadForm = document.getElementById('uploadForm');
+        const errorMsg = document.getElementById('errorMsg');
+
+        // Ouvrir / fermer le pop-up photo
+        openPhotoPopupBtn.addEventListener('click', () => {
+            photoPopup.style.display = "flex";
+        });
+
+        closePopupBtn.addEventListener('click', () => {
+            photoPopup.style.display = "none";
+            errorMsg.style.display = 'none';
+            photoInput.value = ''; // reset input
+        });
+
+        // Drag & drop + clic pour choisir fichier
+        dropZone.addEventListener("click", () => photoInput.click());
+
+        dropZone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropZone.style.background = "#e6f3ff";
+        });
+
+        dropZone.addEventListener("dragleave", () => {
+            dropZone.style.background = "#fafafa";
+        });
+
+        dropZone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            photoInput.files = e.dataTransfer.files;
+            dropZone.style.background = "#fafafa";
+        });
+
+        // Validation du type de fichier lors de l'envoi
+        uploadForm.addEventListener('submit', (e) => {
+            const file = photoInput.files[0];
+            if (!file) {
+                e.preventDefault();
+                errorMsg.textContent = "Veuillez sélectionner un fichier.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            const validTypes = ['image/png', 'image/jpeg'];
+            if (!validTypes.includes(file.type)) {
+                e.preventDefault();
+                errorMsg.textContent = "Veuillez charger un fichier PNG ou JPG.";
+                errorMsg.style.display = 'block';
+            } else {
+                errorMsg.style.display = 'none';
+            }
+        });
+
+        // Cacher le message d'erreur dès qu'on change de fichier
+        photoInput.addEventListener('change', () => {
+            errorMsg.style.display = 'none';
+            errorMsg.textContent = "Veuillez charger un fichier PNG ou JPG.";
+        });
+
+
+        /* ---------------- MODAL SUPPRESSION ---------------- */
+        const openDeleteBtn = document.getElementById('openDeleteBtn');
         const backdrop = document.getElementById('modalBackdrop');
         const modal = document.getElementById('deleteModal');
         const closeBtn = document.getElementById('modalCloseBtn');
         const cancelBtn = document.getElementById('cancelBtn');
 
-        // For focus trap
+        // Focus trap variables
         let lastFocused = null;
         const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
+        // Ouvrir modal suppression
         function openModal(){
             lastFocused = document.activeElement;
             backdrop.classList.add('open');
             modal.classList.add('open');
             backdrop.setAttribute('aria-hidden','false');
-            // disable body scroll
             document.body.style.overflow = 'hidden';
-            // focus first focusable element inside modal
+
             const focusables = modal.querySelectorAll(focusableSelectors);
             if(focusables.length) focusables[0].focus();
 
-            // listen for tab cycling
             document.addEventListener('keydown', handleKeyDown);
-            // close if clicking backdrop (but not when clicking inside modal)
             backdrop.addEventListener('click', handleBackdropClick);
         }
 
+        // Fermer modal suppression
         function closeModal(){
             modal.classList.remove('open');
             backdrop.classList.remove('open');
             backdrop.setAttribute('aria-hidden','true');
             document.body.style.overflow = '';
-            // restore focus
             if(lastFocused) lastFocused.focus();
             document.removeEventListener('keydown', handleKeyDown);
             backdrop.removeEventListener('click', handleBackdropClick);
         }
 
+        // Gestion clic sur backdrop
         function handleBackdropClick(e){
             if(e.target === backdrop) closeModal();
         }
 
+        // Gestion touche Escape et focus trap
         function handleKeyDown(e){
-            // Escape to close
             if(e.key === 'Escape') {
                 e.preventDefault();
                 closeModal();
                 return;
             }
 
-            // Focus trap
             if(e.key === 'Tab'){
                 const focusables = Array.from(modal.querySelectorAll(focusableSelectors))
-                    .filter(el => el.offsetParent !== null); // visible
+                    .filter(el => el.offsetParent !== null);
                 if(focusables.length === 0) {
                     e.preventDefault();
                     return;
@@ -391,13 +548,11 @@
                 const current = document.activeElement;
 
                 if(e.shiftKey){
-                    // backward
                     if(current === first || current === modal) {
                         last.focus();
                         e.preventDefault();
                     }
                 } else {
-                    // forward
                     if(current === last) {
                         first.focus();
                         e.preventDefault();
@@ -406,16 +561,14 @@
             }
         }
 
-        // events
-        if(openBtn){
-            openBtn.addEventListener('click', openModal);
+        // Événements modal suppression
+        if(openDeleteBtn){
+            openDeleteBtn.addEventListener('click', openModal);
         }
         closeBtn.addEventListener('click', closeModal);
         cancelBtn.addEventListener('click', closeModal);
-
-        // prevent accidental submit by pressing enter on backdrop: handled since modal is focused
-        // ensure modal does not close when clicking inside card
         modal.addEventListener('click', (e) => e.stopPropagation());
     </script>
+
 </body>
 </html>

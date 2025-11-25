@@ -280,7 +280,15 @@
       "tweet_id": "c09c581e-d89b-44de-b33c-55f46172d55b",
       "username": "t",
       "date": "2025-11-19T19:38:43",
-      "content": "voila"
+      "content": "voila",
+      "replies": [
+        {
+          "reply_id": "2d3cef20-11ff-46c8-bfb8-ea47a7872c1e",
+          "username": "l",
+          "date": "2025-11-25T16:24:26",
+          "content": "cc"
+        }
+      ]
     },
     {
       "tweet_id": "147190ab-02c0-49f4-b47b-9340bf3e9977",
@@ -305,6 +313,12 @@
           "username": "laurasvrn",
           "date": "2025-11-24T17:34:24",
           "content": "encore"
+        },
+        {
+          "reply_id": "3b3416e9-47eb-45bf-a9f6-e8eee9680426",
+          "username": "l",
+          "date": "2025-11-25T16:25:06",
+          "content": "test"
         }
       ],
       "likes": [
@@ -321,7 +335,21 @@
       "tweet_id": "d8140c3f-dbf2-4f86-a7ab-2100078519cf",
       "username": "l",
       "date": "2025-11-24T18:42:43",
-      "content": "encore 1"
+      "content": "encore 1",
+      "replies": [
+        {
+          "reply_id": "025e858d-83ad-435a-b380-fe3f38a52c45",
+          "username": "l",
+          "date": "2025-11-25T16:27:39",
+          "content": "cc"
+        }
+      ]
+    },
+    {
+      "tweet_id": "0c11625e-909b-4a18-99a6-0453fa880ff6",
+      "username": "la",
+      "date": "2025-11-25T16:31:30",
+      "content": "test"
     }
   ]
 }
