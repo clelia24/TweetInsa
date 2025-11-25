@@ -349,7 +349,15 @@
       "tweet_id": "0c11625e-909b-4a18-99a6-0453fa880ff6",
       "username": "la",
       "date": "2025-11-25T16:31:30",
-      "content": "test"
+      "content": "test",
+      "replies": [
+        {
+          "reply_id": "8a4a3059-de41-4d94-a51c-78304f701d96",
+          "username": "la",
+          "date": "2025-11-25T16:34:57",
+          "content": "retest"
+        }
+      ]
     }
   ]
 }
