@@ -385,6 +385,9 @@
           "date": "2025-11-25T16:47:13",
           "content": "t"
         }
+      ],
+      "likes": [
+        "corentin"
       ]
     },
     {
@@ -399,7 +402,86 @@
           "date": "2025-11-25T16:49:08",
           "content": "t"
         }
+      ],
+      "likes": [
+        "corentin"
       ]
+    },
+    {
+      "tweet_id": "a3460c13-439f-4cd9-a364-4bff42a29f79",
+      "username": "corentin",
+      "date": "2025-11-29T11:43:04",
+      "content": "test",
+      "likes": [
+        "corentin"
+      ],
+      "replies": [
+        {
+          "reply_id": "ed762944-1cb4-4b73-a08e-a1d71c650baf",
+          "username": "corentin",
+          "date": "2025-11-29T11:48:29",
+          "content": "trop cool"
+        }
+      ]
+    },
+    {
+      "tweet_id": "c99f15f1-b319-4791-8d6b-9c004276d4df",
+      "username": "corentin",
+      "date": "2025-11-29T12:18:45",
+      "content": "coucou",
+      "media_path": null
+    },
+    {
+      "tweet_id": "34107923-14e7-43ee-a825-2167c225b0d4",
+      "username": "corentin",
+      "date": "2025-11-29T12:24:02",
+      "content": "test image",
+      "media_path": null
+    },
+    {
+      "tweet_id": "af582ca8-8bdd-4488-b428-6c8a34bb4070",
+      "username": "corentin",
+      "date": "2025-11-29T12:31:05",
+      "content": "test2",
+      "media_path": null,
+      "likes": [
+        "corentin"
+      ]
+    },
+    {
+      "tweet_id": "16ddf9cf-9af8-4b76-a662-0c3d9377597a",
+      "username": "corentin",
+      "date": "2025-11-29T12:38:55",
+      "content": "test3",
+      "media_path": null
+    },
+    {
+      "tweet_id": "e08f35b4-791f-4bf9-ac9a-11404c8453cf",
+      "username": "corentin",
+      "date": "2025-11-29T12:41:03",
+      "content": "test4",
+      "media_path": null
+    },
+    {
+      "tweet_id": "cc595b66-2f93-42d8-8922-092028a92911",
+      "username": "corentin",
+      "date": "2025-11-29T12:43:07",
+      "content": "test5",
+      "media_path": null
+    },
+    {
+      "tweet_id": "09528429-ee5e-4999-b1fb-c57c8f2aa2ec",
+      "username": "corentin",
+      "date": "2025-11-29T12:57:16",
+      "content": "test6",
+      "media_path": null
+    },
+    {
+      "tweet_id": "4d7ec51e-8550-47b3-9f76-2cda23e93285",
+      "username": "corentin",
+      "date": "2025-11-29T13:20:47",
+      "content": "test7",
+      "media_path": "uploads/fleurs.jpg"
     }
   ]
 }

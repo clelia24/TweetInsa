@@ -3,7 +3,7 @@ import os
 import uuid
 from datetime import datetime
 import random
-from . import db_auth_utils
+import db_auth_utils
 
 
 ############## IDÉES AMÉLIORATIONS ##############
@@ -96,7 +96,7 @@ def _save_users(db):
 
 
 #------------ Fonctions publiques ------------#
-def post_tweet(username, description):
+def post_tweet(username, description,media_path=None):
     """
     Rajoute un tweet à la base de données.
 
@@ -125,7 +125,8 @@ def post_tweet(username, description):
         "tweet_id": tweet_id,
         "username": username,
         "date": datetime.now().isoformat(timespec="seconds"), # strftime("%d/%m/%Y %H:%M") est mieux pour afficher
-        "content": description
+        "content": description,
+        "media_path": media_path
     }
     db["tweets"].append(tweet)
     _save_tweets(db)

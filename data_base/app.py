@@ -1,17 +1,24 @@
 import traceback
-from flask import Flask, request, render_template, redirect, send_file, url_for, session, jsonify, flash, Response 
+from flask import Flask, send_from_directory, request, render_template, redirect, send_file, url_for, session, jsonify, flash, Response 
 import base64
 import json
-from .db_auth_utils import *
-from .db_tweet_utils import *
-from .db_tweet_utils import _load_tweets, _save_tweets
-from .db_auth_utils import _load_db, _save_db, _hash_password
+from db_auth_utils import *
+from db_tweet_utils import *
+from db_tweet_utils import _load_tweets, _save_tweets
+from db_auth_utils import _load_db, _save_db, _hash_password
 from datetime import datetime
 import os
 import secrets
 
 app = Flask(__name__, template_folder="../frontend", static_folder="../static")
 app.secret_key = secrets.token_hex(16)
+UPLOAD_FOLDER = os.path.join('..', 'static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov'}  # Extensions autorisées
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 # ================================================
 # CONTEXT PROCESSOR → session dispo partout !
@@ -102,6 +109,9 @@ def timeline():
         get_likes_count=get_likes_count      # ← 2) rendre dispo dans Jinja
     )
 
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
 
 @app.route("/post_tweet", methods=["POST"])
 def post_tweet_route():
@@ -109,13 +119,24 @@ def post_tweet_route():
         return redirect(url_for('login'))
 
     content = request.form.get('tweet', '').strip()
-    if not content:
+    media_path=None
+    #print(allowed_file(media.filename))
+    from werkzeug.utils import secure_filename
+    media = request.files.get('media')
+    if media and allowed_file(media.filename):
+        filename = secure_filename(media.filename)
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        media.save(save_path)
+        media_path = f"uploads/{filename}"
+    if not content and not media_path:
+        flash("Le tweet ne peut pas être vide !")
         return redirect(url_for('timeline'))
 
     try:
-        post_tweet(session['username'], content)
+        print("Chemin du média :", media_path)  # Debug
+        post_tweet(session['username'], content, media_path)
     except TweetTooLong:
-        flash("Ton tweet est trop long ! (max 280 caractères)")
+        flash("Ton tweet est trop long ! (max 140 caractères)")
     except Exception as e:
         print("Erreur post tweet :", e)
         traceback.print_exc()
