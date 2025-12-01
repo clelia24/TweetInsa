@@ -2,7 +2,7 @@ import json
 import os
 import hashlib
 import secrets
-from db_tweet_utils import get_tweet, TweetNotFound
+from .db_tweet_utils import get_tweet, TweetNotFound
 
 ############## IDÉES AMÉLIORATIONS ##############
     # Si DB trop grande, faudra réfléchir à comment ne pas la load sur chaque fonction

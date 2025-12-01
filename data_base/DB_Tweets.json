@@ -481,7 +481,18 @@
       "username": "corentin",
       "date": "2025-11-29T13:20:47",
       "content": "test7",
-      "media_path": "uploads/fleurs.jpg"
+      "media_path": "uploads/fleurs.jpg",
+      "likes": [
+        "astrid1"
+      ],
+      "replies": [
+        {
+          "reply_id": "c2db1238-bb9f-48cc-8735-d6883d14c886",
+          "username": "astrid1",
+          "date": "2025-12-01T10:58:42",
+          "content": "test"
+        }
+      ]
     }
   ]
 }

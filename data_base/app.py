@@ -2,10 +2,10 @@ import traceback
 from flask import Flask, send_from_directory, request, render_template, redirect, send_file, url_for, session, jsonify, flash, Response 
 import base64
 import json
-from db_auth_utils import *
-from db_tweet_utils import *
-from db_tweet_utils import _load_tweets, _save_tweets
-from db_auth_utils import _load_db, _save_db, _hash_password
+from .db_auth_utils import *
+from .db_tweet_utils import *
+from .db_tweet_utils import _load_tweets, _save_tweets
+from .db_auth_utils import _load_db, _save_db, _hash_password
 from datetime import datetime
 import os
 import secrets

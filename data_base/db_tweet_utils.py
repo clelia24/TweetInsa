@@ -3,7 +3,8 @@ import os
 import uuid
 from datetime import datetime
 import random
-import db_auth_utils
+from . import db_auth_utils
+
 
 
 ############## IDÉES AMÉLIORATIONS ##############
