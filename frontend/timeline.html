@@ -91,9 +91,13 @@
                 <span class="close">×</span>
                 <h2>Nouveau tweet</h2>
                 <form id="tweetForm" method="POST" action="/post_tweet">
-                    <textarea name="tweet" rows="4" placeholder="Quoi de neuf ?" maxlength="140" required></textarea>
-                    <br><br>
-                    <button type="submit">Publier</button>
+                    <textarea id="tweetInput" name="tweetInput" rows="4" placeholder="Quoi de neuf ?" maxlength="140" required></textarea>
+                    <div id="charCount" style="text-align:right; font-size:0.85em; color:#657786; margin-top:4px;">
+                        140
+                    </div>
+
+                    <br>
+                    <button type="submit" id="publishBtn">Publier</button>
                 </form>
             </div>
         </div>
@@ -144,14 +148,26 @@
                 <!-- Formulaire de réponse (caché par défaut) -->
                 <div id="replyform-{{ t.tweet_id }}" class="reply-form">
                     <form action="{{ url_for('reply_route', tweet_id=t.tweet_id) }}" method="post">
-                        <textarea name="reply_content" placeholder="Écris ta réponse..." maxlength="280" required></textarea>
-                        <br><br>
-                        <button type="submit">Répondre</button>
+                        <textarea 
+                            name="reply_content" 
+                            class="replyInput"
+                            placeholder="Écris ta réponse..." 
+                            maxlength="280" 
+                            required
+                        ></textarea>
+
+                        <div class="replyCounter" style="text-align:right; font-size:0.8em; color:#657786;">
+                            0/280
+                        </div>
+
+                        <br>
+                        <button type="submit" class="replyBtn">Répondre</button>
                         <button type="button" onclick="this.closest('.reply-form').style.display='none'; 
-                                                     document.querySelector('[onclick*=\"{{ t.tweet_id }}\"]').style.display='inline';">
+                                                       document.querySelector('[onclick*=\"{{ t.tweet_id }}\"]').style.display='inline';">
                             Annuler
                         </button>
                     </form>
+
                 </div>
 
                 <!-- Affichage des réponses existantes -->
@@ -181,5 +197,63 @@
     </div>
 
     <script src="../static/modal.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        /* === COMPTEUR POUR LE TWEET PRINCIPAL === */
+        const textarea = document.getElementById("tweetInput");
+        const counter  = document.getElementById("charCount");
+        const publishBtn = document.getElementById("publishBtn");
+        const max = 140;
+
+        if (textarea) {
+            counter.textContent = `0/${max}`;
+            publishBtn.disabled = true;
+            publishBtn.style.opacity = "0.5";
+
+            textarea.addEventListener("input", () => {
+                const length = textarea.value.length;
+                counter.textContent = `${length}/${max}`;
+
+                counter.style.color = (max - length <= 10) ? "red" : "#657786";
+
+                publishBtn.disabled = (length === 0);
+                publishBtn.style.opacity = (length === 0) ? "0.5" : "1";
+            });
+        }
+
+        /* === COMPTEUR POUR TOUTES LES RÉPONSES === */
+        const replyInputs = document.querySelectorAll(".replyInput");
+        const replyCounters = document.querySelectorAll(".replyCounter");
+        const replyButtons = document.querySelectorAll(".replyBtn");
+
+        replyInputs.forEach((input, index) => {
+            const counter = replyCounters[index];
+            const button = replyButtons[index];
+            const maxReply = 280;
+
+            // init
+            counter.textContent = `0/${maxReply}`;
+            button.disabled = true;
+            button.style.opacity = "0.5";
+
+            input.addEventListener("input", () => {
+                const length = input.value.length;
+                const remaining = maxReply - length;
+
+                counter.textContent = `${length}/${maxReply}`;
+
+                counter.style.color = (remaining <= 20 ? "red" : "#657786");
+
+                button.disabled = (length === 0);
+                button.style.opacity = (length === 0 ? "0.5" : "1");
+            });
+        });
+
+    });
+    </script>
+
+
+
 </body>
 </html>
