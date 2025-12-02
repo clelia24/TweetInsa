@@ -390,6 +390,41 @@ def add_bio():
     flash("Biographie mise à jour avec succès !")
     return redirect(url_for('edit_profile'))
 
+@app.route('/report/<tweet_id>')
+def report_tweet(tweet_id):
+    # Charger la base des tweets
+    db = _load_tweets()
+    tweets = db.get("tweets", [])
+
+    reported_tweet = None
+
+    # Chercher le tweet à signaler
+    for t in tweets:
+        if t["tweet_id"] == tweet_id:
+            # Initialiser le compteur si absent ou incorrect
+            if "reports" not in t or not isinstance(t["reports"], int):
+                t["reports"] = 0
+
+            # Ajouter 1 report
+            t["reports"] += 1
+            reported_tweet = t
+            break  # on a trouvé le tweet → sortir de la boucle
+
+    # Supprimer si 3 reports ou plus
+    if reported_tweet and reported_tweet["reports"] >= 3:
+        tweets.remove(reported_tweet)
+        flash("Tweet supprimé après 3 signalements.")
+
+    # Sauvegarder la DB
+    _save_tweets(db)
+
+    # Message pour le signalement (si pas supprimé)
+    if not (reported_tweet and reported_tweet["reports"] >= 3):
+        flash("Tweet signalé.")
+
+    return redirect(request.referrer or url_for('timeline'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

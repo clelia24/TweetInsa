@@ -332,20 +332,6 @@
       "content": "bla"
     },
     {
-      "tweet_id": "d8140c3f-dbf2-4f86-a7ab-2100078519cf",
-      "username": "la",
-      "date": "2025-11-24T18:42:43",
-      "content": "encore 1",
-      "replies": [
-        {
-          "reply_id": "025e858d-83ad-435a-b380-fe3f38a52c45",
-          "username": "la",
-          "date": "2025-11-25T16:27:39",
-          "content": "cc"
-        }
-      ]
-    },
-    {
       "tweet_id": "0c11625e-909b-4a18-99a6-0453fa880ff6",
       "username": "la",
       "date": "2025-11-25T16:31:30",
@@ -493,6 +479,13 @@
           "content": "test"
         }
       ]
+    },
+    {
+      "tweet_id": "22f5b500-bcb7-40dc-ba36-43847ca3eb42",
+      "username": "la",
+      "date": "2025-12-02T14:32:24",
+      "content": "Photo !",
+      "media_path": "uploads/IMG_3217.JPEG"
     }
   ]
 }
