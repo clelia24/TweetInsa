@@ -485,7 +485,33 @@
       "username": "la",
       "date": "2025-12-02T14:32:24",
       "content": "Photo !",
-      "media_path": "uploads/IMG_3217.JPEG"
+      "media_path": "uploads/IMG_3217.JPEG",
+      "likes": [
+        "astrid1"
+      ],
+      "replies": [
+        {
+          "reply_id": "16d92212-9505-460c-b3ea-398025aab4f5",
+          "username": "astrid1",
+          "date": "2025-12-02T13:06:04",
+          "content": "tres joli!"
+        }
+      ]
+    },
+    {
+      "tweet_id": "4f330498-ef91-40e9-80c2-093c4ecede9d",
+      "username": "astrid1",
+      "date": "2025-12-02T12:52:27",
+      "content": "oui",
+      "media_path": null,
+      "reports": 1
+    },
+    {
+      "tweet_id": "c7acdc7d-77dd-40ff-aeb7-cedf26b598e5",
+      "username": "astrid1",
+      "date": "2025-12-02T13:06:41",
+      "content": "Nouvelle pp",
+      "media_path": "uploads/Untitled.jpeg"
     }
   ]
 }
