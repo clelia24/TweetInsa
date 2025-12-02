@@ -148,6 +148,7 @@
             <img src="/pfp/{{ user['username'] }}" class="pfp">
             <p><strong>Nom d’utilisateur :</strong> {{ user["username"] }}</p>
             <p><strong>Email :</strong> {{ user["email"] }}</p>
+            <p><strong>Biographie :</strong> {{ user["bio"] if user["bio"] else "" }}</p>
 
             {% if session['username'] == user["username"] %}
                 <a href="/edit_profile" class="edit-btn">Modifier le profil</a>

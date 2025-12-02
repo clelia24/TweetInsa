@@ -367,6 +367,29 @@ def pfp(username):
     # Si pas de photo → image par défaut
     return send_file("../static/images/default_pfp.jpg")
 
+@app.route('/add_bio', methods=['POST'])
+def add_bio():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    new_bio = request.form.get('bio', '').strip()
+    db = _load_db()
+
+    for u in db.get("users", []):
+        if u["username"] == session['username']:
+            
+            # Si la clé bio n’existe pas OU n'est pas une string : on la force en string
+            if "bio" not in u or not isinstance(u["bio"], str):
+                u["bio"] = ""
+
+            # On remplace par la nouvelle valeur
+            u["bio"] = new_bio
+            break
+
+    _save_db(db)
+    flash("Biographie mise à jour avec succès !")
+    return redirect(url_for('edit_profile'))
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
