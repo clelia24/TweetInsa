@@ -69,6 +69,16 @@
       "password_hash": "634af311109221da0fb3793c67c68261f37f220a7ee6bfc400bcd3149dfae0c9",
       "salt": "dff61f2107d30440da227cb52f54648a",
       "tweets": []
+    },
+    {
+      "username": "corentin",
+      "email": "corentin.brandam@gmail.com",
+      "password_hash": "053d70398d3937f4d6fc82b6d6a3d7574ab0f1d1446e03f42a74d5433d0ebd25",
+      "salt": "2684dc724b2dccd268046a7ef5e9c1dd",
+      "tweets": [
+        "096b29e6-4ffd-4f67-81e5-e289fbe4acf9",
+        "72b737f7-e324-4608-93ca-a53d7c6aad42"
+      ]
     }
   ]
 }

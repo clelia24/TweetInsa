@@ -2,17 +2,18 @@ import traceback
 from flask import Flask, send_from_directory, request, render_template, redirect, send_file, url_for, session, jsonify, flash, Response 
 import base64
 import json
-from .db_auth_utils import *
-from .db_tweet_utils import *
-from .db_tweet_utils import _load_tweets, _save_tweets
-from .db_auth_utils import _load_db, _save_db, _hash_password
+from db_auth_utils import *
+from db_tweet_utils import *
+from db_tweet_utils import _load_tweets, _save_tweets
+from db_auth_utils import _load_db, _save_db, _hash_password
 from datetime import datetime
 import os
 import secrets
 
 app = Flask(__name__, template_folder="../frontend", static_folder="../static")
 app.secret_key = secrets.token_hex(16)
-UPLOAD_FOLDER = os.path.join('..', 'static', 'uploads')
+UPLOAD_FOLDER = os.path.join(app.root_path, '..', 'static', 'uploads')
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov'}  # Extensions autorisées
 
@@ -126,6 +127,9 @@ def post_tweet_route():
     if media and allowed_file(media.filename):
         filename = secure_filename(media.filename)
         save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        print("DEBUG — app.root_path =", app.root_path)
+        print("DEBUG — UPLOAD_FOLDER =", app.config['UPLOAD_FOLDER'])
+        print("DEBUG — save_path =", save_path)
         media.save(save_path)
         media_path = f"uploads/{filename}"
     if not content and not media_path:

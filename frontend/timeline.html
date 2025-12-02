@@ -61,6 +61,12 @@
         }
         .like-count { font-weight: bold; margin-left: 4px; }
         .reply-count { font-weight: bold; margin-left: 4px; color: #1da1f2; }
+
+        .tweet > img {
+            max-width: 500px;
+            width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -69,12 +75,7 @@
     <div class="bloc-gauche">
         <img src="../static/images/Logo-twitter.png" alt="TwitINSA Logo" width="50" height="50" style="margin-bottom: 20px;">
         <button><img src="../static/images/home.png" alt="Home" width="24"> Accueil</button>
-        <a href="{{ url_for('explore') }}" style="text-decoration:none;">
-            <button>
-                <img src="../static/images/Recherche.png" alt="Recherche" width="24"> Rechercher
-            </button>
-        </a>
-
+        <button><img src="../static/images/recherche.png" alt="Recherche" width="24"> Explorer</button>
         <button><img src="../static/images/notif.png" alt="Notifications" width="24"> Notifications</button>
         <button><img src="../static/images/messages.png" alt="Messages" width="24"> Messages</button>
         <a href="{{ url_for('profile') }}" style="display: inline-block; text-decoration: none;">
@@ -90,14 +91,15 @@
             <div class="modal-content">
                 <span class="close">×</span>
                 <h2>Nouveau tweet</h2>
-                <form id="tweetForm" method="POST" action="/post_tweet">
-                    <textarea id="tweetInput" name="tweetInput" rows="4" placeholder="Quoi de neuf ?" maxlength="140" required></textarea>
+                <form id="tweetForm" method="POST" action="/post_tweet" enctype="multipart/form-data">
+                    <textarea name="tweet" rows="4" placeholder="Quoi de neuf ?" maxlength="280" required></textarea>
                     <div id="charCount" style="text-align:right; font-size:0.85em; color:#657786; margin-top:4px;">
-                        140
+                        280
                     </div>
-
-                    <br>
-                    <button type="submit" id="publishBtn">Publier</button>
+                    <br><br>
+                    <input type="file" name="media" accept="image/*,video/*">
+                    <br><br>
+                    <button type="submit">Publier</button>
                 </form>
             </div>
         </div>
@@ -123,6 +125,10 @@
                     </div>
                 </div>
                 {{ t.content | replace("\n", "<br>") | safe }}
+                {% if t.media_path %}
+                    <br>
+                    <img src="{{ url_for('static', filename=t.media_path) }}" alt="Média">
+                {% endif %}
 
                 <!-- Actions : Like + Répondre -->
                 <div class="tweet-actions">
@@ -160,14 +166,12 @@
                             0/280
                         </div>
 
-                        <br>
-                        <button type="submit" class="replyBtn">Répondre</button>
+                        <button type="submit">Répondre</button>
                         <button type="button" onclick="this.closest('.reply-form').style.display='none'; 
-                                                       document.querySelector('[onclick*=\"{{ t.tweet_id }}\"]').style.display='inline';">
+                                                     document.querySelector('[onclick*=\"{{ t.tweet_id }}\"]').style.display='inline';">
                             Annuler
                         </button>
                     </form>
-
                 </div>
 
                 <!-- Affichage des réponses existantes -->
@@ -197,63 +201,5 @@
     </div>
 
     <script src="../static/modal.js"></script>
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-
-        /* === COMPTEUR POUR LE TWEET PRINCIPAL === */
-        const textarea = document.getElementById("tweetInput");
-        const counter  = document.getElementById("charCount");
-        const publishBtn = document.getElementById("publishBtn");
-        const max = 140;
-
-        if (textarea) {
-            counter.textContent = `0/${max}`;
-            publishBtn.disabled = true;
-            publishBtn.style.opacity = "0.5";
-
-            textarea.addEventListener("input", () => {
-                const length = textarea.value.length;
-                counter.textContent = `${length}/${max}`;
-
-                counter.style.color = (max - length <= 10) ? "red" : "#657786";
-
-                publishBtn.disabled = (length === 0);
-                publishBtn.style.opacity = (length === 0) ? "0.5" : "1";
-            });
-        }
-
-        /* === COMPTEUR POUR TOUTES LES RÉPONSES === */
-        const replyInputs = document.querySelectorAll(".replyInput");
-        const replyCounters = document.querySelectorAll(".replyCounter");
-        const replyButtons = document.querySelectorAll(".replyBtn");
-
-        replyInputs.forEach((input, index) => {
-            const counter = replyCounters[index];
-            const button = replyButtons[index];
-            const maxReply = 280;
-
-            // init
-            counter.textContent = `0/${maxReply}`;
-            button.disabled = true;
-            button.style.opacity = "0.5";
-
-            input.addEventListener("input", () => {
-                const length = input.value.length;
-                const remaining = maxReply - length;
-
-                counter.textContent = `${length}/${maxReply}`;
-
-                counter.style.color = (remaining <= 20 ? "red" : "#657786");
-
-                button.disabled = (length === 0);
-                button.style.opacity = (length === 0 ? "0.5" : "1");
-            });
-        });
-
-    });
-    </script>
-
-
-
 </body>
 </html>

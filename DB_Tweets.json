@@ -50,6 +50,20 @@
           "content": "Yep"
         }
       ]
+    },
+    {
+      "tweet_id": "096b29e6-4ffd-4f67-81e5-e289fbe4acf9",
+      "username": "corentin",
+      "date": "2025-12-02T11:24:26",
+      "content": "test",
+      "media_path": "uploads/plage.jpg"
+    },
+    {
+      "tweet_id": "72b737f7-e324-4608-93ca-a53d7c6aad42",
+      "username": "corentin",
+      "date": "2025-12-02T11:32:10",
+      "content": "test sans media",
+      "media_path": null
     }
   ]
 }
