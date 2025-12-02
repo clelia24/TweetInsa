@@ -1,2 +1,6 @@
 flask==2.0.1
 werkzeug==2.0.1
+fastapi
+pydantic
+sqlalchemy
+passlib[bcrypt]
