@@ -6,6 +6,12 @@
     <title>Recherche — TwitINSA</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
+        /* Surcharge locale pour éviter débordement */
+        .posts {
+            border-right: none;   /* enlève la séparation à droite */
+            max-width: 500px;     /* réduit un peu la largeur */
+        }
+
         .search-box {
             background: white;
             padding: 15px;
@@ -16,10 +22,19 @@
 
         .search-input {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
+            box-sizing: border-box; /* évite le dépassement */
+            padding: 12px 40px 12px 15px;
+            border-radius: 25px;
             border: 1px solid #ccd6dd;
             font-size: 1em;
+            background: url("{{ url_for('static', filename='images/loupe.png') }}") no-repeat right 12px center;
+            background-size: 20px;
+            transition: box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px #1d9bf033;
         }
 
         .suggestions-list {
@@ -35,35 +50,37 @@
             margin-bottom: 10px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.06);
             cursor: pointer;
-            transition: background 0.15s;
+            transition: background 0.15s, transform 0.15s;
         }
 
         .suggestion-item:hover {
-            background: #f1f7ff;
+            background: #e8f5fe;
+            transform: scale(1.02);
         }
     </style>
 </head>
 
 <body>
 
+<!-- MENU FLOTTANT -->
 <div class="floating-menu">
     <a href="{{ url_for('timeline') }}"><img src="{{ url_for('static', filename='images/home.png') }}" width="28"></a>
     <a href="{{ url_for('explore') }}"><img src="{{ url_for('static', filename='images/Recherche.png') }}" width="28"></a>
     <a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='images/profile-2.png') }}" width="28"></a>
 </div>
 
+<!-- BARRE LATERALE -->
 <div class="bloc-gauche">
     <img src="{{ url_for('static', filename='images/Logo-twitter.png') }}" width="50" style="margin-bottom:20px;">
-
     <a href="{{ url_for('timeline') }}"><button><img src="{{ url_for('static', filename='images/home.png') }}" width="24"> Accueil</button></a>
     <a href="{{ url_for('explore') }}"><button><img src="{{ url_for('static', filename='images/Recherche.png') }}" width="24"> Recherche</button></a>
     <button><img src="{{ url_for('static', filename='images/notif.png') }}" width="24"> Notifications</button>
     <a href="{{ url_for('profile') }}"><button><img src="{{ url_for('static', filename='images/profile-2.png') }}" width="24"> Profil</button></a>
 </div>
 
+<!-- CONTENU PRINCIPAL -->
 <div class="posts">
-    <h2>Recherche d’utilisateur</h2>
-
+    <h2>🔍 Recherche d’utilisateur</h2>
     <div class="search-box">
         <input 
             type="text" 
@@ -95,6 +112,13 @@ function searchUser(event) {
         .then(r => r.json())
         .then(data => {
             box.innerHTML = "";
+            if (data.length === 0) {
+                const li = document.createElement("li");
+                li.className = "suggestion-item";
+                li.textContent = "Aucun résultat trouvé";
+                box.appendChild(li);
+                return;
+            }
             data.forEach(name => {
                 const li = document.createElement("li");
                 li.className = "suggestion-item";

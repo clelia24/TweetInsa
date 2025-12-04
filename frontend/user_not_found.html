@@ -4,63 +4,93 @@
     <meta charset="UTF-8">
     <title>Utilisateur introuvable — TwitINSA</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Surcharge locale pour éviter débordement */
+        .posts {
+            border-right: none;   /* enlève la séparation à droite */
+            max-width: 500px;     /* réduit un peu la largeur */
+        }
+
+        .error-box {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .error-box h2 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .error-box p {
+            color: #536471;
+            margin: 10px 0;
+        }
+
+        .suggestions-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .suggestion-item {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 25px;
+            margin: 8px auto;
+            width: fit-content;
+            transition: all 0.2s;
+        }
+
+        .suggestion-item a {
+            text-decoration: none;
+            color: #1d9bf0;
+            font-weight: bold;
+        }
+
+        .suggestion-item:hover {
+            background: #e8f5fe;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- MENU FLOTTANT -->
 <div class="floating-menu">
-    <a href="{{ url_for('timeline') }}">
-        <img src="{{ url_for('static', filename='images/home.png') }}" width="28">
-    </a>
-
-    <a href="{{ url_for('explore') }}">
-        <img src="{{ url_for('static', filename='images/Recherche.png') }}" width="28">
-    </a>
-
-    <a href="{{ url_for('profile') }}">
-        <img src="{{ url_for('static', filename='images/profile-2.png') }}" width="28">
-    </a>
+    <a href="{{ url_for('timeline') }}"><img src="{{ url_for('static', filename='images/home.png') }}" width="28"></a>
+    <a href="{{ url_for('explore') }}"><img src="{{ url_for('static', filename='images/Recherche.png') }}" width="28"></a>
+    <a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='images/profile-2.png') }}" width="28"></a>
 </div>
 
-<!-- BARRE LATERALE -->
 <div class="bloc-gauche">
     <img src="{{ url_for('static', filename='images/Logo-twitter.png') }}" width="50" style="margin-bottom:20px;">
-
-    <a href="{{ url_for('timeline') }}">
-        <button><img src="{{ url_for('static', filename='images/home.png') }}" width="24"> Accueil</button>
-    </a>
-
-    <a href="{{ url_for('explore') }}">
-        <button><img src="{{ url_for('static', filename='images/recherche.png') }}" width="24"> Recherche</button>
-    </a>
-
+    <a href="{{ url_for('timeline') }}"><button><img src="{{ url_for('static', filename='images/home.png') }}" width="24"> Accueil</button></a>
+    <a href="{{ url_for('explore') }}"><button><img src="{{ url_for('static', filename='images/Recherche.png') }}" width="24"> Recherche</button></a>
     <button><img src="{{ url_for('static', filename='images/notif.png') }}" width="24"> Notifications</button>
-    <button><img src="{{ url_for('static', filename='images/messages.png') }}" width="24"> Messages</button>
-
-    <a href="{{ url_for('profile') }}">
-        <button><img src="{{ url_for('static', filename='images/profile-2.png') }}" width="24"> Profil</button>
-    </a>
+    <a href="{{ url_for('profile') }}"><button><img src="{{ url_for('static', filename='images/profile-2.png') }}" width="24"> Profil</button></a>
 </div>
 
-<!-- CONTENU PRINCIPAL -->
 <div class="posts">
-    <h2>Utilisateur introuvable</h2>
+    <div class="error-box">
+        <h2>🚫 Utilisateur introuvable</h2>
+        <p>Aucun utilisateur nommé <strong>{{ query }}</strong>.</p>
 
-    <p>Aucun utilisateur nommé <strong>{{ query }}</strong>.</p>
+        {% if suggestions %}
+            <p>Peut-être recherchez-vous :</p>
+            <ul class="suggestions-list">
+                {% for s in suggestions %}
+                    <li class="suggestion-item">
+                        <a href="/profile/{{ s }}">@{{ s }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-    {% if suggestions %}
-        <p>Peut-être recherchez-vous :</p>
-        <ul class="suggestions-list">
-            {% for s in suggestions %}
-                <li class="suggestion-item">
-                    <a href="/profile/{{ s }}">@{{ s }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-</div>
-
-</body>
-</html>
-
+        <a href="{{ url_for('explore') }}">
+            <button id="post">Retour à la recherche</button>
+        </a>
+    </div
