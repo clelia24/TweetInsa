@@ -130,6 +130,74 @@
         footer a:hover {
             text-decoration: underline;
         }
+        .popup {
+            display: none; /* Masqué par défaut */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+
+        .popup-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            width: 350px;
+            max-height: 450px;
+            overflow-y: auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .popup.show .popup-content {
+            transform: scale(1);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #popupList {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        #popupList li {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e1e8ed;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        #popupList li:hover {
+            background-color: #f0f0f0;
+        }
+
+        #popupList img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+        }
+
+
+        
     </style>
 </head>
 <body>
@@ -152,19 +220,37 @@
             <p style="color:#657786; margin-top:6px;">{{ user["bio"] if user["bio"] else "" }}</p>
 
             {% if session['username'] == user["username"] %}
-                <button type="button" id="openPhotoPopup" class="edit-btn" style="margin-bottom: 15px;">
+                <button type="button" id="followersBtn" class="edit-btn" style="margin-bottom: 15px;">
                     Abonnés ({{ user["followers"] | length }})
                 </button>
-                <button type="button" id="openPhotoPopup" class="edit-btn" style="margin-bottom: 15px;">
+                <button type="button" id="followingBtn" class="edit-btn" style="margin-bottom: 15px;">
                     Abonnements ({{ user["following"] | length }})
                 </button>
+                <div id="popup" class="popup">
+                    <div class="popup-content">
+                        <span class="close">&times;</span>
+                        <h2 id="popupTitle"></h2>
+                        <ul id="popupList">
+                            {% macro render_user_list(users) %}
+                                {% for u_name in users %}
+                                    {% set u = get_user(u_name) %}
+                                    <li onclick="window.location.href='{{ url_for('profile_by_name', username=u['username']) }}'">
+                                        <img src="{{ url_for('pfp', username=u['username']) }}" alt="{{ u['username'] }}">
+                                        <span>{{ u['username'] }}</span>
+                                    </li>
+                                {% endfor %}
+                            {% endmacro %}
+                        </ul>
+                    </div>
+                </div>
+
 
                 <a href="/edit_profile" class="edit-btn">Modifier le profil</a>
             {% else %}
-                <button type="button" id="openPhotoPopup" class="edit-btn" style="margin-bottom: 15px;">
+                <button type="button"  class="edit-btn" style="margin-bottom: 15px;">
                     Abonnés ({{ user["followers"] | length }})
                 </button>
-                <button type="button" id="openPhotoPopup" class="edit-btn" style="margin-bottom: 15px;">
+                <button type="button"  class="edit-btn" style="margin-bottom: 15px;">
                     Abonnements ({{ user["following"] | length }})
                 </button>
 
@@ -227,6 +313,57 @@
         <a href="/timeline">Retour à la timeline</a>
     </footer>
     
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const popup = document.getElementById("popup");
+        const popupTitle = document.getElementById("popupTitle");
+        const popupList = document.getElementById("popupList");
+        const closeBtn = document.querySelector(".close");
+
+        // Données passées depuis Flask
+        const followers = {{ user["followers"] | tojson }};
+        const following = {{ user["following"] | tojson }};
+
+        // Créer un <li> pour chaque utilisateur
+        function fillPopup(title, users) {
+            popupTitle.textContent = title;
+            popupList.innerHTML = "";
+            users.forEach(username => {
+                const li = document.createElement("li");
+                li.onclick = () => {
+                    window.location.href = `/profile/${username}`;
+                };
+
+                const img = document.createElement("img");
+                img.src = `/pfp/${username}`;
+                img.alt = username;
+
+                const span = document.createElement("span");
+                span.textContent = username;
+
+                li.appendChild(img);
+                li.appendChild(span);
+                popupList.appendChild(li);
+            });
+            popup.style.display = "flex";
+        }
+
+        document.getElementById("followersBtn").addEventListener("click", () => {
+            fillPopup("Abonnés", followers);
+        });
+
+        document.getElementById("followingBtn").addEventListener("click", () => {
+            fillPopup("Abonnements", following);
+        });
+
+        closeBtn.addEventListener("click", () => { popup.style.display = "none"; });
+        popup.addEventListener("click", (e) => {
+            if(e.target === popup) popup.style.display = "none";
+        });
+    });
+</script>
+
+
 
 </body>
 </html>
