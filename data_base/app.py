@@ -162,7 +162,7 @@ def profile():
     return render_template('profile.html', user=user, tweets=tweets)
 
 @app.route("/profile/<username>")
-def profile_by_name(username):
+def profile_by_name(username):    
     user = get_user(username)
     if user:
         return render_template("profile.html", user=user, tweets=get_user_tweets(username))
@@ -171,6 +171,8 @@ def profile_by_name(username):
     db = _load_db()
     suggestions = [u["username"] for u in db.get("users", []) if username.lower() in u["username"].lower()]
     return render_template("user_not_found.html", query=username, suggestions=suggestions)
+
+
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
@@ -260,13 +262,7 @@ def search_user():
     matches = sorted([u["username"] for u in users if u["username"].lower().startswith(query)])
     return jsonify(matches)
 
-@app.route('/user/<username>')
-def profil_autre(username):
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    user = get_user(username)
-    if user:
-        return render_template("profile.html", user=user, tweets=get_user_tweets(username))
+
     
 
 

@@ -49,6 +49,7 @@
             border-radius: 10px;
             margin-bottom: 30px;
             border: 1px solid var(--border);
+            text-align: center;
         }
 
         .profile-info p {
@@ -145,13 +146,37 @@
                     {{ success }}
                 </div>
             {% endif %}
-            <img src="/pfp/{{ user['username'] }}" class="pfp">
-            <p><strong>Nom d’utilisateur :</strong> {{ user["username"] }}</p>
-            <p><strong>Email :</strong> {{ user["email"] }}</p>
-            <p><strong>Biographie :</strong> {{ user["bio"] if user["bio"] else "" }}</p>
+            <img src="/pfp/{{ user['username'] }}" class="pfp" alt="@{{ user['username'] }}">
+
+            <p><strong>{{ user["username"] }}</strong></p>
+            <p style="color:#657786; margin-top:6px;">{{ user["bio"] if user["bio"] else "" }}</p>
 
             {% if session['username'] == user["username"] %}
+                <button type="button" id="openPhotoPopup" class="edit-btn" style="margin-bottom: 15px;">
+                    Abonnés ({{ user["followers"] | length }})
+                </button>
+                <button type="button" id="openPhotoPopup" class="edit-btn" style="margin-bottom: 15px;">
+                    Abonnements ({{ user["following"] | length }})
+                </button>
+
                 <a href="/edit_profile" class="edit-btn">Modifier le profil</a>
+            {% else %}
+                <button type="button" id="openPhotoPopup" class="edit-btn" style="margin-bottom: 15px;">
+                    Abonnés ({{ user["followers"] | length }})
+                </button>
+                <button type="button" id="openPhotoPopup" class="edit-btn" style="margin-bottom: 15px;">
+                    Abonnements ({{ user["following"] | length }})
+                </button>
+
+                {% if session['username'] in user["followers"] %}
+                    <form action="/unfollow/{{ user['username'] }}" method="POST" style="display:inline;">
+                        <button type="submit" class="edit-btn" style="background:#d62828; margin-left:10px;">Se désabonner</button>
+                    </form>
+                {% else %}
+                    <form action="/follow/{{ user['username'] }}" method="POST" style="display:inline;">
+                        <button type="submit" class="edit-btn" style="background:#1da1f2; margin-left:10px;">S'abonner</button>
+                    </form>
+                {% endif %}
             {% endif %}
         </div>
 
