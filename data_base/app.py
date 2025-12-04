@@ -443,6 +443,102 @@ def report_tweet(tweet_id):
     _save_tweets(db)
     return redirect(request.referrer or url_for('timeline'))
 
+@app.route("/follow/<username>", methods=["POST"])
+def follow(username):
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    current_user = session["username"]
+
+    if current_user == username:
+        flash("Tu ne peux pas t'abonner à toi-même.")
+        return redirect(request.referrer or url_for("timeline"))
+
+    db = _load_db()
+    users = db.get("users", [])
+
+    user_to_follow = None
+    me = None
+
+    # Trouver les deux utilisateurs
+    for u in users:
+        # On initialise toujours les champs follow ici :
+        if "followers" not in u or not isinstance(u["followers"], list):
+            u["followers"] = []
+        if "following" not in u or not isinstance(u["following"], list):
+            u["following"] = []
+
+        if u["username"] == username:
+            user_to_follow = u
+        if u["username"] == current_user:
+            me = u
+
+    if not user_to_follow or not me:
+        flash("Utilisateur introuvable.")
+        return redirect(url_for("timeline"))
+
+    # Déjà abonné ?
+    if username in me["following"]:
+        flash("Tu es déjà abonné à cet utilisateur.")
+        return redirect(request.referrer or url_for("profil_autre", username=username))
+
+    # Abonnement
+    me["following"].append(username)
+    user_to_follow["followers"].append(current_user)
+
+    _save_db(db)
+
+    flash(f"Tu t'es abonné à {username}.")
+    return redirect(request.referrer or url_for("profil_autre", username=username))
+
+@app.route("/unfollow/<username>", methods=["POST"])
+def unfollow(username):
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    current_user = session["username"]
+
+    if current_user == username:
+        flash("Tu ne peux pas te désabonner de toi-même.")
+        return redirect(request.referrer or url_for("timeline"))
+
+    db = _load_db()
+    users = db.get("users", [])
+
+    user_to_unfollow = None
+    me = None
+
+    for u in users:
+        # Initialiser si manquant
+        if "followers" not in u or not isinstance(u["followers"], list):
+            u["followers"] = []
+        if "following" not in u or not isinstance(u["following"], list):
+            u["following"] = []
+
+        if u["username"] == username:
+            user_to_unfollow = u
+        if u["username"] == current_user:
+            me = u
+
+    if not user_to_unfollow or not me:
+        flash("Utilisateur introuvable.")
+        return redirect(url_for("timeline"))
+
+    # Vérifie s'il était abonné
+    if username not in me["following"]:
+        flash("Tu n'es pas abonné à cet utilisateur.")
+        return redirect(request.referrer or url_for("profil_autre", username=username))
+
+    # Désabonnement
+    me["following"].remove(username)
+    if current_user in user_to_unfollow["followers"]:
+        user_to_unfollow["followers"].remove(current_user)
+
+    _save_db(db)
+
+    flash(f"Tu t'es désabonné de {username}.")
+    return redirect(request.referrer or url_for("profil_autre", username=username))
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
