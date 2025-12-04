@@ -123,11 +123,15 @@
             {% for t in tweets %}
             <div class="tweet">
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
-                    <img src="{{ url_for('pfp', username=t.username) }}" 
-                        alt="@{{ t.username }}" 
-                        style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                    <a href="{{ url_for('profil_autre', username=t.username) }}">
+                        <img src="{{ url_for('pfp', username=t.username) }}" 
+                            alt="@{{ t.username }}" 
+                            style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                    </a>
                     <div>
-                        <strong>@{{ t.username }}</strong> 
+                        <a href="{{ url_for('profil_autre', username=t.username) }}" style="text-decoration:none; color:inherit;">
+                            @{{ t.username }}
+                        </a>
                         <span style="color:#657786; font-weight:normal; font-size:0.9em;">— {{ t.date }}</span>
                     </div>
                 </div>

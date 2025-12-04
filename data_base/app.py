@@ -260,6 +260,16 @@ def search_user():
     matches = sorted([u["username"] for u in users if u["username"].lower().startswith(query)])
     return jsonify(matches)
 
+@app.route('/user/<username>')
+def profil_autre(username):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    user = get_user(username)
+    if user:
+        return render_template("profile.html", user=user, tweets=get_user_tweets(username))
+    
+
+
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
