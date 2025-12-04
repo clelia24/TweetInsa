@@ -402,38 +402,50 @@ def add_bio():
 
 @app.route('/report/<tweet_id>')
 def report_tweet(tweet_id):
-    # Charger la base des tweets
+    if "username" not in session:
+        flash("Vous devez être connecté pour signaler un tweet.")
+        return redirect(url_for("login"))
+
+    current_user = session["username"]
     db = _load_tweets()
     tweets = db.get("tweets", [])
 
     reported_tweet = None
 
-    # Chercher le tweet à signaler
+    # Chercher le tweet
     for t in tweets:
         if t["tweet_id"] == tweet_id:
-            # Initialiser le compteur si absent ou incorrect
+
+            # Initialiser le compteur et la liste des reporters si absents
             if "reports" not in t or not isinstance(t["reports"], int):
                 t["reports"] = 0
 
-            # Ajouter 1 report
+            if "reporters" not in t or not isinstance(t["reporters"], list):
+                t["reporters"] = []
+
+            # Vérifier si l'utilisateur a déjà signalé ce tweet
+            if current_user in t["reporters"]:
+                flash("Vous avez déjà signalé ce tweet.")
+                _save_tweets(db)
+                return redirect(request.referrer or url_for('timeline'))
+
+            # Ajouter ce user comme reporter
+            t["reporters"].append(current_user)
+
+            # Incrémenter
             t["reports"] += 1
             reported_tweet = t
-            break  # on a trouvé le tweet → sortir de la boucle
+            break
 
     # Supprimer si 3 reports ou plus
     if reported_tweet and reported_tweet["reports"] >= 3:
         tweets.remove(reported_tweet)
         flash("Tweet supprimé après 3 signalements.")
-
-    # Sauvegarder la DB
-    _save_tweets(db)
-
-    # Message pour le signalement (si pas supprimé)
-    if not (reported_tweet and reported_tweet["reports"] >= 3):
+    else:
         flash("Tweet signalé.")
 
+    _save_tweets(db)
     return redirect(request.referrer or url_for('timeline'))
-
 
 
 if __name__ == '__main__':
