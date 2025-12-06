@@ -79,6 +79,13 @@
         "096b29e6-4ffd-4f67-81e5-e289fbe4acf9",
         "72b737f7-e324-4608-93ca-a53d7c6aad42"
       ]
+    },
+    {
+      "username": "Ayman Bouss",
+      "email": "ayihmed@gmail.com",
+      "password_hash": "22daa24b4f17384a7efadb5335d59011e248dd47991e6cde3670198261b82ea2",
+      "salt": "aade0c7300341e88eb50f42724374e0b",
+      "tweets": []
     }
   ]
 }

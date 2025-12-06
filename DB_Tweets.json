@@ -16,7 +16,10 @@
       "tweet_id": "0379610d-5d45-410a-9a6f-c264b2b3b38c",
       "username": "astrid",
       "date": "07/10/2025 05:25",
-      "content": "Ceci est un test."
+      "content": "Ceci est un test.",
+      "likes": [
+        "Ayman Bouss"
+      ]
     },
     {
       "tweet_id": "21d508a8-c93e-456d-ba1d-6b08fef61f4f",
@@ -41,14 +44,38 @@
       "username": "nom personne connect\u00e9e",
       "date": "2025-10-21T20:22:20",
       "content": "test stp \u00e7a marche \r\n",
-      "likes": [],
+      "likes": [
+        "Ayman Bouss"
+      ],
       "replies": [
         {
           "reply_id": "5a08c65f-ea76-4a95-a26b-d18df468e4b6",
           "username": "Ayman",
           "date": "2025-11-19T23:42:30",
           "content": "Yep"
+        },
+        {
+          "reply_id": "e7d8ab2d-ade0-430e-a1f1-148273ced00d",
+          "username": "Ayman Bouss",
+          "date": "2025-12-06T17:28:24",
+          "content": "Salut"
+        },
+        {
+          "reply_id": "56e1b48d-05c2-460d-b616-d56fb911025c",
+          "username": "Ayman Bouss",
+          "date": "2025-12-06T17:28:37",
+          "content": "Encore plus de message"
+        },
+        {
+          "reply_id": "fbf2f231-5480-460e-92e8-aeed46eeaf97",
+          "username": "Ayman Bouss",
+          "date": "2025-12-06T17:29:14",
+          "content": "On a bien le voir plus de r\u00e9ponses"
         }
+      ],
+      "reports": 1,
+      "reporters": [
+        "Ayman Bouss"
       ]
     },
     {
@@ -56,14 +83,30 @@
       "username": "corentin",
       "date": "2025-12-02T11:24:26",
       "content": "test",
-      "media_path": "uploads/plage.jpg"
+      "media_path": "uploads/plage.jpg",
+      "likes": [
+        "Ayman Bouss"
+      ],
+      "reports": 1,
+      "reporters": [
+        "Ayman Bouss"
+      ]
     },
     {
       "tweet_id": "72b737f7-e324-4608-93ca-a53d7c6aad42",
       "username": "corentin",
       "date": "2025-12-02T11:32:10",
       "content": "test sans media",
-      "media_path": null
+      "media_path": null,
+      "retweets": [],
+      "retweet_count": 0,
+      "likes": [
+        "Ayman Bouss"
+      ],
+      "reports": 1,
+      "reporters": [
+        "Ayman Bouss"
+      ]
     }
   ]
 }

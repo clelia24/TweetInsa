@@ -1,10 +1,10 @@
 import traceback
-from flask import Flask, send_from_directory, request, render_template, redirect, send_file, url_for, session, jsonify, flash, Response 
+from flask import Flask, send_from_directory, request, render_template, redirect, send_file, url_for, session, jsonify, flash, Response
 import base64
 import json
 from db_auth_utils import *
 from db_tweet_utils import *
-from db_tweet_utils import _load_tweets, _save_tweets
+from db_tweet_utils import _load_tweets, _save_tweets, has_user_retweeted, get_retweet_count, toggle_retweet
 from db_auth_utils import _load_db, _save_db, _hash_password
 from datetime import datetime
 import os
@@ -106,9 +106,11 @@ def timeline():
     return render_template(
         "timeline.html",
         tweets=tweets,
-        has_user_liked=has_user_liked,       # ← 1) rendre dispo dans Jinja
-        get_likes_count=get_likes_count      # ← 2) rendre dispo dans Jinja
-    )
+        has_user_liked=has_user_liked,
+        get_likes_count=get_likes_count,
+        has_user_retweeted=has_user_retweeted,      
+        get_retweet_count=get_retweet_count          
+)
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
@@ -272,21 +274,26 @@ def logout():
     flash('Vous êtes déconnecté.')
     return redirect(url_for('index'))
 
+
+#Like un tweet
 @app.route("/like/<tweet_id>", methods=["POST"])
 def like_route(tweet_id):
     if 'username' not in session:
-        return redirect(url_for('login'))
+        return jsonify({'error': 'Non connecté'}), 401
     try:
         like_tweet(tweet_id, session['username'])
+        return jsonify({
+            'liked': has_user_liked(tweet_id, session['username']),
+            'likes_count': get_likes_count(tweet_id)
+        })
     except TweetNotFound:
-        pass
-    return redirect(request.referrer or url_for('timeline'))
+        return jsonify({'error': 'Tweet non trouvé'}), 404
 
+#Répondre à un tweet
 @app.route("/reply/<tweet_id>", methods=["POST"])
 def reply_route(tweet_id):
     if 'username' not in session:
         return redirect(url_for('login'))
-
     content = request.form.get("reply_content", "").strip()
     if content:
         try:
@@ -294,6 +301,28 @@ def reply_route(tweet_id):
         except (TweetNotFound, TweetTooLong):
             pass
     return redirect(request.referrer or url_for('timeline'))
+
+
+#Retweet un tweet
+@app.route("/retweet/<tweet_id>", methods=["POST"])
+def retweet_route(tweet_id):
+    if 'username' not in session:
+        flash("Tu dois être connecté pour retweeter.")
+        return redirect(url_for("login"))
+
+    username = session['username']
+    
+    try:
+        is_retweeted, count = toggle_retweet(tweet_id, username)
+        if is_retweeted:
+            flash("Retweeté !")
+        else:
+            flash("Retweet annulé.")
+    except TweetNotFound:
+        flash("Tweet introuvable.")
+    
+    return redirect(request.referrer or url_for('timeline'))
+
 
 @app.route('/supp_tweet/<tweet_id>', methods=['POST'])
 def supp_tweet(tweet_id):
@@ -396,7 +425,8 @@ def add_bio():
     flash("Biographie mise à jour avec succès !")
     return redirect(url_for('edit_profile'))
 
-@app.route('/report/<tweet_id>')
+
+@app.route('/report/<tweet_id>', methods=['POST'])
 def report_tweet(tweet_id):
     if "username" not in session:
         flash("Vous devez être connecté pour signaler un tweet.")

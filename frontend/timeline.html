@@ -141,32 +141,54 @@
                     <img src="{{ url_for('static', filename=t.media_path) }}" alt="Média">
                 {% endif %}
 
-                <!-- Actions : Like + Répondre -->
+                <!-- ==================== ACTIONS : LIKE + RETWEET + RÉPONDRE ==================== -->
                 <div class="tweet-actions">
+
                     <!-- LIKE -->
-                    <form action="{{ url_for('like_route', tweet_id=t.tweet_id) }}" method="post">
+                    <form class="like-form" data-tweet-id="{{ t.tweet_id }}" action="{{ url_for('like_route', tweet_id=t.tweet_id) }}" method="post">
                         <button type="submit" title="J'aime">
-                            {% if session.username in (t.likes or []) %}
-                                ❤️
+                            {% if has_user_liked(t.tweet_id, session.username) %}
+                                <span style="color: #e0245e;">♥</span>
                             {% else %}
-                                ♡
+                                <span style="color: #657786;">♡</span>
                             {% endif %}
-                            <span class="like-count">{{ (t.likes or []) | length }}</span>
+                            <span class="like-count">{{ get_likes_count(t.tweet_id) }}</span>
+                        </button>
+                    </form>
+
+                    <!-- RETWEET (neuf et magnifique) -->
+                    <form class="retweet-form" data-tweet-id="{{ t.tweet_id }}" action="{{ url_for('retweet_route', tweet_id=t.tweet_id) }}" method="post">
+                        <button type="submit" 
+                                title="{% if has_user_retweeted(t.tweet_id, session.username) %}Annuler le retweet{% else %}Retweeter{% endif %}">
+                            {% if has_user_retweeted(t.tweet_id, session.username) %}
+                                <span style="color: #00ba7c;">↻</span>   <!-- vert quand déjà retweeté -->
+                            {% else %}
+                                <span style="color: #657786;">↻</span>   <!-- gris sinon -->
+                            {% endif %}
+                            <span class="retweet-count">
+                                {% set rt_count = get_retweet_count(t.tweet_id) %}
+                                {% if rt_count > 0 %}{{ rt_count }}{% endif %}
+                            </span>
                         </button>
                     </form>
 
                     <!-- RÉPONDRE -->
-                    <button onclick="document.getElementById('replyform-{{ t.tweet_id }}').style.display='block'; this.style.display='none';"
+                    <button onclick="document.getElementById('replyform-{{ t.tweet_id }}').style.display='block'; 
+                                     this.style.display='none';"
                             title="Répondre">
-                        💬 <span class="reply-count">{{ (t.replies or []) | length }}</span>
+                        <span style="color: #657786;">↩</span>
+                        <span class="reply-count">
+                            {% if t.replies %}{{ t.replies|length }}{% endif %}
+                        </span>
                     </button>
 
-                    <a href="{{ url_for('report_tweet', tweet_id=t.tweet_id) }}"
-                        title="Signaler"
-                        style="color:#657786; font-size:0.8em; text-decoration:none;">
-                        🚩 Signaler
-                    </a>
+                    <!-- SIGNALER (si tu veux garder) -->
+                    <form action="{{ url_for('report_tweet', tweet_id=t.tweet_id) }}" method="post" style="display:inline;">
+                        <button type="submit" title="Signaler">⚠</button>
+                    </form>
+
                 </div>
+                <!-- ======================================================================= -->
 
                 <!-- Formulaire de réponse (caché par défaut) -->
                 <div id="replyform-{{ t.tweet_id }}" class="reply-form">
@@ -184,8 +206,10 @@
                         </div>
 
                         <button type="submit" class="replyBtn">Répondre</button>
-                        <button type="button" onclick="this.closest('.reply-form').style.display='none'; 
-                                                     document.querySelector('[onclick*=\"{{ t.tweet_id }}\"]').style.display='inline';">
+                        <button type="button" onclick="
+                            document.getElementById('replyform-{{ t.tweet_id }}').style.display='none';
+                            document.querySelector('.tweet-actions button[onclick*=\'replyform-{{ t.tweet_id }}\']').style.display='inline';
+                        ">
                             Annuler
                         </button>
                     </form>
@@ -193,29 +217,43 @@
 
                 <!-- Affichage des réponses existantes -->
                 {% if t.replies %}
-                <div class="replies">
-                    {% for r in t.replies %}
-                    <div class="reply">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <a href="{{ url_for('profile_by_name', username= r.username) }}">
-                                <img src="{{ url_for('pfp', username=r.username) }}"  
-                                    alt="@{{ r.username }}" 
-                                    style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
-                            </a>
-
-                            <div>
-                                <a href="{{ url_for('profile_by_name', username=r.username) }}" style="text-decoration:none; color:inherit;">
-                                    <strong>@{{ r.username }}</strong>
+                    <div class="replies" id="replies-{{ t.tweet_id }}">
+                    
+                        {% set replies = t.replies %}
+                    
+                        {# --- On n'affiche que les 2 premières réponses --- #}
+                        {% for r in replies[:2] %}
+                        <div class="reply">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                                <a href="{{ url_for('profile_by_name', username= r.username) }}">
+                                    <img src="{{ url_for('pfp', username=r.username) }}"  
+                                         alt="@{{ r.username }}" 
+                                         style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
                                 </a>
-                                <small style="color:#657786; font-size:0.8em;">{{ r.date[:16].replace("T", " ") }}</small>
+                                <div>
+                                    <a href="{{ url_for('profile_by_name', username=r.username) }}" style="text-decoration:none; color:inherit;">
+                                        <strong>@{{ r.username }}</strong>
+                                    </a>
+                                    <small style="color:#657786; font-size:0.8em;">{{ r.date[:16].replace("T", " ") }}</small>
+                                </div>
                             </div>
+                            {{ r.content | replace("\n", "<br>") | safe }}
                         </div>
-    
-                        {{ r.content | replace("\n", "<br>") | safe }}
+                        {% endfor %}
+
                     </div>
-                    {% endfor %}
-                </div>
+                    
+                    {# --- BOUTON VOIR PLUS EN DEHORS de la div replies --- #}
+                    {% if replies|length > 2 %}
+                    <button class="show-more-replies"
+                            data-id="{{ t.tweet_id }}"
+                            data-replies='{{ replies|tojson }}'
+                            style="margin-left: 20px; margin-top: 8px;">
+                        Voir plus de réponses ({{ replies|length - 2 }})
+                    </button>
+                    {% endif %}
                 {% endif %}
+
                 <hr>
             </div>
             {% endfor %}
@@ -265,6 +303,148 @@
             });
         });
     });
+    </script>
+
+    <script>
+        // ============================
+        //   VOIR PLUS DE RÉPONSES
+        // ============================
+        document.querySelectorAll(".show-more-replies").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const tweetId = btn.dataset.id;
+                const repliesDiv = document.getElementById("replies-" + tweetId);
+                const allReplies = JSON.parse(btn.dataset.replies);
+                
+                // Si on affiche tout actuellement (bouton dit "Voir moins")
+                if (btn.textContent.includes("Voir moins")) {
+                    // On réaffiche seulement les 2 premières
+                    repliesDiv.innerHTML = allReplies.slice(0, 2).map(r => `
+                        <div class="reply">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                                <a href="/profile/${r.username}">
+                                    <img src="/pfp/${r.username}"
+                                         style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                                </a>
+                                <div>
+                                    <a href="/profile/${r.username}" style="text-decoration:none; color:inherit;">
+                                        <strong>@${r.username}</strong>
+                                    </a>
+                                    <small style="color:#657786; font-size:0.8em;">
+                                        ${r.date.substring(0,16).replace("T"," ")}
+                                    </small>
+                                </div>
+                            </div>
+                            ${r.content.replace(/\n/g, "<br>")}
+                        </div>
+                    `).join("");
+                    btn.textContent = `Voir plus de réponses (${allReplies.length - 2})`;
+                } else {
+                    // On affiche toutes les réponses
+                    repliesDiv.innerHTML = allReplies.map(r => `
+                        <div class="reply">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                                <a href="/profile/${r.username}">
+                                    <img src="/pfp/${r.username}"
+                                         style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                                </a>
+                                <div>
+                                    <a href="/profile/${r.username}" style="text-decoration:none; color:inherit;">
+                                        <strong>@${r.username}</strong>
+                                    </a>
+                                    <small style="color:#657786; font-size:0.8em;">
+                                        ${r.date.substring(0,16).replace("T"," ")}
+                                    </small>
+                                </div>
+                            </div>
+                            ${r.content.replace(/\n/g, "<br>")}
+                        </div>
+                    `).join("");
+                    btn.textContent = "Voir moins de réponses";
+                }
+            });
+        });
+    </script>
+
+    <script>
+        // ============================
+        //   LIKE EN AJAX
+        // ============================
+        document.querySelectorAll(".like-form").forEach(form => {
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault(); // Empêche le rechargement de la page
+                
+                const url = form.action;
+                const button = form.querySelector("button");
+                const heartIcon = button.querySelector("span:first-child");
+                const likeCount = button.querySelector(".like-count");
+                
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // Met à jour le cœur
+                        if (data.liked) {
+                            heartIcon.style.color = "#e0245e";
+                            heartIcon.textContent = "♥";
+                        } else {
+                            heartIcon.style.color = "#657786";
+                            heartIcon.textContent = "♡";
+                        }
+                        
+                        // Met à jour le compteur
+                        likeCount.textContent = data.likes_count;
+                    }
+                } catch (error) {
+                    console.error("Erreur lors du like:", error);
+                }
+            });
+        });
+
+        // ============================
+        //   RETWEET EN AJAX
+        // ============================
+        document.querySelectorAll(".retweet-form").forEach(form => {
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault(); // Empêche le rechargement de la page
+                
+                const url = form.action;
+                const button = form.querySelector("button");
+                const retweetIcon = button.querySelector("span:first-child");
+                const retweetCount = button.querySelector(".retweet-count");
+                
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // Met à jour l'icône
+                        if (data.retweeted) {
+                            retweetIcon.style.color = "#00ba7c";
+                        } else {
+                            retweetIcon.style.color = "#657786";
+                        }
+                        
+                        // Met à jour le compteur
+                        retweetCount.textContent = data.retweet_count > 0 ? data.retweet_count : "";
+                    }
+                } catch (error) {
+                    console.error("Erreur lors du retweet:", error);
+                }
+            });
+        });
     </script>
 </body>
 </html>

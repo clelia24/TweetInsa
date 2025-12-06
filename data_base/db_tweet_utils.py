@@ -323,3 +323,60 @@ def add_reply(tweet_id: str, username: str, content: str):
     _save_tweets(db)
     return reply
 
+# =========================================
+# SISTÈME DE RETWEET 
+# =========================================
+
+def toggle_retweet(tweet_id: str, username: str):
+    """
+    Fait un retweet ou annule un retweet (toggle).
+    Retourne (is_now_retweeted: bool, nouveau_compteur: int)
+    """
+    db = _load_tweets()
+    tweet = None
+    
+    for t in db["tweets"]:
+        if t["tweet_id"] == tweet_id:
+            tweet = t
+            break
+    
+    if not tweet:
+        raise TweetNotFound(f"Tweet {tweet_id} introuvable")
+
+    # Initialisation si le tweet est ancien
+    if "retweets" not in tweet:
+        tweet["retweets"] = []                    # liste des usernames qui ont retweeté
+    if "retweet_count" not in tweet:
+        tweet["retweet_count"] = 0
+
+    if username in tweet["retweets"]:
+        # → Annuler le retweet
+        tweet["retweets"].remove(username)
+        tweet["retweet_count"] -= 1
+        is_retweeted = False
+    else:
+        # → Retweeter
+        tweet["retweets"].append(username)
+        tweet["retweet_count"] += 1
+        is_retweeted = True
+
+    _save_tweets(db)
+    return is_retweeted, tweet["retweet_count"]
+
+
+def has_user_retweeted(tweet_id: str, username: str) -> bool:
+    """Pour savoir si l’utilisateur a déjà retweeté (bouton vert dans le template)"""
+    try:
+        tweet = get_tweet(tweet_id)
+        return username in tweet.get("retweets", [])
+    except TweetNotFound:
+        return False
+
+
+def get_retweet_count(tweet_id: str) -> int:
+    """Nombre de retweets d’un tweet"""
+    try:
+        tweet = get_tweet(tweet_id)
+        return tweet.get("retweet_count", 0)
+    except TweetNotFound:
+        return 0
