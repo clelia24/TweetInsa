@@ -2,17 +2,17 @@ import traceback
 from flask import Flask, send_from_directory, request, render_template, redirect, send_file, url_for, session, jsonify, flash, Response
 import base64
 import json
-from data_base.db_auth_utils import *
-from data_base.db_tweet_utils import *
-from data_base.db_tweet_utils import _load_tweets, _save_tweets, has_user_retweeted, get_retweet_count, toggle_retweet
-from data_base.db_auth_utils import _load_db, _save_db, _hash_password
+from db_auth_utils import *
+from db_tweet_utils import *
+from db_tweet_utils import _load_tweets, _save_tweets, has_user_retweeted, get_retweet_count, toggle_retweet
+from db_auth_utils import _load_db, _save_db, _hash_password
 from datetime import datetime
 import os
 import secrets
 
-app = Flask(__name__, template_folder="./frontend", static_folder="./static")
+app = Flask(__name__, template_folder="../frontend", static_folder="../static")
 app.secret_key = secrets.token_hex(16)
-UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
+UPLOAD_FOLDER = os.path.join(app.root_path, '..', 'static', 'uploads')
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov'}  # Extensions autorisées
@@ -211,11 +211,13 @@ def profile():
         tweets=user_tweets_and_retweets,
         replies=user_replies,
         liked=user_liked_tweets,
-        has_user_liked=has_user_liked,
-        get_likes_count=get_likes_count,
-        has_user_retweeted=has_user_retweeted,
-        get_retweet_count=get_retweet_count
+        has_user_liked=has_user_liked,           
+        get_likes_count=get_likes_count,         
+        has_user_retweeted=has_user_retweeted,   
+        get_retweet_count=get_retweet_count      
     )
+
+
 
 
 @app.route("/profile/<username>")
@@ -271,10 +273,10 @@ def profile_by_name(username):
         tweets=user_tweets_and_retweets,
         replies=user_replies,
         liked=user_liked_tweets,
-        has_user_liked=has_user_liked,
-        get_likes_count=get_likes_count,
-        has_user_retweeted=has_user_retweeted,
-        get_retweet_count=get_retweet_count
+        has_user_liked=has_user_liked,           
+        get_likes_count=get_likes_count,         
+        has_user_retweeted=has_user_retweeted,   
+        get_retweet_count=get_retweet_count      
     )
 
 
@@ -445,7 +447,15 @@ def delete_account():
         flash('Aucun compte connecté.')
     return redirect(url_for('index'))
 
-#ici j'ai supprimé les fonction save_db et load_db pour utiliser celles déjà importées
+
+# Ajout d'une photo de profil
+def load_db():
+    with open("data_base/database_auth.json", "r") as f:
+        return json.load(f)
+
+def save_db(data):
+    with open("data_base/database_auth.json", "w") as f:
+        json.dump(data, f, indent=4)
 
 
 @app.route('/upload_pfp', methods=['POST'])
@@ -466,7 +476,7 @@ def upload_pfp():
     image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
     # 3️⃣ Charger DB JSON
-    db = _load_db()
+    db = load_db()
 
     # 4️⃣ Trouver l'utilisateur
     for user in db["users"]:
@@ -475,7 +485,7 @@ def upload_pfp():
             break
 
     # 5️⃣ Sauvegarder
-    _save_db(db)
+    save_db(db)
 
     flash("Photo de profil mise à jour !")
     return redirect(url_for('edit_profile'))
@@ -483,7 +493,7 @@ def upload_pfp():
 #affichage de la pp
 @app.route('/pfp/<username>')
 def pfp(username):
-    db = _load_db()
+    db = load_db()
 
     for user in db["users"]:
         if user["username"] == username:
@@ -493,7 +503,7 @@ def pfp(username):
                 return Response(img, mimetype="image/*")
 
     # Si pas de photo → image par défaut
-    return redirect(url_for('static', filename='images/default_pfp.jpg'))
+    return send_file("../static/images/default_pfp.jpg")
 
 @app.route('/add_bio', methods=['POST'])
 def add_bio():
