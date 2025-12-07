@@ -393,16 +393,30 @@ def like_route(tweet_id):
         return jsonify({'error': 'Tweet non trouvé'}), 404
 
 #Répondre à un tweet
+#Répondre à un tweet avec média
 @app.route("/reply/<tweet_id>", methods=["POST"])
 def reply_route(tweet_id):
     if 'username' not in session:
         return redirect(url_for('login'))
+    
     content = request.form.get("reply_content", "").strip()
-    if content:
+    media_path = None
+    
+    # Gestion du média
+    from werkzeug.utils import secure_filename
+    media = request.files.get('media')
+    if media and allowed_file(media.filename):
+        filename = secure_filename(media.filename)
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        media.save(save_path)
+        media_path = f"uploads/{filename}"
+    
+    if content or media_path:
         try:
-            add_reply(tweet_id, session['username'], content)
+            add_reply(tweet_id, session['username'], content, media_path)
         except (TweetNotFound, TweetTooLong):
             pass
+    
     return redirect(request.referrer or url_for('timeline'))
 
 

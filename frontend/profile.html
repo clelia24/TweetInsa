@@ -259,6 +259,11 @@
             border: 1px solid #ccd6dd;
             border-radius: 8px;
             font-family: inherit;
+            margin-bottom: 8px;
+        }
+        .reply-form input[type="file"] {
+            margin-bottom: 8px;
+            font-size: 0.9em;
         }
         .reply-form button[type="submit"] {
             background: var(--blue);
@@ -267,7 +272,6 @@
             padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
-            margin-top: 8px;
             margin-right: 8px;
         }
         .reply-form button[type="submit"]:hover {
@@ -280,7 +284,6 @@
             padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
-            margin-top: 8px;
         }
 
         /* SECTION RÉPONSES */
@@ -426,8 +429,10 @@
 
                 <!-- FORMULAIRE DE RÉPONSE -->
                 <div id="replyform-{{ tweet.tweet_id }}" class="reply-form">
-                    <form action="{{ url_for('reply_route', tweet_id=tweet.tweet_id) }}" method="post">
+                    <form action="{{ url_for('reply_route', tweet_id=tweet.tweet_id) }}" method="post" enctype="multipart/form-data">
                         <textarea name="reply_content" placeholder="Écris ta réponse..." maxlength="280" required></textarea>
+                        <input type="file" name="media" accept="image/*,video/*">
+                        <br>
                         <button type="submit">Répondre</button>
                         <button type="button" onclick="
                             document.getElementById('replyform-{{ tweet.tweet_id }}').style.display='none';
@@ -441,59 +446,68 @@
 
     <!-- RÉPONSES -->
     <div id="tab-replies" class="tab-content">
+        {% set grouped_replies = {} %}
         {% for item in replies %}
+            {% set tweet_id = item.tweet.tweet_id %}
+            {% if tweet_id not in grouped_replies %}
+                {% set _ = grouped_replies.update({tweet_id: {'tweet': item.tweet, 'replies': []}}) %}
+            {% endif %}
+            {% set _ = grouped_replies[tweet_id]['replies'].append(item.reply) %}
+        {% endfor %}
+
+        {% for tweet_id, data in grouped_replies.items() %}
             <div class="reply-section">
                 <!-- TWEET ORIGINAL -->
                 <div class="original-tweet">
-                    <p class="reply-indicator"><em>Tweet original de <a href="{{ url_for('profile_by_name', username=item.tweet.username) }}">@{{ item.tweet.username }}</a></em></p>
+                    <p class="reply-indicator"><em>Tweet original de <a href="{{ url_for('profile_by_name', username=data.tweet.username) }}">@{{ data.tweet.username }}</a></em></p>
                     
                     <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
-                        <a href="{{ url_for('profile_by_name', username=item.tweet.username) }}">
-                            <img src="{{ url_for('pfp', username=item.tweet.username) }}" 
+                        <a href="{{ url_for('profile_by_name', username=data.tweet.username) }}">
+                            <img src="{{ url_for('pfp', username=data.tweet.username) }}" 
                                 style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
                         </a>
                         <div>
-                            <a href="{{ url_for('profile_by_name', username=item.tweet.username) }}" style="text-decoration:none; color:inherit;">
-                                <strong>@{{ item.tweet.username }}</strong>
+                            <a href="{{ url_for('profile_by_name', username=data.tweet.username) }}" style="text-decoration:none; color:inherit;">
+                                <strong>@{{ data.tweet.username }}</strong>
                             </a>
                         </div>
                     </div>
                     
-                    <p>{{ item.tweet.content | replace("\n", "<br>") | safe }}</p>
-                    <small>{{ item.tweet.date }}</small>
+                    <p>{{ data.tweet.content | replace("\n", "<br>") | safe }}</p>
+                    <small>{{ data.tweet.date }}</small>
 
                     <!-- ACTIONS SUR LE TWEET ORIGINAL -->
                     <div class="tweet-actions">
                         <!-- LIKE -->
-                        <form class="like-form" data-tweet-id="{{ item.tweet.tweet_id }}" action="{{ url_for('like_route', tweet_id=item.tweet.tweet_id) }}" method="post">
+                        <form class="like-form" data-tweet-id="{{ data.tweet.tweet_id }}" action="{{ url_for('like_route', tweet_id=data.tweet.tweet_id) }}" method="post">
                             <button type="submit" title="J'aime">
-                                {% if has_user_liked(item.tweet.tweet_id, session.username) %}
+                                {% if has_user_liked(data.tweet.tweet_id, session.username) %}
                                     <span style="color: #e0245e;">♥</span>
                                 {% else %}
                                     <span style="color: #657786;">♡</span>
                                 {% endif %}
-                                <span class="like-count">{{ get_likes_count(item.tweet.tweet_id) }}</span>
+                                <span class="like-count">{{ get_likes_count(data.tweet.tweet_id) }}</span>
                             </button>
                         </form>
 
                         <!-- RETWEET -->
-                        <form class="retweet-form" data-tweet-id="{{ item.tweet.tweet_id }}" action="{{ url_for('retweet_route', tweet_id=item.tweet.tweet_id) }}" method="post">
+                        <form class="retweet-form" data-tweet-id="{{ data.tweet.tweet_id }}" action="{{ url_for('retweet_route', tweet_id=data.tweet.tweet_id) }}" method="post">
                             <button type="submit" 
-                                    title="{% if has_user_retweeted(item.tweet.tweet_id, session.username) %}Annuler le retweet{% else %}Retweeter{% endif %}">
-                                {% if has_user_retweeted(item.tweet.tweet_id, session.username) %}
+                                    title="{% if has_user_retweeted(data.tweet.tweet_id, session.username) %}Annuler le retweet{% else %}Retweeter{% endif %}">
+                                {% if has_user_retweeted(data.tweet.tweet_id, session.username) %}
                                     <span style="color: #00ba7c;">↻</span>
                                 {% else %}
                                     <span style="color: #657786;">↻</span>
                                 {% endif %}
                                 <span class="retweet-count">
-                                    {% set rt_count = get_retweet_count(item.tweet.tweet_id) %}
+                                    {% set rt_count = get_retweet_count(data.tweet.tweet_id) %}
                                     {% if rt_count > 0 %}{{ rt_count }}{% endif %}
                                 </span>
                             </button>
                         </form>
 
                         <!-- RÉPONDRE -->
-                        <button onclick="document.getElementById('replyform-original-{{ item.tweet.tweet_id }}').style.display='block'; 
+                        <button onclick="document.getElementById('replyform-original-{{ data.tweet.tweet_id }}').style.display='block'; 
                                          this.style.display='none';"
                                 title="Répondre">
                             <span style="color: #657786;">↩</span>
@@ -501,33 +515,42 @@
                     </div>
 
                     <!-- FORMULAIRE DE RÉPONSE AU TWEET ORIGINAL -->
-                    <div id="replyform-original-{{ item.tweet.tweet_id }}" class="reply-form">
-                        <form action="{{ url_for('reply_route', tweet_id=item.tweet.tweet_id) }}" method="post">
+                    <div id="replyform-original-{{ data.tweet.tweet_id }}" class="reply-form">
+                        <form action="{{ url_for('reply_route', tweet_id=data.tweet.tweet_id) }}" method="post" enctype="multipart/form-data">
                             <textarea name="reply_content" placeholder="Écris ta réponse..." maxlength="280" required></textarea>
+                            <input type="file" name="media" accept="image/*,video/*">
+                            <br>
                             <button type="submit">Répondre</button>
                             <button type="button" onclick="
-                                document.getElementById('replyform-original-{{ item.tweet.tweet_id }}').style.display='none';
-                                document.querySelector('.tweet-actions button[onclick*=\'replyform-original-{{ item.tweet.tweet_id }}\']').style.display='inline';
+                                document.getElementById('replyform-original-{{ data.tweet.tweet_id }}').style.display='none';
+                                document.querySelector('.tweet-actions button[onclick*=\'replyform-original-{{ data.tweet.tweet_id }}\']').style.display='inline';
                             ">Annuler</button>
                         </form>
                     </div>
                 </div>
 
-                <!-- TA RÉPONSE -->
-                <div class="tweet" style="margin-left: 20px; border-left: 3px solid var(--blue);">
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
-                        <a href="{{ url_for('profile_by_name', username=item.reply.username) }}">
-                            <img src="{{ url_for('pfp', username=item.reply.username) }}" 
-                                style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
-                        </a>
-                        <div>
-                            <a href="{{ url_for('profile_by_name', username=item.reply.username) }}" style="text-decoration:none; color:inherit;">
-                                <strong>@{{ item.reply.username }}</strong>
+                <!-- TOUTES TES RÉPONSES À CE TWEET -->
+                <div style="margin-left: 20px;">
+                    {% for reply in data.replies %}
+                    <div class="tweet" style="border-left: 3px solid var(--blue); margin-bottom: 10px;">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                            <a href="{{ url_for('profile_by_name', username=reply.username) }}">
+                                <img src="{{ url_for('pfp', username=reply.username) }}" 
+                                    style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
                             </a>
-                            <span style="color:#657786; font-weight:normal; font-size:0.9em;">— {{ item.reply.date }}</span>
+                            <div>
+                                <a href="{{ url_for('profile_by_name', username=reply.username) }}" style="text-decoration:none; color:inherit;">
+                                    <strong>@{{ reply.username }}</strong>
+                                </a>
+                                <span style="color:#657786; font-weight:normal; font-size:0.9em;">— {{ reply.date }}</span>
+                            </div>
                         </div>
+                        <p>{{ reply.content | replace("\n", "<br>") | safe }}</p>
+                        {% if reply.media_path %}
+                            <img src="{{ url_for('static', filename=reply.media_path) }}" style="max-width: 100%; border-radius: 8px; margin-top: 8px;">
+                        {% endif %}
                     </div>
-                    <p>{{ item.reply.content | replace("\n", "<br>") | safe }}</p>
+                    {% endfor %}
                 </div>
             </div>
         {% endfor %}
@@ -600,8 +623,10 @@
 
                 <!-- FORMULAIRE DE RÉPONSE -->
                 <div id="replyform-liked-{{ tweet.tweet_id }}" class="reply-form">
-                    <form action="{{ url_for('reply_route', tweet_id=tweet.tweet_id) }}" method="post">
+                    <form action="{{ url_for('reply_route', tweet_id=tweet.tweet_id) }}" method="post" enctype="multipart/form-data">
                         <textarea name="reply_content" placeholder="Écris ta réponse..." maxlength="280" required></textarea>
+                        <input type="file" name="media" accept="image/*,video/*">
+                        <br>
                         <button type="submit">Répondre</button>
                         <button type="button" onclick="
                             document.getElementById('replyform-liked-{{ tweet.tweet_id }}').style.display='none';
@@ -646,10 +671,19 @@
         popup.style.display = "flex";
     }
 
-    document.getElementById("followersBtn")?.addEventListener("click", () => fillPopup("Abonnés", followers));
-    document.getElementById("followingBtn")?.addEventListener("click", () => fillPopup("Abonnements", following));
+    const followersBtn = document.getElementById("followersBtn");
+    const followingBtn = document.getElementById("followingBtn");
+    const closeBtn = document.querySelector(".close");
 
-    document.querySelector(".close").onclick = () => popup.style.display = "none";
+    if (followersBtn) {
+        followersBtn.addEventListener("click", () => fillPopup("Abonnés", followers));
+    }
+    if (followingBtn) {
+        followingBtn.addEventListener("click", () => fillPopup("Abonnements", following));
+    }
+    if (closeBtn) {
+        closeBtn.onclick = () => popup.style.display = "none";
+    }
 
     /* TABS */
     document.querySelectorAll(".tab").forEach(tab => {
