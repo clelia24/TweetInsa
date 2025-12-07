@@ -86,26 +86,8 @@
           "content": "blabla"
         }
       ],
-      "reports": 1,
-      "reporters": [
-        "Ayman Bouss"
-      ],
       "retweets": [],
       "retweet_count": 0
-    },
-    {
-      "tweet_id": "096b29e6-4ffd-4f67-81e5-e289fbe4acf9",
-      "username": "corentin",
-      "date": "2025-12-02T11:24:26",
-      "content": "test",
-      "media_path": "uploads/plage.jpg",
-      "likes": [
-        "Ayman Bouss"
-      ],
-      "reports": 1,
-      "reporters": [
-        "Ayman Bouss"
-      ]
     },
     {
       "tweet_id": "72b737f7-e324-4608-93ca-a53d7c6aad42",
@@ -118,12 +100,52 @@
       ],
       "retweet_count": 1,
       "likes": [
-        "Ayman Bouss"
+        "astrid1",
+        "Ayman Boussihmed"
+      ],
+      "replies": [
+        {
+          "reply_id": "c2db1238-bb9f-48cc-8735-d6883d14c886",
+          "username": "astrid1",
+          "date": "2025-12-01T10:58:42",
+          "content": "test"
+        }
       ],
       "reports": 1,
-      "reporters": [
-        "Ayman Bouss"
-      ]
+      "retweets": [],
+      "retweet_count": 0
+    },
+    {
+      "tweet_id": "22f5b500-bcb7-40dc-ba36-43847ca3eb42",
+      "username": "la",
+      "date": "2025-12-02T14:32:24",
+      "content": "Photo !",
+      "media_path": "uploads/IMG_3217.JPEG",
+      "likes": [
+        "astrid1"
+      ],
+      "replies": [
+        {
+          "reply_id": "16d92212-9505-460c-b3ea-398025aab4f5",
+          "username": "astrid1",
+          "date": "2025-12-02T13:06:04",
+          "content": "tres joli!"
+        }
+      ],
+      "retweets": [],
+      "retweet_count": 0
+    },
+    {
+      "tweet_id": "4f330498-ef91-40e9-80c2-093c4ecede9d",
+      "username": "astrid1",
+      "date": "2025-12-02T12:52:27",
+      "content": "oui",
+      "media_path": null,
+      "reports": 1,
+      "retweets": [
+        "Ayman Boussihmed"
+      ],
+      "retweet_count": 1
     }
   ]
 }

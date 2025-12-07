@@ -6,7 +6,6 @@ import random
 import data_base.db_auth_utils
 
 
-
 ############## IDÉES AMÉLIORATIONS ##############
     # Faire une nouvelle ligne dans le dict du user qui fait le tweet : ajouter les tweet_id
     # Backend : fonction d'affichage (regarder commentaire pour date), de saisie du content...
@@ -19,6 +18,17 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Chemin absolu vers le fichier JSON dans *le même dossier que ce fichier*
 DB_FILE = os.path.join(BASE_DIR, "DB_Tweets.json")
 
+
+# Créer le dossier data_base s'il n'existe pas
+if not os.path.exists("data_base"):
+    os.makedirs("data_base")
+    print("Créé le dossier data_base/")
+
+# Créer le fichier DB_Tweets.json s'il n'existe pas
+if not os.path.exists(DB_FILE):
+    with open(DB_FILE, "w", encoding="utf-8") as f:
+        json.dump({"tweets": []}, f, indent=2)
+    print(f"Créé le fichier {DB_FILE}")
 
 
 #------------ Classes Exception ------------#

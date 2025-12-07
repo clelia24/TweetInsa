@@ -90,7 +90,12 @@
       "salt": "dff61f2107d30440da227cb52f54648a",
       "tweets": [],
       "followers": [
+<<<<<<< HEAD
         "corentin"
+=======
+        "astrid1",
+        "Ayman Boussihmed"
+>>>>>>> 769ab00341ab2fce2529f8bdd23436875d98bcf7
       ],
       "following": []
     },
@@ -119,6 +124,17 @@
       "tweets": [],
       "followers": [],
       "following": []
+    },
+    {
+      "username": "Ayman Boussihmed",
+      "email": "ayman@gmail.com",
+      "password_hash": "ec81998bf1fd0e52e12917b622249a3d27af3d992a3d568eede40f83d3cfdaa5",
+      "salt": "949b37b0b2f9df110e95183041543226",
+      "tweets": [],
+      "followers": [],
+      "following": [
+        "la"
+      ]
     }
   ]
 }

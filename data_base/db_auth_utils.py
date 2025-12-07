@@ -18,6 +18,7 @@ DB_FILE = os.path.join(BASE_DIR, "database_auth.json")
 
 NB_USERS = 0
 
+
 # Créer le fichier database_auth.json s'il n'existe pas
 if not os.path.exists(DB_FILE):
     with open(DB_FILE, "w", encoding="utf-8") as f:
@@ -25,8 +26,10 @@ if not os.path.exists(DB_FILE):
     print(f"Créé le fichier {DB_FILE}")
 
 # Vérifier les permissions d'écriture
-if not os.access(BASE_DIR, os.W_OK):
-    print(f"Erreur : Pas de permission d'écriture pour '{BASE_DIR}' !")
+# Si BASE_DIR est vide (car dirname de "data_base/xxx" = "data_base"), on vérifie "data_base"
+dir_to_check = BASE_DIR if BASE_DIR else "data_base"
+if not os.access(dir_to_check, os.W_OK):
+    print(f"Erreur : Pas de permission d'écriture pour '{dir_to_check}' !")
 
 
 #------------ Classes Exception ------------#
