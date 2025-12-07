@@ -2,17 +2,17 @@ import traceback
 from flask import Flask, send_from_directory, request, render_template, redirect, send_file, url_for, session, jsonify, flash, Response
 import base64
 import json
-from db_auth_utils import *
-from db_tweet_utils import *
-from db_tweet_utils import _load_tweets, _save_tweets, has_user_retweeted, get_retweet_count, toggle_retweet
-from db_auth_utils import _load_db, _save_db, _hash_password
+from data_base.db_auth_utils import *
+from data_base.db_tweet_utils import *
+from data_base.db_tweet_utils import _load_tweets, _save_tweets, has_user_retweeted, get_retweet_count, toggle_retweet
+from data_base.db_auth_utils import _load_db, _save_db, _hash_password
 from datetime import datetime
 import os
 import secrets
 
-app = Flask(__name__, template_folder="../frontend", static_folder="../static")
+app = Flask(__name__, template_folder="./frontend", static_folder="./static")
 app.secret_key = secrets.token_hex(16)
-UPLOAD_FOLDER = os.path.join(app.root_path, '..', 'static', 'uploads')
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov'}  # Extensions autorisées
@@ -435,12 +435,12 @@ def delete_account():
     return redirect(url_for('index'))
 # Ajout d'une photo de profil
 def load_db():
-    with open("database_auth.json", "r") as f:
+    with open("data_base/database_auth.json", "r") as f:
         return json.load(f)
 
 
 def save_db(data):
-    with open("database_auth.json", "w") as f:
+    with open("data_base/database_auth.json", "w") as f:
         json.dump(data, f, indent=4)
 
 
@@ -489,7 +489,7 @@ def pfp(username):
                 return Response(img, mimetype="image/*")
 
     # Si pas de photo → image par défaut
-    return send_file("../static/images/default_pfp.jpg")
+    return redirect(url_for('static', filename='images/default_pfp.jpg'))
 
 @app.route('/add_bio', methods=['POST'])
 def add_bio():

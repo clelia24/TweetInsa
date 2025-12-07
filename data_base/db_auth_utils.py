@@ -2,20 +2,21 @@ import json
 import os
 import hashlib
 import secrets
-from db_tweet_utils import get_tweet, TweetNotFound
-
+from data_base.db_tweet_utils import get_tweet,TweetNotFound
 ############## IDÉES AMÉLIORATIONS ##############
     # Si DB trop grande, faudra réfléchir à comment ne pas la load sur chaque fonction
     # Trouver user pas email => fonction commune avec le search by username?
     # Delete by email? => fonction commune avec delete by username?
     #
 
-#------------ Variables globales ------------#
-DB_FILE = "database_auth.json"  #chemin de la DB
 
-NB_USERS = 0 #Compteur utilisateurs
+# Dossier où se trouve ce fichier Python
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-BASE_DIR = os.path.dirname(DB_FILE) #répertoire dans lequel se trouve la db
+# Chemin absolu vers la DB d'authentification
+DB_FILE = os.path.join(BASE_DIR, "database_auth.json")
+
+NB_USERS = 0
 
 # Créer le fichier database_auth.json s'il n'existe pas
 if not os.path.exists(DB_FILE):

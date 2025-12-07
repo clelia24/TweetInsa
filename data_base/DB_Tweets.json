@@ -1,511 +1,129 @@
 {
   "tweets": [
     {
-      "tweet_id": "7dcdeb43-3f2f-4699-a299-b9330735e02d",
+      "tweet_id": "5ef630d0-6a88-4192-951f-c44f86d7c128",
+      "username": "astrid",
+      "date": "2025-10-07T05:06:58",
+      "content": "Ceci est un test."
+    },
+    {
+      "tweet_id": "8819663f-7bc2-4ee7-a764-ea1b4eb6e32d",
+      "username": "astrid",
+      "date": "07/10/2025 05:20",
+      "content": "Ceci est un test."
+    },
+    {
+      "tweet_id": "0379610d-5d45-410a-9a6f-c264b2b3b38c",
+      "username": "astrid",
+      "date": "07/10/2025 05:25",
+      "content": "Ceci est un test.",
+      "likes": []
+    },
+    {
+      "tweet_id": "21d508a8-c93e-456d-ba1d-6b08fef61f4f",
+      "username": "Clelia",
+      "date": "2025-10-14T11:22:59",
+      "content": "test post tweet",
+      "retweets": [],
+      "retweet_count": 0
+    },
+    {
+      "tweet_id": "faf0e391-90c6-4a51-a1a2-556ee4e8050d",
+      "username": "Clelia",
+      "date": "2025-10-14T11:24:03",
+      "content": "test post tweet",
+      "likes": [
+        "corentin"
+      ]
+    },
+    {
+      "tweet_id": "3edbe59d-02f8-4e07-adf4-295dc4a056c0",
+      "username": "Clelia",
+      "date": "2025-10-14T11:24:17",
+      "content": "test post tweet 2.0",
+      "likes": [
+        "corentin"
+      ]
+    },
+    {
+      "tweet_id": "ac7ee4ef-df0e-4c57-a0f4-cf85da57e9ee",
       "username": "nom personne connect\u00e9e",
-      "date": "2025-11-13T15:03:18",
-      "content": "voila le tweet\r\n"
-    },
-    {
-      "tweet_id": "fd077705-b875-4da6-a1a3-07a245e278b4",
-      "username": "souverinlaura",
-      "date": "2025-11-13T15:12:17",
-      "content": "bonjour\r\n"
-    },
-    {
-      "tweet_id": "a2929d31-779c-4691-be3f-2a1294e2303b",
-      "username": "souverinlaura",
-      "date": "2025-11-13T15:22:47",
-      "content": "je teste quelque chose \r\n"
-    },
-    {
-      "tweet_id": "a4505f3c-434a-4edd-ad55-193fcb910d23",
-      "username": "souverinlaura",
-      "date": "2025-11-13T15:50:34",
-      "content": "lalala\r\n"
-    },
-    {
-      "tweet_id": "de3ab988-7b08-439d-b752-1731b71fe00e",
-      "username": "souverinlaura",
-      "date": "2025-11-13T15:54:36",
-      "content": "letest\r\n"
-    },
-    {
-      "tweet_id": "c7dd966d-79d0-40dc-8155-3f5bd0e63652",
-      "username": "souverinlaura",
-      "date": "2025-11-13T15:56:12",
-      "content": "encore"
-    },
-    {
-      "tweet_id": "c990ed0a-0b31-49bd-86b6-989e4ebbd273",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:01:46",
-      "content": "+"
-    },
-    {
-      "tweet_id": "817a9a47-9825-4a2e-966f-d43e46b29623",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:08:21",
-      "content": "aaaah"
-    },
-    {
-      "tweet_id": "b78d3798-0f91-4417-be19-5efa83724960",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:23:39",
-      "content": "c bon?\r\n"
-    },
-    {
-      "tweet_id": "05defe6b-a7e7-42dc-84cd-f0713a1841dc",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:25:04",
-      "content": "non"
-    },
-    {
-      "tweet_id": "d9a751b7-637f-4d95-9e7d-18b3fbcc0eb6",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:28:03",
-      "content": "on croise les doigts "
-    },
-    {
-      "tweet_id": "c892ee53-d534-4892-8fa5-207cd9b963f5",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:29:07",
-      "content": "marre "
-    },
-    {
-      "tweet_id": "982cff8d-ee1f-4951-9b98-0c59be14f1d4",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:31:40",
-      "content": "cette fois ?\r\n"
-    },
-    {
-      "tweet_id": "5182d0ac-9e7e-48a0-8c1a-ca054a1716ea",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:37:27",
-      "content": "je comprends rien "
-    },
-    {
-      "tweet_id": "2077d144-855f-4462-9c2d-1be90d2d759a",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:40:22",
-      "content": "pffff"
-    },
-    {
-      "tweet_id": "c71ca786-f007-4c46-a20b-d34dfef06b9c",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:41:11",
-      "content": ":((("
-    },
-    {
-      "tweet_id": "d96bd338-a855-4f32-8d69-f9294545d401",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:41:42",
-      "content": "hein"
-    },
-    {
-      "tweet_id": "d77baa27-18a3-4d97-a4e6-e100630ff191",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:44:36",
-      "content": "stppp\r\n"
-    },
-    {
-      "tweet_id": "ccfc2329-54ad-44d6-8cca-f42d49b6655e",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:46:49",
-      "content": "alors ?"
-    },
-    {
-      "tweet_id": "dd2672a0-2682-4b85-a9e5-acdd76b59566",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:50:37",
-      "content": ":/"
-    },
-    {
-      "tweet_id": "80ae0121-aea2-462a-a197-4c9a2915bbe7",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:51:59",
-      "content": "lllllll"
-    },
-    {
-      "tweet_id": "54e56891-e19c-4c2b-ac63-e5a376c979c8",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:53:47",
-      "content": "sos"
-    },
-    {
-      "tweet_id": "499ea362-0ff5-4f82-9008-3c2b0f41c014",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:55:06",
-      "content": "cette fois"
-    },
-    {
-      "tweet_id": "513993ff-70a6-4fc9-a18b-346e04b5e8d6",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:56:05",
-      "content": "progres\r\n"
-    },
-    {
-      "tweet_id": "004c43e0-ddd0-4d41-b9dc-30197ba4b226",
-      "username": "souverinlaura",
-      "date": "2025-11-13T16:57:29",
-      "content": "presque finis"
-    },
-    {
-      "tweet_id": "d574fd16-21d1-40c5-bf8a-a430d9e1401f",
-      "username": "souverinlaura",
-      "date": "2025-11-13T17:01:26",
-      "content": "mtn"
-    },
-    {
-      "tweet_id": "3386dd62-513d-4f01-b7cb-cb9b5763c21c",
-      "username": "souverinlaura",
-      "date": "2025-11-13T17:04:36",
-      "content": "chiant "
-    },
-    {
-      "tweet_id": "2d4b1227-e378-4f83-b8fa-dfc89373041e",
-      "username": "test_cor",
-      "date": "2025-11-18T09:21:43",
-      "content": "test tweet\r\n"
-    },
-    {
-      "tweet_id": "5188db08-b69b-48ea-9819-a09e2c953af6",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:14:48",
-      "content": "petite astrid\r\n"
-    },
-    {
-      "tweet_id": "46331a59-fe32-4eef-85fb-3da520f60cef",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:20:15",
-      "content": "ahhhhh\r\n"
-    },
-    {
-      "tweet_id": "6a4d9903-585a-4a31-a23a-2103c60761e6",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:20:21",
-      "content": "blllllll\r\n"
-    },
-    {
-      "tweet_id": "fbdfe296-1fc5-42b0-a6a1-7d5f75456122",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:20:25",
-      "content": "ajajajajaj\r\n"
-    },
-    {
-      "tweet_id": "a1eef69a-acce-4bcf-a1cd-1e3147230cfe",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:20:30",
-      "content": "drrrrr\r\n"
-    },
-    {
-      "tweet_id": "cebeea20-7b44-4f6b-ad3e-a2674443bdc3",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:20:38",
-      "content": "aaaaaaaa"
-    },
-    {
-      "tweet_id": "99c33ab7-4d37-47ac-8c58-71238ba8eda1",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:20:45",
-      "content": "frfrfrfrfrfrfrfrfrfrfr"
-    },
-    {
-      "tweet_id": "ec578739-9dae-4408-9542-f920359dbe3b",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:21:04",
-      "content": "la vie c comme une boite de chocolat"
-    },
-    {
-      "tweet_id": "3c415f2a-2901-4d67-8e07-3509949af0f2",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:21:23",
-      "content": "bjrrrrrrrrrrrrrrrrrrr"
-    },
-    {
-      "tweet_id": "7563729c-8c1c-4d5c-981e-68cd578c34ec",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:21:41",
-      "content": "twiyyrt\r\n"
-    },
-    {
-      "tweet_id": "d3024079-3968-4300-91d5-37f10fb67d34",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:21:49",
-      "content": "tweeeeeetttt\r\n"
-    },
-    {
-      "tweet_id": "6adc98d9-9f6a-4864-9ee7-a4c4326f7d09",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:41:40",
-      "content": "https://www.google.com/"
-    },
-    {
-      "tweet_id": "a40d9779-fe26-4558-931b-b2ce0b0bf954",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:52:05",
-      "content": "hfjfjhf\r\njkhkhl\r\nhjkhk"
-    },
-    {
-      "tweet_id": "8abe1909-6566-422c-8219-20f0e8628d9b",
-      "username": "aaaastrid",
-      "date": "2025-11-18T08:52:16",
-      "content": "q\r\ns\r\n\r\ns"
-    },
-    {
-      "tweet_id": "005cee97-a773-4646-8108-cc9b884286b7",
-      "username": "nom",
-      "date": "2025-11-18T16:19:12",
-      "content": "test"
-    },
-    {
-      "tweet_id": "fbe76cad-e3b7-4d6e-afe4-b684f5c16542",
-      "username": "utilisateur supprim\u00e9",
-      "date": "2025-11-18T18:58:04",
-      "content": "test\r\n"
-    },
-    {
-      "tweet_id": "65fbdb0e-6dac-4b20-af83-ca2acac63f72",
-      "username": "supp",
-      "date": "2025-11-19T19:03:01",
-      "content": "test"
-    },
-    {
-      "tweet_id": "2915bd4f-d0f7-4d1a-8b49-bf28093a54e1",
-      "username": "t",
-      "date": "2025-11-19T19:24:38",
-      "content": "ah"
-    },
-    {
-      "tweet_id": "c09c581e-d89b-44de-b33c-55f46172d55b",
-      "username": "t",
-      "date": "2025-11-19T19:38:43",
-      "content": "voila",
-      "replies": [
-        {
-          "reply_id": "2d3cef20-11ff-46c8-bfb8-ea47a7872c1e",
-          "username": "la",
-          "date": "2025-11-25T16:24:26",
-          "content": "cc"
-        }
-      ]
-    },
-    {
-      "tweet_id": "147190ab-02c0-49f4-b47b-9340bf3e9977",
-      "username": "t",
-      "date": "2025-11-19T19:44:42",
-      "content": "aaa",
-      "replies": [
-        {
-          "reply_id": "52ab8d5b-df6d-4907-855e-e1de0b973b4c",
-          "username": "laurasvrn",
-          "date": "2025-11-24T17:33:44",
-          "content": "un test"
-        },
-        {
-          "reply_id": "e027d251-3821-4f34-b800-32dccb37e279",
-          "username": "laurasvrn",
-          "date": "2025-11-24T17:34:15",
-          "content": "u autre"
-        },
-        {
-          "reply_id": "363b507e-e8d4-4cbc-bf39-f220106647d4",
-          "username": "laurasvrn",
-          "date": "2025-11-24T17:34:24",
-          "content": "encore"
-        },
-        {
-          "reply_id": "3b3416e9-47eb-45bf-a9f6-e8eee9680426",
-          "username": "la",
-          "date": "2025-11-25T16:25:06",
-          "content": "test"
-        }
-      ],
+      "date": "2025-10-21T20:22:20",
+      "content": "test stp \u00e7a marche \r\n",
       "likes": [
-        "laurasvrn"
-      ]
-    },
-    {
-      "tweet_id": "a0b5c6af-0011-4543-b455-86ec3ebbbf32",
-      "username": "utilisateur supprim\u00e9",
-      "date": "2025-11-19T19:47:18",
-      "content": "bla"
-    },
-    {
-      "tweet_id": "0c11625e-909b-4a18-99a6-0453fa880ff6",
-      "username": "la",
-      "date": "2025-11-25T16:31:30",
-      "content": "test",
-      "replies": [
-        {
-          "reply_id": "8a4a3059-de41-4d94-a51c-78304f701d96",
-          "username": "la",
-          "date": "2025-11-25T16:34:57",
-          "content": "retest"
-        }
-      ]
-    },
-    {
-      "tweet_id": "cc056353-710c-49be-ac3f-d0c53113da28",
-      "username": "la",
-      "date": "2025-11-25T16:45:12",
-      "content": "voila voila",
-      "replies": [
-        {
-          "reply_id": "244e8712-de26-4000-89a7-1f2d70eeddb0",
-          "username": "laur",
-          "date": "2025-11-25T16:45:29",
-          "content": "yay"
-        }
-      ]
-    },
-    {
-      "tweet_id": "40cf5431-4e69-4d5d-a470-e2b40b307a46",
-      "username": "la",
-      "date": "2025-11-25T16:47:09",
-      "content": "ta",
-      "replies": [
-        {
-          "reply_id": "3c6e3129-9f9f-4981-a004-5f607bf3054f",
-          "username": "la",
-          "date": "2025-11-25T16:47:13",
-          "content": "t"
-        }
-      ],
-      "likes": [
-        "corentin"
-      ]
-    },
-    {
-      "tweet_id": "77c2e9ce-e2cb-41b7-9847-4506c7cebc9f",
-      "username": "la",
-      "date": "2025-11-25T16:49:03",
-      "content": "test",
-      "replies": [
-        {
-          "reply_id": "25fe5b40-c9ec-4672-9267-9c79afed2904",
-          "username": "la",
-          "date": "2025-11-25T16:49:08",
-          "content": "t"
-        }
-      ],
-      "likes": [
-        "corentin"
-      ]
-    },
-    {
-      "tweet_id": "a3460c13-439f-4cd9-a364-4bff42a29f79",
-      "username": "corentin",
-      "date": "2025-11-29T11:43:04",
-      "content": "test",
-      "likes": [
+        "Ayman Bouss",
         "corentin"
       ],
       "replies": [
         {
-          "reply_id": "ed762944-1cb4-4b73-a08e-a1d71c650baf",
+          "reply_id": "5a08c65f-ea76-4a95-a26b-d18df468e4b6",
+          "username": "Ayman",
+          "date": "2025-11-19T23:42:30",
+          "content": "Yep"
+        },
+        {
+          "reply_id": "e7d8ab2d-ade0-430e-a1f1-148273ced00d",
+          "username": "Ayman Bouss",
+          "date": "2025-12-06T17:28:24",
+          "content": "Salut"
+        },
+        {
+          "reply_id": "56e1b48d-05c2-460d-b616-d56fb911025c",
+          "username": "Ayman Bouss",
+          "date": "2025-12-06T17:28:37",
+          "content": "Encore plus de message"
+        },
+        {
+          "reply_id": "fbf2f231-5480-460e-92e8-aeed46eeaf97",
+          "username": "Ayman Bouss",
+          "date": "2025-12-06T17:29:14",
+          "content": "On a bien le voir plus de r\u00e9ponses"
+        },
+        {
+          "reply_id": "7862d067-7f10-4317-8003-4e4b90a75eee",
           "username": "corentin",
-          "date": "2025-11-29T11:48:29",
-          "content": "trop cool"
+          "date": "2025-12-07T11:39:32",
+          "content": "blabla"
         }
+      ],
+      "reports": 1,
+      "reporters": [
+        "Ayman Bouss"
+      ],
+      "retweets": [],
+      "retweet_count": 0
+    },
+    {
+      "tweet_id": "096b29e6-4ffd-4f67-81e5-e289fbe4acf9",
+      "username": "corentin",
+      "date": "2025-12-02T11:24:26",
+      "content": "test",
+      "media_path": "uploads/plage.jpg",
+      "likes": [
+        "Ayman Bouss"
+      ],
+      "reports": 1,
+      "reporters": [
+        "Ayman Bouss"
       ]
     },
     {
-      "tweet_id": "c99f15f1-b319-4791-8d6b-9c004276d4df",
+      "tweet_id": "72b737f7-e324-4608-93ca-a53d7c6aad42",
       "username": "corentin",
-      "date": "2025-11-29T12:18:45",
-      "content": "coucou",
-      "media_path": null
-    },
-    {
-      "tweet_id": "34107923-14e7-43ee-a825-2167c225b0d4",
-      "username": "corentin",
-      "date": "2025-11-29T12:24:02",
-      "content": "test image",
-      "media_path": null
-    },
-    {
-      "tweet_id": "af582ca8-8bdd-4488-b428-6c8a34bb4070",
-      "username": "corentin",
-      "date": "2025-11-29T12:31:05",
-      "content": "test2",
+      "date": "2025-12-02T11:32:10",
+      "content": "test sans media",
       "media_path": null,
-      "likes": [
+      "retweets": [
         "corentin"
-      ]
-    },
-    {
-      "tweet_id": "16ddf9cf-9af8-4b76-a662-0c3d9377597a",
-      "username": "corentin",
-      "date": "2025-11-29T12:38:55",
-      "content": "test3",
-      "media_path": null
-    },
-    {
-      "tweet_id": "e08f35b4-791f-4bf9-ac9a-11404c8453cf",
-      "username": "corentin",
-      "date": "2025-11-29T12:41:03",
-      "content": "test4",
-      "media_path": null
-    },
-    {
-      "tweet_id": "cc595b66-2f93-42d8-8922-092028a92911",
-      "username": "corentin",
-      "date": "2025-11-29T12:43:07",
-      "content": "test5",
-      "media_path": null
-    },
-    {
-      "tweet_id": "09528429-ee5e-4999-b1fb-c57c8f2aa2ec",
-      "username": "corentin",
-      "date": "2025-11-29T12:57:16",
-      "content": "test6",
-      "media_path": null
-    },
-    {
-      "tweet_id": "4d7ec51e-8550-47b3-9f76-2cda23e93285",
-      "username": "corentin",
-      "date": "2025-11-29T13:20:47",
-      "content": "test7",
-      "media_path": "uploads/fleurs.jpg",
+      ],
+      "retweet_count": 1,
       "likes": [
-        "astrid1"
+        "Ayman Bouss"
       ],
-      "replies": [
-        {
-          "reply_id": "c2db1238-bb9f-48cc-8735-d6883d14c886",
-          "username": "astrid1",
-          "date": "2025-12-01T10:58:42",
-          "content": "test"
-        }
-      ],
-      "reports": 1
-    },
-    {
-      "tweet_id": "22f5b500-bcb7-40dc-ba36-43847ca3eb42",
-      "username": "la",
-      "date": "2025-12-02T14:32:24",
-      "content": "Photo !",
-      "media_path": "uploads/IMG_3217.JPEG",
-      "likes": [
-        "astrid1"
-      ],
-      "replies": [
-        {
-          "reply_id": "16d92212-9505-460c-b3ea-398025aab4f5",
-          "username": "astrid1",
-          "date": "2025-12-02T13:06:04",
-          "content": "tres joli!"
-        }
+      "reports": 1,
+      "reporters": [
+        "Ayman Bouss"
       ]
-    },
-    {
-      "tweet_id": "4f330498-ef91-40e9-80c2-093c4ecede9d",
-      "username": "astrid1",
-      "date": "2025-12-02T12:52:27",
-      "content": "oui",
-      "media_path": null,
-      "reports": 1
     }
   ]
 }

@@ -1,7 +1,7 @@
 import unittest
 import tempfile
 import os
-import db_tweet_utils as tweets
+import data_base.db_tweet_utils as tweets
 import data_base.db_auth_utils as auth_utils
 
 class TestDBTweetsUtils(unittest.TestCase):

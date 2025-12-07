@@ -3,7 +3,7 @@ import os
 import uuid
 from datetime import datetime
 import random
-import db_auth_utils
+import data_base.db_auth_utils
 
 
 
@@ -12,9 +12,12 @@ import db_auth_utils
     # Backend : fonction d'affichage (regarder commentaire pour date), de saisie du content...
     #   => essayer de tout faire via le tweet_id, ca sera plus simple je pense
 
-#------------ Variables globales ------------#
-DB_FILE = "./DB_Tweets.json"  #chemin de la DB
-#DB_AUTH = "./data_base/database_auth.json"
+
+# Dossier où se trouve ce fichier Python
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Chemin absolu vers le fichier JSON dans *le même dossier que ce fichier*
+DB_FILE = os.path.join(BASE_DIR, "DB_Tweets.json")
 
 
 
