@@ -74,12 +74,6 @@
             background: #0d8de0;
         }
 
-        h2 {
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-        }
-
         .tweet {
             border: 1px solid var(--border);
             padding: 15px;
@@ -106,15 +100,16 @@
             color: #657786;
             font-size: 0.85em;
         }
+
         .pfp {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%; /* forme ronde */
-        object-fit: cover; /* recadre proprement */
-        border: 3px solid var(--blue);
-        display: block;
-        margin: 0 auto 15px auto;
-    }
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--blue);
+            display: block;
+            margin: 0 auto 15px auto;
+        }
 
         footer {
             text-align: center;
@@ -130,8 +125,10 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        /* POPUP FOLLOWERS */
         .popup {
-            display: none; /* Masqué par défaut */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -141,7 +138,6 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            transition: opacity 0.3s ease;
         }
 
         .popup-content {
@@ -153,12 +149,6 @@
             overflow-y: auto;
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
             position: relative;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .popup.show .popup-content {
-            transform: scale(1);
         }
 
         .close {
@@ -166,7 +156,6 @@
             top: 15px;
             right: 20px;
             font-size: 28px;
-            font-weight: bold;
             cursor: pointer;
         }
 
@@ -175,13 +164,13 @@
             padding: 0;
             margin-top: 20px;
         }
+
         #popupList li {
             display: flex;
             align-items: center;
             padding: 8px 12px;
             border-bottom: 1px solid #e1e8ed;
             cursor: pointer;
-            transition: background 0.2s ease;
         }
 
         #popupList li:hover {
@@ -192,178 +181,184 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            object-fit: cover;
             margin-right: 12px;
         }
 
+        /* AJOUT : TABS */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            border-bottom: 3px solid transparent;
+            transition: 0.2s;
+        }
+        .tab.active {
+            color: var(--blue);
+            border-bottom-color: var(--blue);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.visible {
+            display: block;
+        }
 
-        
     </style>
 </head>
 <body>
-    <header>
-        <h1>Profil de {{ user["username"] }}</h1>
-        <a href="/timeline" class="edit-btn">← Retour à la timeline</a>
-    </header>
 
+<header>
+    <h1>Profil de {{ user["username"] }}</h1>
+    <a href="/timeline" class="edit-btn">← Retour</a>
+</header>
 
-    <div class="container">
-        <div class="profile-info">
-            {% if success %}
-                <div class="success-box">
-                    {{ success }}
-                </div>
-            {% endif %}
-            <img src="/pfp/{{ user['username'] }}" class="pfp" alt="@{{ user['username'] }}">
+<div class="container">
 
-            <p><strong>{{ user["username"] }}</strong></p>
-            <p style="color:#657786; margin-top:6px;">{{ user["bio"] if user["bio"] else "" }}</p>
+    <!-- Profile info -->
+    <div class="profile-info">
+        <img src="/pfp/{{ user['username'] }}" class="pfp">
 
-            {% if session['username'] == user["username"] %}
-                <button type="button" id="followersBtn" class="edit-btn" style="margin-bottom: 15px;">
-                    Abonnés ({{ user["followers"] | length }})
-                </button>
-                <button type="button" id="followingBtn" class="edit-btn" style="margin-bottom: 15px;">
-                    Abonnements ({{ user["following"] | length }})
-                </button>
-                <div id="popup" class="popup">
-                    <div class="popup-content">
-                        <span class="close">&times;</span>
-                        <h2 id="popupTitle"></h2>
-                        <ul id="popupList">
-                            {% macro render_user_list(users) %}
-                                {% for u_name in users %}
-                                    {% set u = get_user(u_name) %}
-                                    <li onclick="window.location.href='{{ url_for('profile_by_name', username=u['username']) }}'">
-                                        <img src="{{ url_for('pfp', username=u['username']) }}" alt="{{ u['username'] }}">
-                                        <span>{{ u['username'] }}</span>
-                                    </li>
-                                {% endfor %}
-                            {% endmacro %}
-                        </ul>
-                    </div>
-                </div>
+        <p><strong>{{ user["username"] }}</strong></p>
+        <p style="color:#657786;">{{ user["bio"] if user["bio"] else "" }}</p>
 
-
-                <a href="/edit_profile" class="edit-btn">Modifier le profil</a>
-            {% else %}
-                <button type="button"  class="edit-btn" style="margin-bottom: 15px;">
-                    Abonnés ({{ user["followers"] | length }})
-                </button>
-                <button type="button"  class="edit-btn" style="margin-bottom: 15px;">
-                    Abonnements ({{ user["following"] | length }})
-                </button>
-
-                {% if session['username'] in user["followers"] %}
-                    <form action="/unfollow/{{ user['username'] }}" method="POST" style="display:inline;">
-                        <button type="submit" class="edit-btn" style="background:#d62828; margin-left:10px;">Se désabonner</button>
-                    </form>
-                {% else %}
-                    <form action="/follow/{{ user['username'] }}" method="POST" style="display:inline;">
-                        <button type="submit" class="edit-btn" style="background:#1da1f2; margin-left:10px;">S'abonner</button>
-                    </form>
-                {% endif %}
-            {% endif %}
-        </div>
-
-        <h2>
         {% if session['username'] == user["username"] %}
-            Mes tweets
-        {% else %}
-            Tweets
-        {% endif %}
-        </h2>
+            <button id="followersBtn" class="edit-btn">Abonnés ({{ user["followers"]|length }})</button>
+            <button id="followingBtn" class="edit-btn">Abonnements ({{ user["following"]|length }})</button>
 
-
-        {% if tweets %}
-            {% for tweet in tweets %}
-                <div class="tweet" style="position: relative; padding: 15px 20px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 15px; background: #fff;">
-                    <p>{{ tweet["content"] }}</p>
-                    {% if tweet.media_path %}
-                    <br>
-                    <img src="{{ url_for('static', filename=tweet.media_path) }}" alt="Média">
-                    {% endif %}
-                    <br>
-                    <small>Posté le {{ tweet["date"] }}</small>
-                    
-                    <form action="/supp_tweet/{{ tweet['tweet_id'] }}" method="POST" style="margin:0;">
-                        <button type="submit" class="small-btn" style="
-                            background: #d62828;
-                            color: white;
-                            padding: 6px 10px;
-                            font-size: 0.8em;
-                            border-radius: 5px;
-                            border: none;
-                            cursor: pointer;
-                            position: absolute;
-                            bottom: 10px;
-                            right: 10px;
-                            transition: 0.2s;">
-                                Supprimer
-                        </button>
-                    </form>
+            <div id="popup" class="popup">
+                <div class="popup-content">
+                    <span class="close">&times;</span>
+                    <h2 id="popupTitle"></h2>
+                    <ul id="popupList"></ul>
                 </div>
-            {% endfor %}
+            </div>
+
+            <a href="/edit_profile" class="edit-btn">Modifier le profil</a>
+
         {% else %}
-            <p>Aucun tweet pour le moment.</p>
+            <button class="edit-btn">Abonnés ({{ user["followers"]|length }})</button>
+            <button class="edit-btn">Abonnements ({{ user["following"]|length }})</button>
+
+            {% if session['username'] in user["followers"] %}
+                <form action="/unfollow/{{ user['username'] }}" method="POST" style="display:inline;">
+                    <button class="edit-btn" style="background:#d62828;">Se désabonner</button>
+                </form>
+            {% else %}
+                <form action="/follow/{{ user['username'] }}" method="POST" style="display:inline;">
+                    <button class="edit-btn">S'abonner</button>
+                </form>
+            {% endif %}
         {% endif %}
     </div>
 
-    <footer>
-        <a href="/timeline">Retour à la timeline</a>
-    </footer>
-    
+    <!-- AJOUT : Onglets -->
+    <div class="tabs">
+        <div class="tab active" data-target="tab-tweets">Tweets & Retweets</div>
+        <div class="tab" data-target="tab-replies">Réponses</div>
+        <div class="tab" data-target="tab-liked">J'aime</div>
+    </div>
+
+    <!-- AJOUT : Contenu onglets -->
+
+    <!-- TWEETS & RETWEETS -->
+    <div id="tab-tweets" class="tab-content visible">
+        {% for tweet in tweets %}
+            <div class="tweet">
+                <p><strong>@{{ tweet.username }}</strong></p>
+                <p>{{ tweet.content }}</p>
+
+                {% if tweet.media_path %}
+                    <img src="{{ url_for('static', filename=tweet.media_path) }}">
+                {% endif %}
+
+                <small>{{ tweet.date }}</small>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- REPONSES -->
+    <div id="tab-replies" class="tab-content">
+        {% for item in replies %}
+            <div class="tweet">
+                <p style="color:#657786;"><em>Réponse à @{{ item.tweet.username }}</em></p>
+                <p><em>{{ item.tweet.content }}</em></p>
+                <hr>
+                <p><strong>@{{ item.reply.username }}</strong></p>
+                <p>{{ item.reply.content }}</p>
+                <small>{{ item.reply.date }}</small>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- LIKES -->
+    <div id="tab-liked" class="tab-content">
+        {% for tweet in liked %}
+            <div class="tweet">
+                <p><strong>@{{ tweet.username }}</strong></p>
+                <p>{{ tweet.content }}</p>
+                <small>{{ tweet.date }}</small>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<footer>
+    <a href="/timeline">Retour à la timeline</a>
+</footer>
+
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const popup = document.getElementById("popup");
-        const popupTitle = document.getElementById("popupTitle");
-        const popupList = document.getElementById("popupList");
-        const closeBtn = document.querySelector(".close");
+    /* Popup followers */
+    const followers = {{ user.get("followers", []) | tojson }};
+    const following = {{ user.get("following", []) | tojson }};
 
-        // Données passées depuis Flask
-        const followers = {{ user["followers"] | tojson }};
-        const following = {{ user["following"] | tojson }};
+    const popup = document.getElementById("popup");
+    const popupTitle = document.getElementById("popupTitle");
+    const popupList = document.getElementById("popupList");
 
-        // Créer un <li> pour chaque utilisateur
-        function fillPopup(title, users) {
-            popupTitle.textContent = title;
-            popupList.innerHTML = "";
-            users.forEach(username => {
-                const li = document.createElement("li");
-                li.onclick = () => {
-                    window.location.href = `/profile/${username}`;
-                };
+    function fillPopup(title, list) {
+        popupTitle.textContent = title;
+        popupList.innerHTML = "";
 
-                const img = document.createElement("img");
-                img.src = `/pfp/${username}`;
-                img.alt = username;
+        list.forEach(name => {
+            const li = document.createElement("li");
+            li.onclick = () => window.location.href = `/profile/${name}`;
 
-                const span = document.createElement("span");
-                span.textContent = username;
-
-                li.appendChild(img);
-                li.appendChild(span);
-                popupList.appendChild(li);
-            });
-            popup.style.display = "flex";
-        }
-
-        document.getElementById("followersBtn").addEventListener("click", () => {
-            fillPopup("Abonnés", followers);
+            li.innerHTML = `
+                <img src="/pfp/${name}">
+                <span>${name}</span>
+            `;
+            popupList.appendChild(li);
         });
 
-        document.getElementById("followingBtn").addEventListener("click", () => {
-            fillPopup("Abonnements", following);
-        });
+        popup.style.display = "flex";
+    }
 
-        closeBtn.addEventListener("click", () => { popup.style.display = "none"; });
-        popup.addEventListener("click", (e) => {
-            if(e.target === popup) popup.style.display = "none";
+    document.getElementById("followersBtn")?.addEventListener("click", () => fillPopup("Abonnés", followers));
+    document.getElementById("followingBtn")?.addEventListener("click", () => fillPopup("Abonnements", following));
+
+    document.querySelector(".close").onclick = () => popup.style.display = "none";
+
+    /* AJOUT : TABS */
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+
+            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("visible"));
+
+            tab.classList.add("active");
+            document.getElementById(tab.dataset.target).classList.add("visible");
         });
     });
 </script>
-
-
 
 </body>
 </html>

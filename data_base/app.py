@@ -149,6 +149,8 @@ def post_tweet_route():
 
     return redirect(url_for('timeline'))
 
+
+
 @app.route('/profile')
 def profile():
     if 'username' not in session:
@@ -161,18 +163,105 @@ def profile():
     if not user:
         return "Utilisateur non trouvé", 404
 
-    return render_template('profile.html', user=user, tweets=tweets)
+    # 🔹 Toujours initialiser followers / following
+    if "followers" not in user or not isinstance(user["followers"], list):
+        user["followers"] = []
+    if "following" not in user or not isinstance(user["following"], list):
+        user["following"] = []
+
+    # ================================
+    # 🔥 AJOUT : tweets / retweets / réponses / likes
+    # ================================
+    db_tweets = _load_tweets()
+    all_tweets = db_tweets.get("tweets", [])
+
+    # 1️⃣ Tweets + retweets
+    user_tweets_and_retweets = [
+        t for t in all_tweets
+        if t["username"] == username or (t.get("retweets") and username in t["retweets"])
+    ]
+
+    # 2️⃣ Réponses
+    user_replies = []
+    for t in all_tweets:
+        if t.get("replies"):
+            for r in t["replies"]:
+                if r["username"] == username:
+                    user_replies.append({"tweet": t, "reply": r})
+
+    # 3️⃣ Tweets likés
+    user_liked_tweets = [
+        t for t in all_tweets
+        if t.get("likes") and username in t["likes"]
+    ]
+
+    # ================================
+    # 🔹 ENVOI AU TEMPLATE
+    # ================================
+    return render_template(
+        'profile.html',
+        user=user,
+        tweets=user_tweets_and_retweets,
+        replies=user_replies,
+        liked=user_liked_tweets
+    )
+
 
 @app.route("/profile/<username>")
-def profile_by_name(username):    
+def profile_by_name(username):
     user = get_user(username)
-    if user:
-        return render_template("profile.html", user=user, tweets=get_user_tweets(username))
+    if not user:
+        # Suggestions
+        db = _load_db()
+        suggestions = [
+            u["username"] for u in db.get("users", [])
+            if username.lower() in u["username"].lower()
+        ]
+        return render_template("user_not_found.html", query=username, suggestions=suggestions)
 
-    # Suggestions si l'utilisateur n'existe pas
-    db = _load_db()
-    suggestions = [u["username"] for u in db.get("users", []) if username.lower() in u["username"].lower()]
-    return render_template("user_not_found.html", query=username, suggestions=suggestions)
+    # 🔹 Initialiser followers / following
+    if "followers" not in user or not isinstance(user["followers"], list):
+        user["followers"] = []
+    if "following" not in user or not isinstance(user["following"], list):
+        user["following"] = []
+
+    # ================================
+    # 🔥 AJOUT : tweets / retweets / réponses / likes
+    # ================================
+    db_tweets = _load_tweets()
+    all_tweets = db_tweets.get("tweets", [])
+
+    # 1️⃣ Tweets + retweets
+    user_tweets_and_retweets = [
+        t for t in all_tweets
+        if t["username"] == username or (t.get("retweets") and username in t["retweets"])
+    ]
+
+    # 2️⃣ Réponses
+    user_replies = []
+    for t in all_tweets:
+        if t.get("replies"):
+            for r in t["replies"]:
+                if r["username"] == username:
+                    user_replies.append({"tweet": t, "reply": r})
+
+    # 3️⃣ Tweets likés
+    user_liked_tweets = [
+        t for t in all_tweets
+        if t.get("likes") and username in t["likes"]
+    ]
+
+    # ================================
+    # 🔹 ENVOI AU TEMPLATE
+    # ================================
+    return render_template(
+        "profile.html",
+        user=user,
+        tweets=user_tweets_and_retweets,
+        replies=user_replies,
+        liked=user_liked_tweets
+    )
+
 
 
 
