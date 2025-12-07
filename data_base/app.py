@@ -97,32 +97,13 @@ def timeline():
     db = _load_tweets()
     all_tweets = db.get("tweets", [])
     
-    # 🔥 NOUVEAU : Créer une liste qui inclut les tweets ET les retweets
-    timeline_items = []
-    
-    for tweet in all_tweets:
-        # 1️⃣ Ajouter le tweet original
-        timeline_items.append({
-            **tweet,
-            'is_retweet': False,
-            'original_user': tweet['username']
-        })
-        
-        # 2️⃣ Ajouter une entrée pour chaque retweet
-        if tweet.get('retweets'):
-            for retweeter in tweet['retweets']:
-                timeline_items.append({
-                    **tweet,
-                    'is_retweet': True,
-                    'retweeted_by': retweeter,
-                    'original_user': tweet['username']
-                })
-    
     # Trier par date (plus récent en premier)
-    timeline_items = sorted(timeline_items, key=lambda t: t["date"], reverse=True)
+    all_tweets = sorted(all_tweets, key=lambda t: t["date"], reverse=True)
     
-    # Formater les dates
-    for t in timeline_items:
+    # Formater les dates et ajouter original_user
+    for t in all_tweets:
+        t['original_user'] = t['username']  # Pour la compatibilité avec le template
+        t['is_retweet'] = False  # Pas d'indicateur de retweet dans cette version
         try:
             t["date"] = t["date"].replace("T", " ")[:16]
         except:
@@ -130,12 +111,12 @@ def timeline():
     
     return render_template(
         "timeline.html",
-        tweets=timeline_items,
+        tweets=all_tweets,
         has_user_liked=has_user_liked,
         get_likes_count=get_likes_count,
         has_user_retweeted=has_user_retweeted,      
         get_retweet_count=get_retweet_count
-    )      
+    ) 
 
 
 @app.route('/static/<path:filename>')
