@@ -93,24 +93,50 @@ def timeline():
     if 'username' not in session:
         return redirect(url_for('login'))
 
+    current_user = session['username']
     db = _load_tweets()
-    tweets = db.get("tweets", [])
-    tweets = sorted(tweets, key=lambda t: t["date"], reverse=True)
-
-    for t in tweets:
+    all_tweets = db.get("tweets", [])
+    
+    # 🔥 NOUVEAU : Créer une liste qui inclut les tweets ET les retweets
+    timeline_items = []
+    
+    for tweet in all_tweets:
+        # 1️⃣ Ajouter le tweet original
+        timeline_items.append({
+            **tweet,
+            'is_retweet': False,
+            'original_user': tweet['username']
+        })
+        
+        # 2️⃣ Ajouter une entrée pour chaque retweet
+        if tweet.get('retweets'):
+            for retweeter in tweet['retweets']:
+                timeline_items.append({
+                    **tweet,
+                    'is_retweet': True,
+                    'retweeted_by': retweeter,
+                    'original_user': tweet['username']
+                })
+    
+    # Trier par date (plus récent en premier)
+    timeline_items = sorted(timeline_items, key=lambda t: t["date"], reverse=True)
+    
+    # Formater les dates
+    for t in timeline_items:
         try:
             t["date"] = t["date"].replace("T", " ")[:16]
         except:
             pass
-
+    
     return render_template(
         "timeline.html",
-        tweets=tweets,
+        tweets=timeline_items,
         has_user_liked=has_user_liked,
         get_likes_count=get_likes_count,
         has_user_retweeted=has_user_retweeted,      
-        get_retweet_count=get_retweet_count          
-)
+        get_retweet_count=get_retweet_count
+    )      
+
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
@@ -396,21 +422,18 @@ def reply_route(tweet_id):
 @app.route("/retweet/<tweet_id>", methods=["POST"])
 def retweet_route(tweet_id):
     if 'username' not in session:
-        flash("Tu dois être connecté pour retweeter.")
-        return redirect(url_for("login"))
+        return jsonify({'error': 'Non connecté'}), 401
 
     username = session['username']
     
     try:
         is_retweeted, count = toggle_retweet(tweet_id, username)
-        if is_retweeted:
-            flash("Retweeté !")
-        else:
-            flash("Retweet annulé.")
+        return jsonify({
+            'retweeted': is_retweeted,
+            'retweet_count': count
+        })
     except TweetNotFound:
-        flash("Tweet introuvable.")
-    
-    return redirect(request.referrer or url_for('timeline'))
+        return jsonify({'error': 'Tweet non trouvé'}), 404
 
 
 @app.route('/supp_tweet/<tweet_id>', methods=['POST'])
@@ -433,14 +456,15 @@ def delete_account():
     else:
         flash('Aucun compte connecté.')
     return redirect(url_for('index'))
+
+
 # Ajout d'une photo de profil
 def load_db():
-    with open("database_auth.json", "r") as f:
+    with open("data_base/database_auth.json", "r") as f:
         return json.load(f)
 
-
 def save_db(data):
-    with open("database_auth.json", "w") as f:
+    with open("data_base/database_auth.json", "w") as f:
         json.dump(data, f, indent=4)
 
 

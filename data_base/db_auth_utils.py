@@ -9,13 +9,15 @@ from db_tweet_utils import get_tweet, TweetNotFound
     # Trouver user pas email => fonction commune avec le search by username?
     # Delete by email? => fonction commune avec delete by username?
     #
-
 #------------ Variables globales ------------#
-DB_FILE = "database_auth.json"  #chemin de la DB
+DB_FILE = "data_base/database_auth.json"  # chemin de la DB
+NB_USERS = 0  # Compteur utilisateurs
+BASE_DIR = os.path.dirname(DB_FILE)  # répertoire dans lequel se trouve la db
 
-NB_USERS = 0 #Compteur utilisateurs
-
-BASE_DIR = os.path.dirname(DB_FILE) #répertoire dans lequel se trouve la db
+# Créer le dossier data_base s'il n'existe pas
+if not os.path.exists("data_base"):
+    os.makedirs("data_base")
+    print("Créé le dossier data_base/")
 
 # Créer le fichier database_auth.json s'il n'existe pas
 if not os.path.exists(DB_FILE):
@@ -24,8 +26,10 @@ if not os.path.exists(DB_FILE):
     print(f"Créé le fichier {DB_FILE}")
 
 # Vérifier les permissions d'écriture
-if not os.access(BASE_DIR, os.W_OK):
-    print(f"Erreur : Pas de permission d'écriture pour '{BASE_DIR}' !")
+# Si BASE_DIR est vide (car dirname de "data_base/xxx" = "data_base"), on vérifie "data_base"
+dir_to_check = BASE_DIR if BASE_DIR else "data_base"
+if not os.access(dir_to_check, os.W_OK):
+    print(f"Erreur : Pas de permission d'écriture pour '{dir_to_check}' !")
 
 
 #------------ Classes Exception ------------#

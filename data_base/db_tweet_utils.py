@@ -6,16 +6,24 @@ import random
 import db_auth_utils
 
 
-
 ############## IDÉES AMÉLIORATIONS ##############
     # Faire une nouvelle ligne dans le dict du user qui fait le tweet : ajouter les tweet_id
     # Backend : fonction d'affichage (regarder commentaire pour date), de saisie du content...
     #   => essayer de tout faire via le tweet_id, ca sera plus simple je pense
-
 #------------ Variables globales ------------#
-DB_FILE = "./DB_Tweets.json"  #chemin de la DB
+DB_FILE = "data_base/DB_Tweets.json"  # chemin de la DB
 #DB_AUTH = "./data_base/database_auth.json"
 
+# Créer le dossier data_base s'il n'existe pas
+if not os.path.exists("data_base"):
+    os.makedirs("data_base")
+    print("Créé le dossier data_base/")
+
+# Créer le fichier DB_Tweets.json s'il n'existe pas
+if not os.path.exists(DB_FILE):
+    with open(DB_FILE, "w", encoding="utf-8") as f:
+        json.dump({"tweets": []}, f, indent=2)
+    print(f"Créé le fichier {DB_FILE}")
 
 
 #------------ Classes Exception ------------#

@@ -408,7 +408,9 @@
           "date": "2025-11-29T11:48:29",
           "content": "trop cool"
         }
-      ]
+      ],
+      "retweets": [],
+      "retweet_count": 0
     },
     {
       "tweet_id": "c99f15f1-b319-4791-8d6b-9c004276d4df",
@@ -469,7 +471,8 @@
       "content": "test7",
       "media_path": "uploads/fleurs.jpg",
       "likes": [
-        "astrid1"
+        "astrid1",
+        "Ayman Boussihmed"
       ],
       "replies": [
         {
@@ -479,7 +482,9 @@
           "content": "test"
         }
       ],
-      "reports": 1
+      "reports": 1,
+      "retweets": [],
+      "retweet_count": 0
     },
     {
       "tweet_id": "22f5b500-bcb7-40dc-ba36-43847ca3eb42",
@@ -497,7 +502,9 @@
           "date": "2025-12-02T13:06:04",
           "content": "tres joli!"
         }
-      ]
+      ],
+      "retweets": [],
+      "retweet_count": 0
     },
     {
       "tweet_id": "4f330498-ef91-40e9-80c2-093c4ecede9d",
@@ -505,7 +512,11 @@
       "date": "2025-12-02T12:52:27",
       "content": "oui",
       "media_path": null,
-      "reports": 1
+      "reports": 1,
+      "retweets": [
+        "Ayman Boussihmed"
+      ],
+      "retweet_count": 1
     }
   ]
 }
