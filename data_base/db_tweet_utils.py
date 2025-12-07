@@ -19,10 +19,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, "DB_Tweets.json")
 
 
-# Créer le dossier data_base s'il n'existe pas
-if not os.path.exists("data_base"):
-    os.makedirs("data_base")
-    print("Créé le dossier data_base/")
 
 # Créer le fichier DB_Tweets.json s'il n'existe pas
 if not os.path.exists(DB_FILE):

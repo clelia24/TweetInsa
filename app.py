@@ -438,15 +438,7 @@ def delete_account():
         flash('Aucun compte connecté.')
     return redirect(url_for('index'))
 
-
-# Ajout d'une photo de profil
-def load_db():
-    with open("data_base/database_auth.json", "r") as f:
-        return json.load(f)
-
-def save_db(data):
-    with open("data_base/database_auth.json", "w") as f:
-        json.dump(data, f, indent=4)
+#ici j'ai supprimé les fonction save_db et load_db pour utiliser celles déjà importées
 
 
 @app.route('/upload_pfp', methods=['POST'])
@@ -467,7 +459,7 @@ def upload_pfp():
     image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
     # 3️⃣ Charger DB JSON
-    db = load_db()
+    db = _load_db()
 
     # 4️⃣ Trouver l'utilisateur
     for user in db["users"]:
@@ -476,7 +468,7 @@ def upload_pfp():
             break
 
     # 5️⃣ Sauvegarder
-    save_db(db)
+    _save_db(db)
 
     flash("Photo de profil mise à jour !")
     return redirect(url_for('edit_profile'))
@@ -484,7 +476,7 @@ def upload_pfp():
 #affichage de la pp
 @app.route('/pfp/<username>')
 def pfp(username):
-    db = load_db()
+    db = _load_db()
 
     for user in db["users"]:
         if user["username"] == username:

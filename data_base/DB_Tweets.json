@@ -95,10 +95,8 @@
       "date": "2025-12-02T11:32:10",
       "content": "test sans media",
       "media_path": null,
-      "retweets": [
-        "corentin"
-      ],
-      "retweet_count": 1,
+      "retweets": [],
+      "retweet_count": 0,
       "likes": [
         "astrid1",
         "Ayman Boussihmed"
@@ -111,9 +109,7 @@
           "content": "test"
         }
       ],
-      "reports": 1,
-      "retweets": [],
-      "retweet_count": 0
+      "reports": 1
     },
     {
       "tweet_id": "22f5b500-bcb7-40dc-ba36-43847ca3eb42",
@@ -146,6 +142,27 @@
         "Ayman Boussihmed"
       ],
       "retweet_count": 1
+    },
+    {
+      "tweet_id": "771442f4-0c1c-41ef-8e9c-78c7e820b64d",
+      "username": "corentin",
+      "date": "2025-12-07T12:57:07",
+      "content": "Regardez cette belle photo !",
+      "media_path": "uploads/99587211.jpg",
+      "likes": [
+        "corentin"
+      ],
+      "reports": 1,
+      "reporters": [
+        "corentin"
+      ]
+    },
+    {
+      "tweet_id": "72cb38b8-6851-4cf2-81d5-4ebc13a1b08b",
+      "username": "corentin",
+      "date": "2025-12-07T13:14:06",
+      "content": "test",
+      "media_path": null
     }
   ]
 }
