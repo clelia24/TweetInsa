@@ -189,6 +189,15 @@
           "media_path": "uploads/2-pingouins.jpg",
           "reply_to_reply_id": null,
           "sub_replies": []
+        },
+        {
+          "reply_id": "620eb5cf-1f4a-48ee-b864-b164a3f053bd",
+          "username": "Marwan",
+          "content": "pas mal",
+          "date": "2025-12-08T11:51:50.593333",
+          "media_path": null,
+          "reply_to_reply_id": null,
+          "sub_replies": []
         }
       ]
     },
@@ -209,20 +218,6 @@
         "Marwan"
       ],
       "retweet_count": 1
-    },
-    {
-      "tweet_id": "4f4720b2-23f2-4379-8413-62852e1771cf",
-      "username": "Marwan",
-      "date": "2025-12-08T11:10:59",
-      "content": "mer",
-      "media_path": "uploads/IMG-20230518-WA0059.jpg"
-    },
-    {
-      "tweet_id": "3125911b-693f-402c-89b7-f859c9836ef8",
-      "username": "Marwan",
-      "date": "2025-12-08T11:36:25",
-      "content": "test",
-      "media_path": null
     },
     {
       "tweet_id": "a39b98a7-771e-4987-afe2-c017a3cb4d74",

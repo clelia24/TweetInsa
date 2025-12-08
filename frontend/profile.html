@@ -303,6 +303,22 @@
             margin-bottom: 8px;
         }
 
+        .delete-btn {
+            background: #d62828; /* Rouge */
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px; /* Bords arrondis */
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: bold;
+            transition: background 0.2s ease;
+            margin-left: auto; /* Pour l'aligner à droite */
+        }
+        .delete-btn:hover {
+            background: #c01b1b;
+        }
+
     </style>
 </head>
 <body>
@@ -373,6 +389,11 @@
                         </a>
                         <span style="color:#657786; font-weight:normal; font-size:0.9em;">— {{ tweet.date }}</span>
                     </div>
+                    {% if session.username == tweet.username %}
+                        <form action="{{ url_for('supp_tweet', tweet_id=tweet.tweet_id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce tweet ?');" style="margin: 0;">
+                            <button type="submit" class="delete-btn" title="Supprimer le tweet">🗑️ Supprimer</button>
+                        </form>
+                    {% endif %}
                 </div>
 
                 <p>{{ tweet.content | replace("\n", "<br>") | safe }}</p>
