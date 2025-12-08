@@ -198,23 +198,38 @@
       "date": "2025-12-07T13:14:06",
       "content": "test",
       "media_path": null,
+      "reports": 1,
+      "reporters": [
+        "Ayman "
+      ],
       "likes": [
-        "Clelia25"
-      ]
+        "Marwan"
+      ],
+      "retweets": [
+        "Marwan"
+      ],
+      "retweet_count": 1
     },
     {
-      "tweet_id": "141f06dd-841d-4248-ae3d-45f58ab11f48",
-      "username": "Clelia24",
-      "date": "2025-12-08T11:21:45",
-      "content": "Testttt mais je crois que \u00e7a marche",
+      "tweet_id": "4f4720b2-23f2-4379-8413-62852e1771cf",
+      "username": "Marwan",
+      "date": "2025-12-08T11:10:59",
+      "content": "mer",
+      "media_path": "uploads/IMG-20230518-WA0059.jpg"
+    },
+    {
+      "tweet_id": "3125911b-693f-402c-89b7-f859c9836ef8",
+      "username": "Marwan",
+      "date": "2025-12-08T11:36:25",
+      "content": "test",
       "media_path": null
     },
     {
-      "tweet_id": "92517fbe-dfe0-49a1-8fb4-99774d09f619",
-      "username": "Clelia25",
-      "date": "2025-12-08T11:32:26",
-      "content": "Je peux poster un tweet avec une photo !",
-      "media_path": "uploads/149bfa0a-5a02-46b5-9080-903beb624898.JPG"
+      "tweet_id": "a39b98a7-771e-4987-afe2-c017a3cb4d74",
+      "username": "Marwan",
+      "date": "2025-12-08T11:40:58",
+      "content": "barcelone",
+      "media_path": "uploads/IMG_3111.JPEG"
     }
   ]
 }
