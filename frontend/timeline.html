@@ -89,6 +89,96 @@
         .retweet-indicator a:hover {
             text-decoration: underline;
         }
+        /* --- Modal --- */
+        #tweetModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(2px);
+            z-index: 1000;
+        }
+
+        /* --- Contenu du modal façon Twitter --- */
+        #tweetModal .modal-content {
+            background: #fff;
+            width: 500px;
+            max-width: 90%;
+            margin: 80px auto;
+            padding: 20px 25px 80px; /* espace pour le bouton */
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            position: relative;
+        }
+
+        /* --- Header --- */
+        #tweetModal h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* --- Close --- */
+        #tweetModal .close {
+            position: absolute;
+            right: 20px;
+            top: 18px;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        /* --- Zone de texte --- */
+        #tweetInput {
+            width: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 18px;
+        }
+
+        /* --- Fichier --- */
+        input[type="file"] {
+            margin-top: 15px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d0d7de;
+            background: #f7f9f9;
+            font-size: 14px;
+            cursor: pointer;
+            color: #0f1419;
+        }
+
+        input[type="file"]:hover {
+            background: #eef1f1;
+        }
+
+        /* --- Bouton Publier (version hardcore) --- */
+        #publishBtn {
+            position: absolute !important;
+            bottom: 20px !important;
+            right: 25px !important;
+
+            background: #1d9bf0 !important;
+            color: #fff !important;
+
+            padding: 10px 22px !important;
+            border: none !important;
+            border-radius: 9999px !important;
+            font-size: 15px !important;
+            font-weight: 700 !important;
+
+            max-width: fit-content !important;
+
+            float: none !important;
+            display: inline-block !important;
+
+            box-sizing: border-box !important;
+        }
+
+        #publishBtn:hover {
+            background: #1a8cd8 !important;
+        }
+
     </style>
 </head>
 <body>
