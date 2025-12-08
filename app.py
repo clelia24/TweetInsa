@@ -227,6 +227,9 @@ def profile():
         t for t in all_tweets
         if t["username"] == username or (t.get("retweets") and username in t["retweets"])
     ]
+    
+    # 🔥 TRI PAR DATE DÉCROISSANTE (plus récent en premier)
+    user_tweets_and_retweets.sort(key=lambda t: t.get("date", ""), reverse=True)
 
     # 2️⃣ Réponses
     user_replies = []
@@ -235,12 +238,18 @@ def profile():
             for r in t["replies"]:
                 if r["username"] == username:
                     user_replies.append({"tweet": t, "reply": r})
+    
+    # 🔥 TRI DES RÉPONSES PAR DATE
+    user_replies.sort(key=lambda x: x["reply"].get("date", ""), reverse=True)
 
     # 3️⃣ Tweets likés
     user_liked_tweets = [
         t for t in all_tweets
         if t.get("likes") and username in t["likes"]
     ]
+    
+    # 🔥 TRI DES TWEETS LIKÉS PAR DATE
+    user_liked_tweets.sort(key=lambda t: t.get("date", ""), reverse=True)
 
     # ================================
     # 🔹 ENVOI AU TEMPLATE AVEC LES FONCTIONS
@@ -287,6 +296,9 @@ def profile_by_name(username):
         t for t in all_tweets
         if t["username"] == username or (t.get("retweets") and username in t["retweets"])
     ]
+    
+    # 🔥 TRI PAR DATE DÉCROISSANTE (plus récent en premier)
+    user_tweets_and_retweets.sort(key=lambda t: t.get("date", ""), reverse=True)
 
     # 2️⃣ Réponses
     user_replies = []
@@ -295,12 +307,18 @@ def profile_by_name(username):
             for r in t["replies"]:
                 if r["username"] == username:
                     user_replies.append({"tweet": t, "reply": r})
+    
+    # 🔥 TRI DES RÉPONSES PAR DATE
+    user_replies.sort(key=lambda x: x["reply"].get("date", ""), reverse=True)
 
     # 3️⃣ Tweets likés
     user_liked_tweets = [
         t for t in all_tweets
         if t.get("likes") and username in t["likes"]
     ]
+    
+    # 🔥 TRI DES TWEETS LIKÉS PAR DATE
+    user_liked_tweets.sort(key=lambda t: t.get("date", ""), reverse=True)
 
     # ================================
     # 🔹 ENVOI AU TEMPLATE AVEC LES FONCTIONS
@@ -316,7 +334,6 @@ def profile_by_name(username):
         has_user_retweeted=has_user_retweeted,
         get_retweet_count=get_retweet_count
     )
-
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
