@@ -306,31 +306,56 @@ def has_user_liked(tweet_id: str, username: str) -> bool:
 
 
 # === REPLIES (commentaires) ===
-def add_reply(tweet_id: str, username: str, content: str):
-    if len(content) > 280:  # ou 140 si tu veux rester old-school
-        raise TweetTooLong("Réponse trop longue !")
+def add_reply(tweet_id: str, username: str, content: str, media_path: str = None, reply_to_reply_id: str = None):
+    """
+    Ajoute une réponse à un tweet existant ou à une réponse.
+    Si reply_to_reply_id est fourni, c'est une réponse à une réponse.
+    """
+    if len(content) > 140:
+        raise TweetTooLong()
 
     db = _load_tweets()
-    tweet = None
-    for t in db["tweets"]:
+    tweets = db.get("tweets", [])
+
+    for t in tweets:
         if t["tweet_id"] == tweet_id:
-            tweet = t
-            break
-    if not tweet:
-        raise TweetNotFound(f"Tweet {tweet_id} introuvable")
+            if "replies" not in t:
+                t["replies"] = []
 
-    reply = {
-        "reply_id": str(uuid.uuid4()),
-        "username": username,
-        "date": datetime.now().isoformat(timespec="seconds"),
-        "content": content
-    }
+            reply = {
+                "reply_id": str(uuid.uuid4()),  # ID unique pour chaque réponse
+                "username": username,
+                "content": content,
+                "date": datetime.now().isoformat(),
+                "media_path": media_path,
+                "reply_to_reply_id": reply_to_reply_id,  # ID de la réponse parente (None si réponse au tweet principal)
+                "sub_replies": []  # Pour stocker les réponses à cette réponse
+            }
+            
+            # Si c'est une réponse à une réponse
+            if reply_to_reply_id:
+                # Trouver la réponse parente et ajouter la sous-réponse
+                def add_sub_reply(replies_list):
+                    for r in replies_list:
+                        if r.get("reply_id") == reply_to_reply_id:
+                            if "sub_replies" not in r:
+                                r["sub_replies"] = []
+                            r["sub_replies"].append(reply)
+                            return True
+                        # Recherche récursive dans les sous-réponses
+                        if r.get("sub_replies") and add_sub_reply(r["sub_replies"]):
+                            return True
+                    return False
+                
+                add_sub_reply(t["replies"])
+            else:
+                # Réponse directe au tweet
+                t["replies"].append(reply)
+            
+            _save_tweets(db)
+            return
 
-    if "replies" not in tweet:
-        tweet["replies"] = []
-    tweet["replies"].append(reply)
-    _save_tweets(db)
-    return reply
+    raise TweetNotFound()
 
 # =========================================
 # SISTÈME DE RETWEET 

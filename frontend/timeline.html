@@ -231,7 +231,7 @@
 
                 <!-- Formulaire de réponse (caché par défaut) -->
                 <div id="replyform-{{ t.tweet_id }}" class="reply-form">
-                    <form action="{{ url_for('reply_route', tweet_id=t.tweet_id) }}" method="post">
+                    <form action="{{ url_for('reply_route', tweet_id=t.tweet_id) }}" method="post" enctype="multipart/form-data">
                         <textarea 
                             name="reply_content" 
                             class="replyInput"
@@ -243,6 +243,9 @@
                         <div class="replyCounter" style="text-align:right; font-size:0.8em; color:#657786;">
                             0/280
                         </div>
+
+                        <input type="file" name="media" accept="image/*,video/*" style="margin-bottom: 8px;">
+                        <br>
 
                         <button type="submit" class="replyBtn">Répondre</button>
                         <button type="button" onclick="
@@ -277,6 +280,11 @@
                                 </div>
                             </div>
                             {{ r.content | replace("\n", "<br>") | safe }}
+                            {% if r.media_path %}
+                                <br>
+                                <img src="{{ url_for('static', filename=r.media_path) }}" 
+                                     style="max-width: 100%; border-radius: 8px; margin-top: 8px;">
+                            {% endif %}
                         </div>
                         {% endfor %}
 
@@ -374,6 +382,7 @@
                                 </div>
                             </div>
                             ${r.content.replace(/\n/g, "<br>")}
+                            ${r.media_path ? `<br><img src="/static/${r.media_path}" style="max-width: 100%; border-radius: 8px; margin-top: 8px;">` : ''}
                         </div>
                     `).join("");
                     btn.textContent = `Voir plus de réponses (${allReplies.length - 2})`;
@@ -396,6 +405,7 @@
                                 </div>
                             </div>
                             ${r.content.replace(/\n/g, "<br>")}
+                            ${r.media_path ? `<br><img src="/static/${r.media_path}" style="max-width: 100%; border-radius: 8px; margin-top: 8px;">` : ''}
                         </div>
                     `).join("");
                     btn.textContent = "Voir moins de réponses";

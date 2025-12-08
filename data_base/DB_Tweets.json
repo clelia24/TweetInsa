@@ -150,11 +150,46 @@
       "content": "Regardez cette belle photo !",
       "media_path": "uploads/99587211.jpg",
       "likes": [
-        "corentin"
+        "corentin",
+        "Ayman "
       ],
-      "reports": 1,
+      "reports": 2,
       "reporters": [
-        "corentin"
+        "corentin",
+        "Ayman "
+      ],
+      "retweets": [
+        "Ayman "
+      ],
+      "retweet_count": 1,
+      "replies": [
+        {
+          "reply_id": "e7aa960d-6bcc-4b4e-a105-8e5151181923",
+          "username": "Ayman ",
+          "date": "2025-12-07T23:35:52",
+          "content": "Je peux r\u00e9pondre"
+        },
+        {
+          "reply_id": "1ba7fdd5-d2d7-4a32-86c9-6c2d317a1f02",
+          "username": "Ayman ",
+          "date": "2025-12-07T23:36:05",
+          "content": "Et de nouveau r\u00e9pondre"
+        },
+        {
+          "reply_id": "8fff4e13-2a12-4b0e-a183-668c77ffeab6",
+          "username": "Ayman ",
+          "date": "2025-12-07T23:36:14",
+          "content": "Magie"
+        },
+        {
+          "reply_id": "84955d04-499b-416d-837e-f85532672b7c",
+          "username": "Ayman ",
+          "content": "Yo",
+          "date": "2025-12-08T00:30:53.779112",
+          "media_path": "uploads/2-pingouins.jpg",
+          "reply_to_reply_id": null,
+          "sub_replies": []
+        }
       ]
     },
     {
