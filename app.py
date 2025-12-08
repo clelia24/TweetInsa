@@ -118,6 +118,46 @@ def timeline():
         get_retweet_count=get_retweet_count
     ) 
 
+@app.route('/following')
+def following():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    current_user = session['username']
+    db = _load_tweets()
+    db_users=_load_db()
+
+    all_tweets = db.get("tweets", [])
+
+    # récupérer la liste des gens suivis : 
+
+    user = next((u for u in db_users["users"] if u["username"] == current_user), None)
+    subscriptions = user.get("following", []) if user else []
+
+
+    # filtrer seulement leurs tweets
+    filtered = [t for t in all_tweets if t["username"] in subscriptions]
+
+    # tri (comme avant)
+    filtered = sorted(filtered, key=lambda t: t["date"], reverse=True)
+
+    # même formatage que dans timeline
+    for t in filtered:
+        t['original_user'] = t['username']
+        t['is_retweet'] = False
+        try:
+            t["date"] = t["date"].replace("T", " ")[:16]
+        except:
+            pass
+
+    return render_template(
+        "timeline.html",
+        tweets=filtered,
+        has_user_liked=has_user_liked,
+        get_likes_count=get_likes_count,
+        has_user_retweeted=has_user_retweeted,
+        get_retweet_count=get_retweet_count
+    )
 
 @app.route('/static/<path:filename>')
 def static_files(filename):

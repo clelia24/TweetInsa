@@ -162,7 +162,24 @@
       "username": "corentin",
       "date": "2025-12-07T13:14:06",
       "content": "test",
+      "media_path": null,
+      "likes": [
+        "Clelia25"
+      ]
+    },
+    {
+      "tweet_id": "141f06dd-841d-4248-ae3d-45f58ab11f48",
+      "username": "Clelia24",
+      "date": "2025-12-08T11:21:45",
+      "content": "Testttt mais je crois que \u00e7a marche",
       "media_path": null
+    },
+    {
+      "tweet_id": "92517fbe-dfe0-49a1-8fb4-99774d09f619",
+      "username": "Clelia25",
+      "date": "2025-12-08T11:32:26",
+      "content": "Je peux poster un tweet avec une photo !",
+      "media_path": "uploads/149bfa0a-5a02-46b5-9080-903beb624898.JPG"
     }
   ]
 }

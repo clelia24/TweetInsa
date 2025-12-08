@@ -66,6 +66,7 @@
 <div class="floating-menu">
     <a href="{{ url_for('timeline') }}"><img src="{{ url_for('static', filename='images/home.png') }}" width="28"></a>
     <a href="{{ url_for('explore') }}"><img src="{{ url_for('static', filename='images/Recherche.png') }}" width="28"></a>
+    <a href="{{ url_for('following') }}"><img src="{{ url_for('static', filename='images/notif.png') }}" width="28"></a>
     <a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='images/profile-2.png') }}" width="28"></a>
 </div>
 
@@ -74,7 +75,7 @@
     <img src="{{ url_for('static', filename='images/Logo-twitter.png') }}" width="50" style="margin-bottom:20px;">
     <a href="{{ url_for('timeline') }}"><button><img src="{{ url_for('static', filename='images/home.png') }}" width="24"> Accueil</button></a>
     <a href="{{ url_for('explore') }}"><button><img src="{{ url_for('static', filename='images/Recherche.png') }}" width="24"> Recherche</button></a>
-    <button><img src="{{ url_for('static', filename='images/notif.png') }}" width="24"> Notifications</button>
+    <a href="{{ url_for('following')}}"><button><img src="{{ url_for('static', filename='images/notif.png') }}" width="24"> Notifications</button></a>
     <a href="{{ url_for('profile') }}"><button><img src="{{ url_for('static', filename='images/profile-2.png') }}" width="24"> Profil</button></a>
 </div>
 
